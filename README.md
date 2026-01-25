@@ -19,8 +19,8 @@ The project's development is guided by two main objectives:
 
 ## 🛠️ Technologies
 *   **Language:** C#
-*   **Platform:** .NET 8
-*   **IDE:** Visual Studio 2022
+*   **Platform:** .NET
+*   **IDE:** Visual Studio 2026
 
 *Author: Ignacio Fernández Suárez*
 
