@@ -19,8 +19,8 @@ El desarrollo del proyecto se guía por dos objetivos principales:
 
 ## 🛠️ Tecnologías
 *   **Lenguaje:** C#
-*   **Plataforma:** .NET 8
-*   **IDE:** Visual Studio 2022
+*   **Plataforma:** .NET
+*   **IDE:** Visual Studio 2026
 
 *Autor: Ignacio Fernández Suárez*
 
