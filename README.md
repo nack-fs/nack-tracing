@@ -22,7 +22,7 @@ The project's development is guided by two main objectives:
 *   **Platform:** .NET 8
 *   **IDE:** Visual Studio 2022
 
-*Author: Ignacio Fernández Suárez
+*Author: Ignacio Fernández Suárez*
 
 <p align="center">
   <img src="assets/footer_nack_tracing.png" width="100%">
