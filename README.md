@@ -4,7 +4,7 @@
 
 <p align="left">
   <a href="README.es.md"><img src="assets/flag_spain.png" width="25"> Español</a> | 
-  <a href="README.md"><img src="assets/flag_u.png" width="25"> English</a>
+  <a href="README.md"><img src="assets/flag_uk.png" width="25"> English</a>
 </p>
 
 # Nack Tracing: A Photorealistic Ray Tracing Engine in C#
