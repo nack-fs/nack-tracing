@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/Logo_NackTracing.png" alt="Nack Tracing Logo" width="300">
+  <img src="assests/Logo_NackTracing.png" alt="Nack Tracing Logo" width="300">
 </p>
 
 <p align="left">
