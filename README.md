@@ -18,7 +18,7 @@ The project has two main objectives: first, to build a robust and scalable softw
 
 ## 🛠️ Technologies
 *   **Language:** C#
-*   **Platform:** .NET
+*   **Platform:** .NET 10
 *   **IDE:** Visual Studio 2026
 
 *Author: Ignacio Fernández Suárez*
