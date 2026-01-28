@@ -14,7 +14,7 @@ namespace NackEngine
             this.r = r; this.g = g; this.b = b;
         }
 
-        public string WriteColor() {
+        public override string ToString() {
             var r = Math.Clamp(this.r, 0.0, 0.999);
             var g = Math.Clamp(this.g, 0.0, 0.999);
             var b = Math.Clamp(this.b, 0.0, 0.999);

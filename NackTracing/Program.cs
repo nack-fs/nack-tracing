@@ -1,33 +1,64 @@
 ﻿using System.Text;
 using System.IO;
 using ExportConfig;
+using NackEngine;
 
 namespace NackTracing
 {
+    using Point = NackEngine.NVector;
+
     internal class Program
     {
         static void Main(string[] args)
         {
+            // Image settings
+            var aspectRatio = 16.0 / 9.0;
+            int imageWidth = 400;
+
+            int imageHeight = Math.Max(1,(int)(imageWidth / aspectRatio));
+
+            // Camera
+            var focalLenght = 1.0;
+            var viewportHeight = 2.0;
+            var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
+            var cameraOrigin = new Point(0, 0, 0);
+
+            /*
+             * Vectors
+             * - Across the horizontal
+             * - Down the vertical
+             */
+            var viewportH = new NVector(viewportWidth,0,0);
+            var viewportW = new NVector(0, -viewportHeight, 0);
+
+            // Horizontal and Vertical, Delta Vectors
+            var deltaH = viewportH / imageWidth;
+            var deltaW = viewportW / imageHeight;
+
+            var viewportUpperLeft = cameraOrigin -
+                new NVector(0, 0, focalLenght) - viewportH / 2 - viewportW / 2;
+
+            var pixel00 = viewportUpperLeft + 0.5 * (deltaH + deltaW);
+
+            // Render
             StringBuilder imageData = new StringBuilder();
-            int imageWidth = 256;
-            int imageHeight = 256;
 
             for (int y = 0; y < imageHeight; y++) {
-                Console.Title = $"Processing line: {y} of {imageHeight}";
-                for (int x = 0; x < imageWidth; x++) { 
-                    var r = (double)x / (imageWidth - 1);
-                    var g = (double)y / (imageHeight - 1);
-                    var b = 0.0;
-
-                    int ir = (int)(255.999 * r);
-                    int ig = (int)(255.999 * g);
-                    int ib = (int)(255.999 * b);
-
-                    imageData.AppendLine($"{ir} {ig} {ib}");
+                Console.Write($"Processing line: {y} of {imageHeight}");
+                for (int x = 0; x < imageWidth; x++) {
+                    var center = pixel00 + (x*deltaH) + (y*deltaW);
+                    var rayDirection = center - cameraOrigin;
+                    Ray r = new Ray(cameraOrigin, rayDirection);
+                    Color color = rayColor(r);
+                    imageData.AppendLine(color.ToString());
                 }
             }
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
             export.ExportFile(imageData);
+        }
+        private static Color rayColor(Ray r)
+        {
+            return new Color(0, 0, 0);
         }
     }
 }
