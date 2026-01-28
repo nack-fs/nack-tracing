@@ -1,6 +1,6 @@
 ﻿namespace NackEngine
 {
-    public class NVector
+    public struct NVector
     {
         double x;
         double y;
