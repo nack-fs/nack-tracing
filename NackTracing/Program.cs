@@ -56,9 +56,15 @@ namespace NackTracing
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
             export.ExportFile(imageData);
         }
-        private static Color rayColor(Ray r)
+        private static Color rayColor(Ray ray)
         {
-            return new Color(0, 0, 0);
+            NVector unitDirection = NVector.UnitVector(ray.Direction());
+            var t = 0.5 * (unitDirection.Y() + 1.0);
+            Color white = new Color(1.0, 1.0, 1.0);
+            Color lightBlue = new Color(0.5, 0.7, 1.0);
+            NVector startColor = white;
+            NVector endColor = lightBlue;
+            return startColor * (1.0 - t) + endColor * t;
         }
     }
 }

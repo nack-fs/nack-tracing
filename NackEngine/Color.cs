@@ -6,18 +6,28 @@ namespace NackEngine
 {
     public struct Color
     {
-        double r;
-        double g;
-        double b;
+        private NVector vector;
 
         public Color(double r, double g, double b) {
-            this.r = r; this.g = g; this.b = b;
+            this.vector = new NVector(r, g, b);
+        }
+
+        private Color(NVector vector) {this.vector = vector;}
+
+        public static implicit operator Color(NVector v)
+        {
+            return new Color(v);
+        }
+
+        public static implicit operator NVector(Color c)
+        {
+            return c.vector;
         }
 
         public override string ToString() {
-            var r = Math.Clamp(this.r, 0.0, 0.999);
-            var g = Math.Clamp(this.g, 0.0, 0.999);
-            var b = Math.Clamp(this.b, 0.0, 0.999);
+            var r = Math.Clamp(this.vector.X(), 0.0, 0.999);
+            var g = Math.Clamp(this.vector.Y(), 0.0, 0.999);
+            var b = Math.Clamp(this.vector.Z(), 0.0, 0.999);
 
             int ir = (int)(255.999 * r);
             int ig = (int)(255.999 * g);
