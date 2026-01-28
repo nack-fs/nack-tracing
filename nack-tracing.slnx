@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="ImageWriter/ImageWriter.csproj" />
+  <Project Path="ImageWriter/ExportConfig.csproj" />
   <Project Path="NackEngine/NackEngine.csproj" Id="f27afe2e-4a47-42be-af47-148efa5db67f" />
   <Project Path="NackTracing/NackTracing.csproj" />
 </Solution>

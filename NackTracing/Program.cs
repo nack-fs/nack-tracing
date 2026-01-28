@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.IO;
+using ExportConfig;
 
 namespace NackTracing
 {
@@ -7,19 +8,9 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
-            string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string downloadsPath = Path.Combine(userProfilePath, "Downloads");
-            Directory.CreateDirectory(downloadsPath);
-            string filePath = Path.Combine(downloadsPath, "render.ppm");
-
+            StringBuilder imageData = new StringBuilder();
             int imageWidth = 256;
             int imageHeight = 256;
-
-            using StreamWriter writer = new StreamWriter(filePath);
-
-            writer.WriteLine("P3");
-            writer.WriteLine($"{imageWidth} {imageHeight}");
-            writer.WriteLine("255");
 
             for (int y = 0; y < imageHeight; y++) {
                 Console.Title = $"Processing line: {y} of {imageHeight}";
@@ -32,10 +23,11 @@ namespace NackTracing
                     int ig = (int)(255.999 * g);
                     int ib = (int)(255.999 * b);
 
-                    writer.WriteLine($"{ir} {ig} {ib}");
+                    imageData.AppendLine($"{ir} {ig} {ib}");
                 }
             }
-            Console.WriteLine("Render completado, archivo 'render.ppm' creado");
+            PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
+            export.ExportFile(imageData);
         }
     }
 }
