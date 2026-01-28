@@ -1,20 +1,16 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Text;
 
 namespace ExportConfig
 {
     public class PNGExport
     {
-        int imageWidth;
-        int imageHeight;
-        string fileName;
+        private readonly int imageWidth;
+        private readonly int imageHeight;
+        private readonly string fileName;
 
-        public PNGExport(string fileName) { 
-            // Resolution by default
-            this.imageWidth = 256;
-            this.imageHeight = 256;
-            this.fileName = fileName;
-        }
         public PNGExport(int imageWidth, int imageHeight, string fileName)
         {
             this.imageWidth = imageWidth;
@@ -22,23 +18,43 @@ namespace ExportConfig
             this.fileName = fileName;
         }
 
-        public void ExportFile(StringBuilder data) {
+        public void ExportFile(StringBuilder data)
+        {
+
+            using var bitmap = new Bitmap(imageWidth, imageHeight, PixelFormat.Format24bppRgb);
+            using (var reader = new StringReader(data.ToString()))
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    for (int x = 0; x < imageWidth; x++)
+                    {
+                        string? line = reader.ReadLine();
+                        if (line == null) { break; }
+
+                        // Separación "R G B"
+                        string[] rgbValues = line.Split(' ',
+                            StringSplitOptions.RemoveEmptyEntries);
+
+                        if (rgbValues.Length == 3)
+                        {
+                            byte r = byte.Parse(rgbValues[0]);
+                            byte g = byte.Parse(rgbValues[1]);
+                            byte b = byte.Parse(rgbValues[2]);
+
+                            Color pixelColor = Color.FromArgb(r, g, b);
+                            bitmap.SetPixel(x, y, pixelColor);
+                        }
+                    }
+                }
+            }
 
             string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string downloadsPath = Path.Combine(userProfilePath, "Downloads");
             Directory.CreateDirectory(downloadsPath);
-            string filePath = Path.Combine(downloadsPath, $"{fileName}.ppm");
+            string filePath = Path.Combine(downloadsPath, $"{fileName}.png");
 
-            using StreamWriter writer = new StreamWriter(filePath);
-
-            writer.WriteLine("P3");
-            writer.WriteLine($"{imageWidth} {imageHeight}");
-            writer.WriteLine("255");
-
-            // Writing data
-            writer.Write(data.ToString());
-
-            Console.WriteLine($"Render completado, archivo '{fileName}.ppm' creado");
+            bitmap.Save(filePath, ImageFormat.Png);
+            Console.WriteLine($"Render completado, archivo '{fileName}.png' creado");
         }
     }
 }
