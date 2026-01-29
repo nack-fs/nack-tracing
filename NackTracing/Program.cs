@@ -2,6 +2,8 @@
 using System.IO;
 using ExportConfig;
 using NackEngine.core;
+using NackEngine.objects;
+
 
 namespace NackTracing
 {
@@ -16,6 +18,13 @@ namespace NackTracing
             int imageWidth = 400;
 
             int imageHeight = Math.Max(1,(int)(imageWidth / aspectRatio));
+
+            // World
+            HitCollection world = new HitCollection();
+
+            world.addObject(new Sphere(new Point(0,0,-1),0.5));
+            world.addObject(new Sphere(new Point(0, -100.5, -1), 100));
+
 
             // Camera
             var focalLenght = 1.0;
@@ -48,19 +57,18 @@ namespace NackTracing
                     var center = pixel00 + (x*deltaH) + (y*deltaW);
                     var rayDirection = center - cameraOrigin;
                     Ray r = new Ray(cameraOrigin, rayDirection);
-                    Color color = rayColor(r);
+                    Color color = rayColor(r, world);
                     imageData.AppendLine(color.ToString());
                 }
             }
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
             export.ExportFile(imageData);
         }
-        private static Color rayColor(Ray ray)
+        private static Color rayColor(Ray ray, Hittable world)
         {
-            var t = hitSphere(new Point(0, 0, -1), 0.5, ray);
-            if (t > 0.0) {
-                NVector n = NVector.UnitVector(ray.At(t) - new NVector(0, 0, -1));
-                return new Color(0.5 * new Color(n.X()+1,n.Y()+1,n.Z()+1).Vector());
+            HitStruct hit;
+            if (world.Hit(ray, 0, double.MaxValue, out hit)) {
+                return new Color(0.5 * (hit.normal + new Color(1, 1, 1).Vector()));
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
@@ -68,17 +76,6 @@ namespace NackTracing
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
             return new Color(white.Vector() * (1.0 - a) + lightBlue.Vector() * a);
-        }
-
-        private static double hitSphere(Point center, double radius, Ray ray) {
-            NVector oc = center - ray.Origin();
-            var a = ray.Direction().LengthSquared();
-            var h = NVector.Dot(ray.Direction(), oc);
-            var c = oc.LengthSquared() - radius * radius;
-            var discriminant = h * h - a * c;
-
-            if (discriminant < 0){return -1.0;}
-            return (h - Math.Sqrt(discriminant)) / a;
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace NackEngine.objects
 {
-    public class Collection : Hittable
+    public class HitCollection : Hittable
     {
         private List<Hittable> objects;
 
-        public Collection() {
+        public HitCollection() {
             this.objects = new List<Hittable>();
         }
 
