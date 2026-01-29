@@ -6,6 +6,6 @@ namespace NackEngine.core
 {
     public interface Hittable
     {
-        public bool Hit(Ray ray, double rayTmin, double rayTmax, HitStruct hit);
+        public bool Hit(Ray ray, double rayTmin, double rayTmax,out HitStruct hit);
     }
 }
