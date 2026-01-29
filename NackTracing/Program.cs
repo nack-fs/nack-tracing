@@ -44,7 +44,6 @@ namespace NackTracing
             StringBuilder imageData = new StringBuilder();
 
             for (int y = 0; y < imageHeight; y++) {
-                Console.Write($"Processing line: {y} of {imageHeight}");
                 for (int x = 0; x < imageWidth; x++) {
                     var center = pixel00 + (x*deltaH) + (y*deltaW);
                     var rayDirection = center - cameraOrigin;
@@ -58,11 +57,24 @@ namespace NackTracing
         }
         private static Color rayColor(Ray ray)
         {
+            if (hitSphere(new Point(0, 0, -1), 0.5, ray)) {
+                return new Color(1,0,0);
+            }
+
             NVector unitDirection = NVector.UnitVector(ray.Direction());
             var t = 0.5 * (unitDirection.Y() + 1.0);
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
             return new Color(white.Vector() * (1.0 - t) + lightBlue.Vector() * t);
+        }
+
+        private static bool hitSphere(Point center, double radius, Ray ray) {
+            NVector oc = center - ray.Origin();
+            var a = NVector.Dot(ray.Direction(), ray.Direction());
+            var b = -2.0 * NVector.Dot(ray.Direction(), oc);
+            var c = NVector.Dot(oc, oc) - radius * radius;
+            var discriminant = b * b - 4 * a * c;
+            return discriminant >= 0;
         }
     }
 }
