@@ -3,6 +3,7 @@ using System.IO;
 using ExportConfig;
 using NackEngine.core;
 using NackEngine.objects;
+using Range = NackEngine.core.Range;
 
 
 namespace NackTracing
@@ -67,7 +68,7 @@ namespace NackTracing
         private static Color rayColor(Ray ray, Hittable world)
         {
             HitStruct hit;
-            if (world.Hit(ray, 0, double.MaxValue, out hit)) {
+            if (world.Hit(ray, Range.DEFAULT, out hit)) {
                 return new Color(0.5 * (hit.normal + new Color(1, 1, 1).Vector()));
             }
 

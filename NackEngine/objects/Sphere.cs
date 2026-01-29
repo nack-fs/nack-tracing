@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NackEngine.core;
+using Range = NackEngine.core.Range;
 
 
 namespace NackEngine.objects
@@ -18,7 +19,7 @@ namespace NackEngine.objects
             this.radius = Math.Max(0, radius);
         }
 
-        public bool Hit(Ray ray, double rayTmin, double rayTmax,out HitStruct hit)
+        public bool Hit(Ray ray, Range rayT,out HitStruct hit)
         {
             NVector oc = center - ray.Origin();
             var a = ray.Direction().LengthSquared();
@@ -35,9 +36,9 @@ namespace NackEngine.objects
 
             // Find the nearest root
             var root = (h - sqrtDis) / a;
-            if (root <= rayTmin || rayTmax <= root) {
+            if (!rayT.Surrounds(root)) {
                 root = (h + sqrtDis) / a;
-                if (root <= rayTmin || rayTmax <= root) {
+                if (!rayT.Surrounds(root)) {
                     return false;
                 }
             }

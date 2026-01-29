@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Range = NackEngine.core.Range;
 
 namespace NackEngine.objects
 {
@@ -27,15 +28,15 @@ namespace NackEngine.objects
             objects.Clear();
         }
 
-        public bool Hit(Ray ray, double rayTmin, double rayTmax,out HitStruct hit)
+        public bool Hit(Ray ray, Range rayT,out HitStruct hit)
         {
             HitStruct tmpHit = new HitStruct();
             bool hitAnything = false;
-            var closestSoFar = rayTmax;
+            var closestSoFar = rayT.Max();
             hit = default;
 
             foreach(Hittable obj in objects) {
-                if (obj.Hit(ray, rayTmin, closestSoFar, out tmpHit)) {
+                if (obj.Hit(ray, new Range(rayT.Min(),closestSoFar), out tmpHit)) {
                     hitAnything = true;
                     closestSoFar = tmpHit.t;
                     hit = tmpHit;
