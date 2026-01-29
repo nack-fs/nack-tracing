@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NackEngine
+namespace NackEngine.core
 {
-    using Point = NackEngine.NVector;
+    using Point = NVector;
     public struct HitStruct
     {
         public Point point { set; get; }
         public NVector normal { set; get; }
-        double t { set; get; }
+        public double t { set; get; }
     }
 }

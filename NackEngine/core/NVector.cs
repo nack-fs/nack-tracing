@@ -1,4 +1,4 @@
-﻿namespace NackEngine
+﻿namespace NackEngine.core
 {
     public struct NVector
     {

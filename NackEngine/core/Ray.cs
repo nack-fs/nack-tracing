@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Point = NackEngine.NVector;
+using Point = NackEngine.core.NVector;
 
-namespace NackEngine
+namespace NackEngine.core
 {
     public struct Ray
     {

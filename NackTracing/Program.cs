@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using System.IO;
 using ExportConfig;
-using NackEngine;
+using NackEngine.core;
 
 namespace NackTracing
 {
-    using Point = NackEngine.NVector;
+    using Point = NVector;
 
     internal class Program
     {
