@@ -57,24 +57,28 @@ namespace NackTracing
         }
         private static Color rayColor(Ray ray)
         {
-            if (hitSphere(new Point(0, 0, -1), 0.5, ray)) {
-                return new Color(1,0,0);
+            var t = hitSphere(new Point(0, 0, -1), 0.5, ray);
+            if (t > 0.0) {
+                NVector n = NVector.UnitVector(ray.At(t) - new NVector(0, 0, -1));
+                return new Color(0.5 * new Color(n.X()+1,n.Y()+1,n.Z()+1).Vector());
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
-            var t = 0.5 * (unitDirection.Y() + 1.0);
+            var a = 0.5 * (unitDirection.Y() + 1.0);
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
-            return new Color(white.Vector() * (1.0 - t) + lightBlue.Vector() * t);
+            return new Color(white.Vector() * (1.0 - a) + lightBlue.Vector() * a);
         }
 
-        private static bool hitSphere(Point center, double radius, Ray ray) {
+        private static double hitSphere(Point center, double radius, Ray ray) {
             NVector oc = center - ray.Origin();
-            var a = NVector.Dot(ray.Direction(), ray.Direction());
-            var b = -2.0 * NVector.Dot(ray.Direction(), oc);
-            var c = NVector.Dot(oc, oc) - radius * radius;
-            var discriminant = b * b - 4 * a * c;
-            return discriminant >= 0;
+            var a = ray.Direction().LengthSquared();
+            var h = NVector.Dot(ray.Direction(), oc);
+            var c = oc.LengthSquared() - radius * radius;
+            var discriminant = h * h - a * c;
+
+            if (discriminant < 0){return -1.0;}
+            return (h - Math.Sqrt(discriminant)) / a;
         }
     }
 }
