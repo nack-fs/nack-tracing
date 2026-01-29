@@ -43,7 +43,8 @@ namespace NackEngine.objects
 
             hit.t = root;
             hit.point = ray.At(hit.t);
-            hit.normal = (hit.point - center) / radius;
+            NVector owNormal = (hit.point - center) / radius;
+            hit.setFaceNormal(ray, owNormal);
 
             return true;
         }

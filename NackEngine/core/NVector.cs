@@ -26,6 +26,9 @@
         public static NVector operator -(NVector a, NVector b) =>
             new NVector(a.x - b.x, a.y - b.y, a.z - b.z);
 
+        public static NVector operator -(NVector a) =>
+            new NVector(-a.x, -a.y, -a.z);
+
         public static NVector operator *(NVector a, double scalar) =>
             new NVector(a.x * scalar, a.y * scalar, a.z * scalar);
 
@@ -50,5 +53,6 @@
 
         public static NVector UnitVector(NVector a) =>
             a / a.Length();
+
     }
 }
