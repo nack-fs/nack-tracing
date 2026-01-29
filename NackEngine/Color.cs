@@ -12,16 +12,12 @@ namespace NackEngine
             this.vector = new NVector(r, g, b);
         }
 
-        private Color(NVector vector) {this.vector = vector;}
-
-        public static implicit operator Color(NVector v)
-        {
-            return new Color(v);
+        public Color(NVector vector) {
+            this.vector = vector;
         }
 
-        public static implicit operator NVector(Color c)
-        {
-            return c.vector;
+        public NVector Vector() { 
+            return this.vector;
         }
 
         public override string ToString() {

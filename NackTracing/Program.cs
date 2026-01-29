@@ -62,9 +62,7 @@ namespace NackTracing
             var t = 0.5 * (unitDirection.Y() + 1.0);
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
-            NVector startColor = white;
-            NVector endColor = lightBlue;
-            return startColor * (1.0 - t) + endColor * t;
+            return new Color(white.Vector() * (1.0 - t) + lightBlue.Vector() * t);
         }
     }
 }
