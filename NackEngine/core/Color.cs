@@ -21,13 +21,14 @@ namespace NackEngine.core
         }
 
         public override string ToString() {
-            var r = Math.Clamp(this.vector.X(), 0.0, 0.999);
-            var g = Math.Clamp(this.vector.Y(), 0.0, 0.999);
-            var b = Math.Clamp(this.vector.Z(), 0.0, 0.999);
+            var r = this.vector.X();
+            var g = this.vector.Y();
+            var b = this.vector.Z();
 
-            int ir = (int)(255.999 * r);
-            int ig = (int)(255.999 * g);
-            int ib = (int)(255.999 * b);
+            Range intensity = new Range(0.000,0.999);
+            int ir = (int)(256 * intensity.Clamp(r));
+            int ig = (int)(256 * intensity.Clamp(g));
+            int ib = (int)(256 * intensity.Clamp(b));
 
             return $"{ir} {ig} {ib}";
         }
