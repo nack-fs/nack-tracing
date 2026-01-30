@@ -14,7 +14,10 @@ namespace NackEngine.core
         public double aspectRatio;
         public int imageWidth;
         public int numSamples;
+        public int maxDepth;
+
         // -----------------------
+
         private int imageHeight;
         private Point cameraOrigin;
         private Point pixel00;
@@ -22,17 +25,13 @@ namespace NackEngine.core
         private NVector deltaW;
         private double samplesScale;
 
-        public Camera() { 
-            this.aspectRatio = 1.0;
-            this.imageWidth = 100;
-            this.numSamples = 10;
-        }
-
-        public Camera(double aspectRatio, int imageWidth, int numSamples)
+        public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
+            int numSamples = 10, int maxDepth = 10)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
             this.numSamples = numSamples;
+            this.maxDepth = maxDepth;
         }
 
         public void Render(Hittable world) {
@@ -47,7 +46,7 @@ namespace NackEngine.core
                     Color pixelColor = new Color(0, 0, 0);
                     for (int sample = 0; sample < numSamples; sample++) {
                         Ray ray = getRay(x, y);
-                        pixelColor = new Color(pixelColor.Vector() + RayColor(ray, world).Vector());
+                        pixelColor = new Color(pixelColor.Vector() + RayColor(ray,maxDepth,world).Vector());
                     }
                     imageData.AppendLine(new Color(samplesScale*pixelColor.Vector()).ToString());
                 }
@@ -86,12 +85,14 @@ namespace NackEngine.core
             this.pixel00 = viewportUpperLeft + 0.5 * (deltaH + deltaW);
         }
 
-        private Color RayColor(Ray ray, Hittable world) {
+        private Color RayColor(Ray ray, int depth ,Hittable world) {
+            if (depth <= 0) { return new Color(0, 0, 0); }
+
             HitStruct hit;
             if (world.Hit(ray, Range.DEFAULT, out hit))
             {
                 NVector direction = NVector.RandomOnHemisphere(hit.normal);
-                return new Color(0.5 * RayColor(new Ray(hit.point, direction), world).Vector()); 
+                return new Color(0.5 * RayColor(new Ray(hit.point, direction), depth-1, world).Vector()); 
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
