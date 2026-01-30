@@ -12,7 +12,7 @@ namespace NackEngine.core
         // Default
         public static readonly Range EMPTY = new Range(double.MaxValue, double.MinValue);
         public static readonly Range UNIVERSE = new Range(double.MinValue, double.MaxValue);
-        public static readonly Range DEFAULT = new Range(0, double.MaxValue);
+        public static readonly Range DEFAULT = new Range(0.001, double.MaxValue);
 
         public Range()
         {
