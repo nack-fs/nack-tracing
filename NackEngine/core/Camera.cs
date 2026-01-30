@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ExportConfig;
+using NackEngine.math;
+using System;
 using System.Collections.Generic;
-using ExportConfig;
+using System.Drawing;
 using System.Text;
 
 namespace NackEngine.core
@@ -11,22 +13,26 @@ namespace NackEngine.core
     {
         public double aspectRatio;
         public int imageWidth;
+        public int numSamples;
         // -----------------------
         private int imageHeight;
         private Point cameraOrigin;
         private Point pixel00;
         private NVector deltaH;
         private NVector deltaW;
+        private double samplesScale;
 
         public Camera() { 
             this.aspectRatio = 1.0;
             this.imageWidth = 100;
+            this.numSamples = 10;
         }
 
-        public Camera(double aspectRatio, int imageWidth)
+        public Camera(double aspectRatio, int imageWidth, int numSamples)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
+            this.numSamples = numSamples;
         }
 
         public void Render(Hittable world) {
@@ -38,11 +44,17 @@ namespace NackEngine.core
             {
                 for (int x = 0; x < imageWidth; x++)
                 {
-                    var center = pixel00 + (x * deltaH) + (y * deltaW);
-                    var rayDirection = center - cameraOrigin;
-                    Ray r = new Ray(cameraOrigin, rayDirection);
-                    Color color = RayColor(r, world);
-                    imageData.AppendLine(color.ToString());
+                    //var center = pixel00 + (x * deltaH) + (y * deltaW);
+                    //var rayDirection = center - cameraOrigin;
+                    //Ray r = new Ray(cameraOrigin, rayDirection);
+                    //Color color = RayColor(r, world);
+                    //imageData.AppendLine(color.ToString());
+                    Color pixelColor = new Color(0, 0, 0);
+                    for (int sample = 0; sample < numSamples; sample++) {
+                        Ray ray = getRay(x, y);
+                        pixelColor = new Color(pixelColor.Vector() + RayColor(ray, world).Vector());
+                    }
+                    imageData.AppendLine(new Color(samplesScale*pixelColor.Vector()).ToString());
                 }
             }
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
@@ -57,6 +69,7 @@ namespace NackEngine.core
             var viewportHeight = 2.0;
             var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
+            this.samplesScale = 1.0 / numSamples;
             this.cameraOrigin = new Point(0, 0, 0);
 
             /*
@@ -90,6 +103,22 @@ namespace NackEngine.core
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
             return new Color(white.Vector() * (1.0 - a) + lightBlue.Vector() * a);
+        }
+
+        private Ray getRay(int x, int y) {
+            var offset = Sample();
+            var pixelSample = pixel00
+                + ((x + offset.X()) * deltaH)
+                + ((y + offset.X()) * deltaW);
+            var rayOrigin = cameraOrigin;
+            var rayDirection = pixelSample - rayOrigin;
+            return new Ray(rayOrigin, rayDirection);
+        }
+
+        private NVector Sample() {
+            // From [-0.5,-0.5] to [0.5,0.5]
+            return new NVector(MathSetting.RandomDouble() - 0.5,
+                MathSetting.RandomDouble() - 0.5, 0);
         }
     }
 }

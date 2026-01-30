@@ -24,8 +24,9 @@ namespace NackTracing
             // Camera
             double aspectRatio = 16.0 / 9.0;
             int imageWidth = 400;
+            int numSamples = 10;
 
-            Camera camera = new Camera(aspectRatio, imageWidth);
+            Camera camera = new Camera(aspectRatio, imageWidth, numSamples);
             camera.Render(world);
         }
     }
