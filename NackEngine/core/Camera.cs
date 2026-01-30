@@ -44,11 +44,6 @@ namespace NackEngine.core
             {
                 for (int x = 0; x < imageWidth; x++)
                 {
-                    //var center = pixel00 + (x * deltaH) + (y * deltaW);
-                    //var rayDirection = center - cameraOrigin;
-                    //Ray r = new Ray(cameraOrigin, rayDirection);
-                    //Color color = RayColor(r, world);
-                    //imageData.AppendLine(color.ToString());
                     Color pixelColor = new Color(0, 0, 0);
                     for (int sample = 0; sample < numSamples; sample++) {
                         Ray ray = getRay(x, y);
@@ -95,7 +90,8 @@ namespace NackEngine.core
             HitStruct hit;
             if (world.Hit(ray, Range.DEFAULT, out hit))
             {
-                return new Color(0.5 * (hit.normal + new Color(1, 1, 1).Vector()));
+                NVector direction = NVector.RandomOnHemisphere(hit.normal);
+                return new Color(0.5 * RayColor(new Ray(hit.point, direction), world).Vector()); 
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());

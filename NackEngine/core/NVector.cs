@@ -67,7 +67,7 @@ namespace NackEngine.core
                 MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
         }
 
-        public static NVector randomUnitVector() {
+        public static NVector RandomUnitVector() {
             while (true) {
                 var p = NVector.Random(-1, 1);
                 var len = p.LengthSquared();
@@ -75,6 +75,12 @@ namespace NackEngine.core
                     return p / Math.Sqrt(len);
                 }
             }
+        }
+
+        public static NVector RandomOnHemisphere(NVector normal) {
+            NVector onUnitSphere = RandomUnitVector();
+            return (Dot(onUnitSphere, normal) > 0.0) ?
+                    onUnitSphere : -onUnitSphere;
         }
 
     }
