@@ -91,7 +91,7 @@ namespace NackEngine.core
             HitStruct hit;
             if (world.Hit(ray, Range.DEFAULT, out hit))
             {
-                NVector direction = NVector.RandomOnHemisphere(hit.normal);
+                NVector direction = hit.normal + NVector.RandomUnitVector();
                 return new Color(0.5 * RayColor(new Ray(hit.point, direction), depth-1, world).Vector()); 
             }
 
