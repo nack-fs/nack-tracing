@@ -20,10 +20,18 @@ namespace NackEngine.core
             return this.vector;
         }
 
+        private double Linear2Gamma(double linear) {
+            return (linear > 0) ? Math.Sqrt(linear) : 0;
+        }
+
         public override string ToString() {
             var r = this.vector.X();
             var g = this.vector.Y();
             var b = this.vector.Z();
+
+            r = Linear2Gamma(r);
+            g = Linear2Gamma(g);
+            b = Linear2Gamma(b);
 
             Range intensity = new Range(0.000,0.999);
             int ir = (int)(256 * intensity.Clamp(r));

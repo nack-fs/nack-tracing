@@ -92,7 +92,7 @@ namespace NackEngine.core
             if (world.Hit(ray, Range.DEFAULT, out hit))
             {
                 NVector direction = hit.normal + NVector.RandomUnitVector();
-                return new Color(0.5 * RayColor(new Ray(hit.point, direction), depth-1, world).Vector()); 
+                return new Color(0.1 * RayColor(new Ray(hit.point, direction), depth-1, world).Vector()); 
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
