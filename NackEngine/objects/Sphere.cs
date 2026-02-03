@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NackEngine.core;
+using Range = NackEngine.core.Range;
 
 
 namespace NackEngine.objects
@@ -11,14 +12,16 @@ namespace NackEngine.objects
     {
         private Point center;
         private double radius;
+        private Material material;
 
-        public Sphere(Point center, double radius)
+        public Sphere(Point center, double radius, Material material)
         {
             this.center = center;
             this.radius = Math.Max(0, radius);
+            this.material = material;
         }
 
-        public bool Hit(Ray ray, double rayTmin, double rayTmax,out HitStruct hit)
+        public bool Hit(Ray ray, Range rayT,out HitStruct hit)
         {
             NVector oc = center - ray.Origin();
             var a = ray.Direction().LengthSquared();
@@ -35,17 +38,18 @@ namespace NackEngine.objects
 
             // Find the nearest root
             var root = (h - sqrtDis) / a;
-            if (root <= rayTmin || rayTmax <= root) {
+            if (!rayT.Surrounds(root)) {
                 root = (h + sqrtDis) / a;
-                if (root <= rayTmin || rayTmax <= root) {
+                if (!rayT.Surrounds(root)) {
                     return false;
                 }
             }
 
-            hit.t = root;
-            hit.point = ray.At(hit.t);
-            NVector owNormal = (hit.point - center) / radius;
+            hit.T = root;
+            hit.Point = ray.At(hit.T);
+            NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
+            hit.Material = material;
 
             return true;
         }

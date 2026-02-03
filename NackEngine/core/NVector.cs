@@ -1,4 +1,6 @@
-﻿namespace NackEngine.core
+﻿using NackEngine.math;
+
+namespace NackEngine.core
 {
     public struct NVector
     {
@@ -53,6 +55,37 @@
 
         public static NVector UnitVector(NVector a) =>
             a / a.Length();
+
+        public static NVector Random() {
+            return new NVector(MathSetting.RandomDouble(),
+                MathSetting.RandomDouble(), MathSetting.RandomDouble());
+        }
+
+        public static NVector Random(double min, double max)
+        {
+            return new NVector(MathSetting.RandomDouble(min,max),
+                MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
+        }
+
+        public static NVector RandomUnitVector() {
+            while (true) {
+                var p = NVector.Random(-1, 1);
+                var len = p.LengthSquared();
+                if (1e-160 < len && len <= 1) {
+                    return p / Math.Sqrt(len);
+                }
+            }
+        }
+
+        public static NVector RandomOnHemisphere(NVector normal) {
+            NVector onUnitSphere = RandomUnitVector();
+            return (Dot(onUnitSphere, normal) > 0.0) ?
+                    onUnitSphere : -onUnitSphere;
+        }
+
+        public static NVector Reflect(NVector v, NVector n) {
+            return v - 2 * Dot(v, n) * n;
+        }
 
     }
 }

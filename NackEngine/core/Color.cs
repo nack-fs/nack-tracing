@@ -20,14 +20,23 @@ namespace NackEngine.core
             return this.vector;
         }
 
-        public override string ToString() {
-            var r = Math.Clamp(this.vector.X(), 0.0, 0.999);
-            var g = Math.Clamp(this.vector.Y(), 0.0, 0.999);
-            var b = Math.Clamp(this.vector.Z(), 0.0, 0.999);
+        private double Linear2Gamma(double linear) {
+            return (linear > 0) ? Math.Sqrt(linear) : 0;
+        }
 
-            int ir = (int)(255.999 * r);
-            int ig = (int)(255.999 * g);
-            int ib = (int)(255.999 * b);
+        public override string ToString() {
+            var r = this.vector.X();
+            var g = this.vector.Y();
+            var b = this.vector.Z();
+
+            r = Linear2Gamma(r);
+            g = Linear2Gamma(g);
+            b = Linear2Gamma(b);
+
+            Range intensity = new Range(0.000,0.999);
+            int ir = (int)(256 * intensity.Clamp(r));
+            int ig = (int)(256 * intensity.Clamp(g));
+            int ib = (int)(256 * intensity.Clamp(b));
 
             return $"{ir} {ig} {ib}";
         }
