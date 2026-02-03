@@ -91,8 +91,12 @@ namespace NackEngine.core
             HitStruct hit;
             if (world.Hit(ray, Range.DEFAULT, out hit))
             {
-                NVector direction = hit.normal + NVector.RandomUnitVector();
-                return new Color(0.1 * RayColor(new Ray(hit.point, direction), depth-1, world).Vector()); 
+                Ray bounced = default;
+                Color attenuation = default;
+                if (hit.Material.Bounce(ray, hit, out attenuation, out bounced)) {
+                    return new Color(attenuation.Vector() * RayColor(bounced, depth - 1, world).Vector());
+                }
+                return new Color(0, 0, 0);
             }
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());

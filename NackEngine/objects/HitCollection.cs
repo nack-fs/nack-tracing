@@ -38,7 +38,7 @@ namespace NackEngine.objects
             foreach(Hittable obj in objects) {
                 if (obj.Hit(ray, new Range(rayT.Min(),closestSoFar), out tmpHit)) {
                     hitAnything = true;
-                    closestSoFar = tmpHit.t;
+                    closestSoFar = tmpHit.T;
                     hit = tmpHit;
                 }
             }

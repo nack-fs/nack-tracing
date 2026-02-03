@@ -83,5 +83,9 @@ namespace NackEngine.core
                     onUnitSphere : -onUnitSphere;
         }
 
+        public static NVector Reflect(NVector v, NVector n) {
+            return v - 2 * Dot(v, n) * n;
+        }
+
     }
 }

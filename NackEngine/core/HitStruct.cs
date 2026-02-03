@@ -7,15 +7,17 @@ namespace NackEngine.core
     using Point = NVector;
     public struct HitStruct
     {
-        public Point point { set; get; }
-        public NVector normal { set; get; }
-        public double t { set; get; }
+        public Point Point { set; get; }
+        public NVector Normal { set; get; }
+        public double T { set; get; }
 
-        public bool frontFace { set;  get; }
+        public bool FrontFace { set;  get; }
+
+        public Material Material { set; get; }
 
         public void setFaceNormal(Ray ray, NVector owNormal) {
-            this.frontFace = NVector.Dot(ray.Direction(), owNormal) <0;
-            this.normal = frontFace? owNormal : -owNormal;
+            this.FrontFace = NVector.Dot(ray.Direction(), owNormal) <0;
+            this.Normal = FrontFace? owNormal : -owNormal;
         }
     }
 }

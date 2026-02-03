@@ -3,6 +3,7 @@ using System.IO;
 using NackEngine.core;
 using NackEngine.objects;
 using Range = NackEngine.core.Range;
+using NackEngine.materials;
 
 
 namespace NackTracing
@@ -13,12 +14,19 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
+            // Materials
+            var groundMaterial = new Diffuse(new Color(0.8, 0.8, 0.0));
+            var centerMaterial = new Diffuse(new Color(0.1, 0.2, 0.5));
+            var leftMaterial = new Metal(new Color(0.8, 0.8, 0.8));
+            var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2));
 
             // World
             HitCollection world = new HitCollection();
 
-            world.addObject(new Sphere(new Point(0,0,-1),0.5));
-            world.addObject(new Sphere(new Point(0, -100.5, -1), 100));
+            world.addObject(new Sphere(new Point(0.0, -100.5, -1.0), 100.0, groundMaterial));
+            world.addObject(new Sphere(new Point(0.0, 0.0, -1.2), 0.5, centerMaterial));
+            world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.5, leftMaterial));
+            world.addObject(new Sphere(new Point(1.0, 0.0, -1.0), 0.5, rightMaterial));
 
 
             // Camera

@@ -12,11 +12,13 @@ namespace NackEngine.objects
     {
         private Point center;
         private double radius;
+        private Material material;
 
-        public Sphere(Point center, double radius)
+        public Sphere(Point center, double radius, Material material)
         {
             this.center = center;
             this.radius = Math.Max(0, radius);
+            this.material = material;
         }
 
         public bool Hit(Ray ray, Range rayT,out HitStruct hit)
@@ -43,10 +45,11 @@ namespace NackEngine.objects
                 }
             }
 
-            hit.t = root;
-            hit.point = ray.At(hit.t);
-            NVector owNormal = (hit.point - center) / radius;
+            hit.T = root;
+            hit.Point = ray.At(hit.T);
+            NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
+            hit.Material = material;
 
             return true;
         }
