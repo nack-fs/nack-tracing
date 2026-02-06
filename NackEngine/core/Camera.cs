@@ -19,6 +19,9 @@ namespace NackEngine.core
         public int maxDepth;
 
         public double fieldView;
+        public Point lookPoint = new Point(0,0,0);
+        public Point lookTarget = new Point(0, 0, -1);
+        public NVector vup = new NVector(0,1,0);
 
         // -----------------------
 
@@ -28,6 +31,7 @@ namespace NackEngine.core
         private NVector deltaH;
         private NVector deltaW;
         private double samplesScale;
+        private NVector u, v, w;
 
         public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
             int numSamples = 10, int maxDepth = 10, double fieldView = 90)
@@ -64,32 +68,43 @@ namespace NackEngine.core
             this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
 
             // Viewport
-            var focalLenght = 1.0;
+            var focalLenght = (lookPoint - lookTarget).Length();
             var angle = double.DegreesToRadians(fieldView);
             var h = Math.Tan(angle / 2);
             var viewportHeight = 2 * h * focalLenght;
             var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.samplesScale = 1.0 / numSamples;
-            this.cameraOrigin = new Point(0, 0, 0);
+            this.cameraOrigin = lookPoint;
+
+            // Camera coordinate frame (u,v,w)
+            this.w = NVector.UnitVector(lookPoint - lookTarget);
+            this.u = NVector.UnitVector(NVector.Cross(vup, w));
+            this.v = NVector.Cross(w,u);
 
             /*
              * Vectors
              * - Across the horizontal
              * - Down the vertical
              */
-            var viewportH = new NVector(viewportWidth, 0, 0);
-            var viewportW = new NVector(0, -viewportHeight, 0);
+            var viewportU = viewportWidth * u;
+            var viewportV = viewportHeight * -v;
 
 
             // Horizontal and Vertical, Delta Vectors
-            this.deltaH = viewportH / imageWidth;
-            this.deltaW = viewportW / imageHeight;
+            this.deltaH = viewportU / imageWidth;
+            this.deltaW = viewportV / imageHeight;
 
-            var viewportUpperLeft = cameraOrigin -
-                new NVector(0, 0, focalLenght) - viewportH / 2 - viewportW / 2;
+            var viewportUpperLeft = cameraOrigin - (focalLenght * w)
+                 - viewportU / 2 - viewportV / 2;
 
             this.pixel00 = viewportUpperLeft + 0.5 * (deltaH + deltaW);
+        }
+
+        public void setLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
+            this.lookPoint = lookPoint;
+            this.lookTarget = lookTarget;
+            this.vup = vup;
         }
 
         private Color RayColor(Ray ray, int depth ,Hittable world) {
@@ -111,7 +126,7 @@ namespace NackEngine.core
             var a = 0.5 * (unitDirection.Y() + 1.0);
             Color white = new Color(1.0, 1.0, 1.0);
             Color lightBlue = new Color(0.5, 0.7, 1.0);
-            return new Color(white.Vector() * (1.0 - a) + lightBlue.Vector() * a);
+            return white * (1.0 - a) + lightBlue * a;
         }
 
         private Ray getRay(int x, int y) {
