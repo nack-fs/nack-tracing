@@ -17,8 +17,8 @@ namespace NackTracing
             // Materials
             var groundMaterial = new Diffuse(new Color(0.8, 0.8, 0.0));
             var centerMaterial = new Diffuse(new Color(0.1, 0.2, 0.5));
-            var leftMaterial = new Metal(new Color(0.8, 0.8, 0.8));
-            var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2));
+            var leftMaterial = new Metal(new Color(0.8, 0.8, 0.8), 0.3);
+            var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
 
             // World
             HitCollection world = new HitCollection();
