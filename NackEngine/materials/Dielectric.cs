@@ -20,9 +20,20 @@ namespace NackEngine.materials
             double ri = hit.FrontFace ? (1.0 / indexRefraction) : indexRefraction;
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
-            NVector refracted = NVector.Refract(unitDirection, hit.Normal, ri);
+            double cosine = Math.Min(NVector.Dot(-unitDirection, hit.Normal), 1.0);
+            double sine = Math.Sqrt(1.0 - cosine*cosine);
 
-            bounced = new Ray(hit.Point, refracted);
+            bool canRefract = ri * sine <= 1.0;
+            NVector direction;
+
+            if (canRefract)
+            {
+                direction = NVector.Refract(unitDirection, hit.Normal, ri);
+            }
+            else {
+                direction = NVector.Reflect(unitDirection, hit.Normal);
+            }
+            bounced = new Ray(hit.Point, direction);
             return true;
         }
     }
