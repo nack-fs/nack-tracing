@@ -87,5 +87,12 @@ namespace NackEngine.core
             return v - 2 * Dot(v, n) * n;
         }
 
+        public static NVector Refract(NVector uv, NVector n, double eta) {
+            var cosine = Math.Min(NVector.Dot(-uv, n), 1.0);
+            NVector rayPerpendicular = eta * (uv + cosine * n);
+            NVector rayParallel = -Math.Sqrt(Math.Abs(1.0 - rayPerpendicular.LengthSquared()))*n;
+            return rayPerpendicular + rayParallel;
+        }
+
     }
 }
