@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using NackEngine.core;
+
 
 namespace NackEngine.core
 {
@@ -16,6 +18,8 @@ namespace NackEngine.core
         public int numSamples;
         public int maxDepth;
 
+        public double fieldView;
+
         // -----------------------
 
         private int imageHeight;
@@ -26,12 +30,13 @@ namespace NackEngine.core
         private double samplesScale;
 
         public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
-            int numSamples = 10, int maxDepth = 10)
+            int numSamples = 10, int maxDepth = 10, double fieldView = 90)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
             this.numSamples = numSamples;
             this.maxDepth = maxDepth;
+            this.fieldView = fieldView;
         }
 
         public void Render(Hittable world) {
@@ -46,9 +51,9 @@ namespace NackEngine.core
                     Color pixelColor = new Color(0, 0, 0);
                     for (int sample = 0; sample < numSamples; sample++) {
                         Ray ray = getRay(x, y);
-                        pixelColor = new Color(pixelColor.Vector() + RayColor(ray,maxDepth,world).Vector());
+                        pixelColor += RayColor(ray, maxDepth, world);
                     }
-                    imageData.AppendLine(new Color(samplesScale*pixelColor.Vector()).ToString());
+                    imageData.AppendLine((pixelColor*samplesScale).ToString());
                 }
             }
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
@@ -58,9 +63,11 @@ namespace NackEngine.core
         private void Initialize() {
             this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
 
-            // Camera
+            // Viewport
             var focalLenght = 1.0;
-            var viewportHeight = 2.0;
+            var angle = double.DegreesToRadians(fieldView);
+            var h = Math.Tan(angle / 2);
+            var viewportHeight = 2 * h * focalLenght;
             var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.samplesScale = 1.0 / numSamples;
@@ -93,8 +100,9 @@ namespace NackEngine.core
             {
                 Ray bounced = default;
                 Color attenuation = default;
-                if (hit.Material.Bounce(ray, hit, out attenuation, out bounced)) {
-                    return new Color(attenuation.Vector() * RayColor(bounced, depth - 1, world).Vector());
+                if (hit.Material.Bounce(ray, hit, out attenuation, out bounced))
+                {
+                    return attenuation * RayColor(bounced, depth - 1, world);
                 }
                 return new Color(0, 0, 0);
             }
@@ -110,7 +118,7 @@ namespace NackEngine.core
             var offset = Sample();
             var pixelSample = pixel00
                 + ((x + offset.X()) * deltaH)
-                + ((y + offset.X()) * deltaW);
+                + ((y + offset.Y()) * deltaW);
             var rayOrigin = cameraOrigin;
             var rayDirection = pixelSample - rayOrigin;
             return new Ray(rayOrigin, rayDirection);

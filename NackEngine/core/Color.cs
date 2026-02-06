@@ -40,5 +40,22 @@ namespace NackEngine.core
 
             return $"{ir} {ig} {ib}";
         }
+
+        public static Color operator *(Color a, Color b)
+        {
+            return new Color(a.vector * b.vector);
+        }
+
+        public static Color operator *(Color a, double b)
+        {
+            return new Color(a.vector * b);
+        }
+
+        public static Color operator +(Color a, Color b)
+        {
+            return new Color(a.vector + b.vector);
+        }
+
+
     }
 }

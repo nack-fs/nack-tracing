@@ -15,20 +15,28 @@ namespace NackTracing
         static void Main(string[] args)
         {
             // Materials
-            var groundMaterial = new Diffuse(new Color(0.8, 0.8, 0.0));
-            var centerMaterial = new Diffuse(new Color(0.1, 0.2, 0.5));
-            var leftMaterial = new Dielectric(1.5);
-            var bubbleMaterial = new Dielectric(1.0 / 1.5);
-            var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
+            //var groundMaterial = new Diffuse(new Color(0.8, 0.8, 0.0));
+            //var centerMaterial = new Diffuse(new Color(0.1, 0.2, 0.5));
+            //var leftMaterial = new Dielectric(1.5);
+            //var bubbleMaterial = new Dielectric(1.0 / 1.5);
+            //var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
 
             // World
             HitCollection world = new HitCollection();
 
-            world.addObject(new Sphere(new Point(0.0, -100.5, -1.0), 100.0, groundMaterial));
-            world.addObject(new Sphere(new Point(0.0, 0.0, -1.2), 0.5, centerMaterial));
-            world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.5, leftMaterial));
-            world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.4, bubbleMaterial));
-            world.addObject(new Sphere(new Point(1.0, 0.0, -1.0), 0.5, rightMaterial));
+            var R = Math.Cos(Math.PI / 4);
+
+            var materialLeft = new Diffuse(new Color(0,0,1));
+            var materialRight = new Diffuse(new Color(1, 0, 0));
+
+            world.addObject(new Sphere(new Point(-R,0,-1),R, materialLeft));
+            world.addObject(new Sphere(new Point(R, 0, -1), R, materialRight));
+
+            //world.addObject(new Sphere(new Point(0.0, -100.5, -1.0), 100.0, groundMaterial));
+            //world.addObject(new Sphere(new Point(0.0, 0.0, -1.2), 0.5, centerMaterial));
+            //world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.5, leftMaterial));
+            //world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.4, bubbleMaterial));
+            //world.addObject(new Sphere(new Point(1.0, 0.0, -1.0), 0.5, rightMaterial));
 
 
             // Camera
@@ -36,7 +44,8 @@ namespace NackTracing
                 aspectRatio: 16.0 / 9.0, 
                 imageWidth: 400,
                 numSamples:100, 
-                maxDepth:50
+                maxDepth:50,
+                fieldView:90
             );
 
             camera.Render(world);
