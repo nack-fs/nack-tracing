@@ -94,5 +94,14 @@ namespace NackEngine.core
             return rayPerpendicular + rayParallel;
         }
 
+        public static NVector RandomUnitDisk() {
+            while (true) {
+                var p = new NVector(MathSetting.RandomDouble(-1, 1), MathSetting.RandomDouble(-1, 1),0);
+                if (p.LengthSquared() < 1) {
+                    return p;
+                }
+            }
+        }
+
     }
 }
