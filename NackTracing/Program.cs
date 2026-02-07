@@ -38,7 +38,11 @@ namespace NackTracing
                 imageWidth: 400,
                 numSamples: 100,
                 maxDepth: 50,
-                fieldView: 20 // Zoom
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 10.0,
+                focusDistance: 3.4
             );
                 
             camera.setLookPoint(

@@ -23,6 +23,9 @@ namespace NackEngine.core
         public Point lookTarget = new Point(0, 0, -1);
         public NVector vup = new NVector(0,1,0);
 
+        public double depthFieldAngle;
+        public double focusDistance;
+
         // -----------------------
 
         private int imageHeight;
@@ -32,15 +35,20 @@ namespace NackEngine.core
         private NVector deltaW;
         private double samplesScale;
         private NVector u, v, w;
+        private NVector defocusDiskU;
+        private NVector defocusDiskV;
 
         public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
-            int numSamples = 10, int maxDepth = 10, double fieldView = 90)
+            int numSamples = 10, int maxDepth = 10, double fieldView = 90,
+            double depthFieldAngle = 0, double focusDistance = 10)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
             this.numSamples = numSamples;
             this.maxDepth = maxDepth;
             this.fieldView = fieldView;
+            this.depthFieldAngle = depthFieldAngle;
+            this.focusDistance = focusDistance;
         }
 
         public void Render(Hittable world) {
@@ -54,7 +62,7 @@ namespace NackEngine.core
                 {
                     Color pixelColor = new Color(0, 0, 0);
                     for (int sample = 0; sample < numSamples; sample++) {
-                        Ray ray = getRay(x, y);
+                        Ray ray = GetRay(x, y);
                         pixelColor += RayColor(ray, maxDepth, world);
                     }
                     imageData.AppendLine((pixelColor*samplesScale).ToString());
@@ -68,10 +76,9 @@ namespace NackEngine.core
             this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
 
             // Viewport
-            var focalLenght = (lookPoint - lookTarget).Length();
             var angle = double.DegreesToRadians(fieldView);
             var h = Math.Tan(angle / 2);
-            var viewportHeight = 2 * h * focalLenght;
+            var viewportHeight = 2 * h * focusDistance;
             var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.samplesScale = 1.0 / numSamples;
@@ -95,10 +102,14 @@ namespace NackEngine.core
             this.deltaH = viewportU / imageWidth;
             this.deltaW = viewportV / imageHeight;
 
-            var viewportUpperLeft = cameraOrigin - (focalLenght * w)
+            var viewportUpperLeft = cameraOrigin - (focusDistance * w)
                  - viewportU / 2 - viewportV / 2;
 
             this.pixel00 = viewportUpperLeft + 0.5 * (deltaH + deltaW);
+
+            var defocusRadius = focusDistance * Math.Tan(double.DegreesToRadians(depthFieldAngle / 2));
+            this.defocusDiskU = u * defocusRadius;
+            this.defocusDiskV = v * defocusRadius;
         }
 
         public void setLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
@@ -129,12 +140,12 @@ namespace NackEngine.core
             return white * (1.0 - a) + lightBlue * a;
         }
 
-        private Ray getRay(int x, int y) {
+        private Ray GetRay(int x, int y) {
             var offset = Sample();
             var pixelSample = pixel00
                 + ((x + offset.X()) * deltaH)
                 + ((y + offset.Y()) * deltaW);
-            var rayOrigin = cameraOrigin;
+            var rayOrigin = (depthFieldAngle<=0)? cameraOrigin : DepthFieldDisk();
             var rayDirection = pixelSample - rayOrigin;
             return new Ray(rayOrigin, rayDirection);
         }
@@ -143,6 +154,11 @@ namespace NackEngine.core
             // From [-0.5,-0.5] to [0.5,0.5]
             return new NVector(MathSetting.RandomDouble() - 0.5,
                 MathSetting.RandomDouble() - 0.5, 0);
+        }
+
+        private NVector DepthFieldDisk() {
+            var point = NVector.RandomUnitDisk();
+            return cameraOrigin + (point.X() * defocusDiskU) + (point.Y() * defocusDiskV);
         }
     }
 }
