@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Point = NackEngine.core.NVector;
+using Point = NackEngine.core.space.NVector;
 
-namespace NackEngine.core
+namespace NackEngine.core.physics
 {
     public struct Ray
     {

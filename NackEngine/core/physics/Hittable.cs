@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Range = NackEngine.core.space.Range;
 
-namespace NackEngine.core
+namespace NackEngine.core.physics
 {
     public interface Hittable
     {

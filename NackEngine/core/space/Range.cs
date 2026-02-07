@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NackEngine.core
+namespace NackEngine.core.space
 {
     public class Range
     {

@@ -1,15 +1,17 @@
 ﻿using ExportConfig;
+using NackEngine.core.physics;
+using NackEngine.core.space;
 using NackEngine.math;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using NackEngine.core;
 
 
-namespace NackEngine.core
+namespace NackEngine.core.render
 {
     using Point = NVector;
+    using Range = space.Range;
 
     public class Camera
     {
@@ -119,7 +121,7 @@ namespace NackEngine.core
             this.defocusDiskV = v * defocusRadius;
         }
 
-        public void setLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
+        public void SetLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
             this.lookPoint = lookPoint;
             this.lookTarget = lookTarget;
             this.vup = vup;

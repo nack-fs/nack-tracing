@@ -1,6 +1,6 @@
 ﻿using NackEngine.math;
 
-namespace NackEngine.core
+namespace NackEngine.core.space
 {
     public struct NVector
     {

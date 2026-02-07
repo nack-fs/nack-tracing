@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using System.IO;
-using NackEngine.core;
 using NackEngine.objects;
-using Range = NackEngine.core.Range;
+using Range = NackEngine.core.space.Range;
 using NackEngine.materials;
 using System.Diagnostics;
 using NackEngine.math;
+using NackEngine.core.render;
+using NackEngine.core.space;
 
 
 namespace NackTracing
@@ -20,7 +21,7 @@ namespace NackTracing
             HitCollection world = new HitCollection();
 
             var groundMaterial = new Diffuse(new Color(0.5, 0.5, 0.5));
-            world.addObject(new Sphere(new Point(0, -1000, 0), 1000, groundMaterial));
+            world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, groundMaterial));
 
             double ballSize = 0.2;
             for (int a = -11; a < 11; a++) {
@@ -45,19 +46,19 @@ namespace NackTracing
                         else {
                             sphereMaterial = new Dielectric(1.5);
                         }
-                        world.addObject(new Sphere(center, ballSize, sphereMaterial));
+                        world.AddObject(new Sphere(center, ballSize, sphereMaterial));
                     }
                 }
             }
 
             Material material1 = new Dielectric(1.5);
-            world.addObject(new Sphere(new Point(0, 1, 0), 1.0, material1));
+            world.AddObject(new Sphere(new Point(0, 1, 0), 1.0, material1));
 
             Material material2 = new Diffuse(new Color(0.4, 0.2, 0.1));
-            world.addObject(new Sphere(new Point(-4, 1, 0), 1.0, material2));
+            world.AddObject(new Sphere(new Point(-4, 1, 0), 1.0, material2));
 
             Material material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
-            world.addObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
+            world.AddObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
 
             // Camera
             Camera camera = new Camera(
@@ -72,7 +73,7 @@ namespace NackTracing
                 focusDistance: 10.0
             );
                 
-            camera.setLookPoint(
+            camera.SetLookPoint(
                     new Point(13,2,3), // Look point
                     new Point(0,0,0), // Look target
                     new NVector(0,1,0) // vup

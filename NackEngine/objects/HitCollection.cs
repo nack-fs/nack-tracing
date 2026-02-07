@@ -1,8 +1,8 @@
-﻿using NackEngine.core;
+﻿using NackEngine.core.physics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Range = NackEngine.core.Range;
+using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects
 {
@@ -14,17 +14,17 @@ namespace NackEngine.objects
             this.objects = new List<Hittable>();
         }
 
-        public void addObject(Hittable obj) {
+        public void AddObject(Hittable obj) {
             if (!objects.Contains(obj)) { 
                 objects.Add(obj);
             }
         }
 
-        public void removeObject(Hittable obj) {
+        public void RemoveObject(Hittable obj) {
             objects.Remove(obj);
         }
 
-        public void clear() { 
+        public void Clear() { 
             objects.Clear();
         }
 

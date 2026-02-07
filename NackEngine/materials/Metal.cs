@@ -1,4 +1,6 @@
-﻿using NackEngine.core;
+﻿using NackEngine.core.physics;
+using NackEngine.core.render;
+using NackEngine.core.space;
 using System;
 using System.Collections.Generic;
 using System.Text;
