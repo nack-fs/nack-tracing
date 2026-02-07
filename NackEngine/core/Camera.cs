@@ -54,20 +54,27 @@ namespace NackEngine.core
         public void Render(Hittable world) {
             Initialize();
 
-            StringBuilder imageData = new StringBuilder();
+            Color[] pixelColors = new Color[imageWidth * imageHeight];
 
-            for (int y = 0; y < imageHeight; y++)
-            {
+            Parallel.For(0, imageHeight, y => {
                 for (int x = 0; x < imageWidth; x++)
                 {
                     Color pixelColor = new Color(0, 0, 0);
-                    for (int sample = 0; sample < numSamples; sample++) {
+                    for (int sample = 0; sample < numSamples; sample++)
+                    {
                         Ray ray = GetRay(x, y);
                         pixelColor += RayColor(ray, maxDepth, world);
                     }
-                    imageData.AppendLine((pixelColor*samplesScale).ToString());
+                    pixelColors[y * imageWidth + x] = pixelColor * samplesScale;
                 }
+            });
+
+            StringBuilder imageData = new StringBuilder();
+
+            for (int i = 0; i < pixelColors.Length; i++) {
+                imageData.AppendLine(pixelColors[i].ToString());
             }
+
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
             export.ExportFile(imageData);
         }

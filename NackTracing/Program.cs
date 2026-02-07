@@ -63,8 +63,8 @@ namespace NackTracing
             Camera camera = new Camera(
                 aspectRatio: 16.0 / 9.0,
                 imageWidth: 400,
-                numSamples: 10,
-                maxDepth: 10,
+                numSamples: 40,
+                maxDepth: 50,
                 fieldView: 20, // Zoom
 
                 // Depth of field
