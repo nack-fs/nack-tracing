@@ -5,6 +5,7 @@ using NackEngine.objects;
 using Range = NackEngine.core.Range;
 using NackEngine.materials;
 using System.Diagnostics;
+using NackEngine.math;
 
 
 namespace NackTracing
@@ -15,39 +16,65 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
-            // Materials
-            var groundMaterial = new Diffuse(new Color(0.8, 0.8, 0.0));
-            var centerMaterial = new Diffuse(new Color(0.1, 0.2, 0.5));
-            var leftMaterial = new Dielectric(1.5);
-            var bubbleMaterial = new Dielectric(1.0 / 1.5);
-            var rightMaterial = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
-
-            // World
+            //// World
             HitCollection world = new HitCollection();
 
-            world.addObject(new Sphere(new Point(0.0, -100.5, -1.0), 100.0, groundMaterial));
-            world.addObject(new Sphere(new Point(0.0, 0.0, -1.2), 0.5, centerMaterial));
-            world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.5, leftMaterial));
-            world.addObject(new Sphere(new Point(-1.0, 0.0, -1.0), 0.4, bubbleMaterial));
-            world.addObject(new Sphere(new Point(1.0, 0.0, -1.0), 0.5, rightMaterial));
+            var groundMaterial = new Diffuse(new Color(0.5, 0.5, 0.5));
+            world.addObject(new Sphere(new Point(0, -1000, 0), 1000, groundMaterial));
 
+            double ballSize = 0.2;
+            for (int a = -11; a < 11; a++) {
+                for (int b = -11; b < 11; b++) {
+                    var chooseMat = MathSetting.RandomDouble();
+                    var center = new Point(a+0.9* MathSetting.RandomDouble(), 0.2, b+ 0.9 * MathSetting.RandomDouble());
+
+                    if ((center - new Point(4, ballSize, 0)).Length() > 0.9) {
+                        Material sphereMaterial;
+
+                        if (chooseMat < 0.8)
+                        {
+                            var albedo = NVector.Random() * NVector.Random();
+                            sphereMaterial = new Diffuse(new Color(albedo));
+                        }
+                        else if (chooseMat < 0.95)
+                        {
+                            var albedo = NVector.Random(0.5, 1);
+                            var fuzz = MathSetting.RandomDouble(0, 0.5);
+                            sphereMaterial = new Metal(new Color(albedo), fuzz);
+                        }
+                        else {
+                            sphereMaterial = new Dielectric(1.5);
+                        }
+                        world.addObject(new Sphere(center, ballSize, sphereMaterial));
+                    }
+                }
+            }
+
+            Material material1 = new Dielectric(1.5);
+            world.addObject(new Sphere(new Point(0, 1, 0), 1.0, material1));
+
+            Material material2 = new Diffuse(new Color(0.4, 0.2, 0.1));
+            world.addObject(new Sphere(new Point(-4, 1, 0), 1.0, material2));
+
+            Material material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
+            world.addObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
 
             // Camera
             Camera camera = new Camera(
                 aspectRatio: 16.0 / 9.0,
                 imageWidth: 400,
-                numSamples: 100,
-                maxDepth: 50,
+                numSamples: 10,
+                maxDepth: 10,
                 fieldView: 20, // Zoom
 
                 // Depth of field
-                depthFieldAngle: 10.0,
-                focusDistance: 3.4
+                depthFieldAngle: 0.6,
+                focusDistance: 10.0
             );
                 
             camera.setLookPoint(
-                    new Point(-2,2,1), // Look point
-                    new Point(0,0,-1), // Look target
+                    new Point(13,2,3), // Look point
+                    new Point(0,0,0), // Look target
                     new NVector(0,1,0) // vup
             );
 
