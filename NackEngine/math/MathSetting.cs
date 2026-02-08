@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,6 +15,38 @@ namespace NackEngine.math
         public static double RandomDouble(double min, double max)
         {
             return min + (max - min) * Random.Shared.NextDouble();
+        }
+
+        public static NVector RandomUnitVector()
+        {
+            while (true)
+            {
+                var p = NVector.Random(-1, 1);
+                var len = p.LengthSquared();
+                if (1e-160 < len && len <= 1)
+                {
+                    return p / Math.Sqrt(len);
+                }
+            }
+        }
+
+        public static NVector RandomOnHemisphere(NVector normal)
+        {
+            NVector onUnitSphere = RandomUnitVector();
+            return (NVector.Dot(onUnitSphere, normal) > 0.0) ?
+                    onUnitSphere : -onUnitSphere;
+        }
+
+        public static NVector RandomUnitDisk()
+        {
+            while (true)
+            {
+                var p = new NVector(MathSetting.RandomDouble(-1, 1), MathSetting.RandomDouble(-1, 1), 0);
+                if (p.LengthSquared() < 1)
+                {
+                    return p;
+                }
+            }
         }
     }
 }

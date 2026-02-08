@@ -31,10 +31,10 @@ namespace NackEngine.materials
 
             if (canRefract || Reflectance(cosine, ri) <= MathSetting.RandomDouble())
             {
-                direction = NVector.Refract(unitDirection, hit.Normal, ri);
+                direction = RayPhysics.Refract(unitDirection, hit.Normal, ri);
             }
             else {
-                direction = NVector.Reflect(unitDirection, hit.Normal);
+                direction = RayPhysics.Reflect(unitDirection, hit.Normal);
             }
             bounced = new Ray(hit.Point, direction);
             return true;

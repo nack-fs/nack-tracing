@@ -56,52 +56,16 @@ namespace NackEngine.core.space
         public static NVector UnitVector(NVector a) =>
             a / a.Length();
 
-        public static NVector Random() {
+        public static NVector Random()
+        {
             return new NVector(MathSetting.RandomDouble(),
                 MathSetting.RandomDouble(), MathSetting.RandomDouble());
         }
 
         public static NVector Random(double min, double max)
         {
-            return new NVector(MathSetting.RandomDouble(min,max),
+            return new NVector(MathSetting.RandomDouble(min, max),
                 MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
         }
-
-        public static NVector RandomUnitVector() {
-            while (true) {
-                var p = NVector.Random(-1, 1);
-                var len = p.LengthSquared();
-                if (1e-160 < len && len <= 1) {
-                    return p / Math.Sqrt(len);
-                }
-            }
-        }
-
-        public static NVector RandomOnHemisphere(NVector normal) {
-            NVector onUnitSphere = RandomUnitVector();
-            return (Dot(onUnitSphere, normal) > 0.0) ?
-                    onUnitSphere : -onUnitSphere;
-        }
-
-        public static NVector Reflect(NVector v, NVector n) {
-            return v - 2 * Dot(v, n) * n;
-        }
-
-        public static NVector Refract(NVector uv, NVector n, double eta) {
-            var cosine = Math.Min(NVector.Dot(-uv, n), 1.0);
-            NVector rayPerpendicular = eta * (uv + cosine * n);
-            NVector rayParallel = -Math.Sqrt(Math.Abs(1.0 - rayPerpendicular.LengthSquared()))*n;
-            return rayPerpendicular + rayParallel;
-        }
-
-        public static NVector RandomUnitDisk() {
-            while (true) {
-                var p = new NVector(MathSetting.RandomDouble(-1, 1), MathSetting.RandomDouble(-1, 1),0);
-                if (p.LengthSquared() < 1) {
-                    return p;
-                }
-            }
-        }
-
     }
 }

@@ -166,7 +166,7 @@ namespace NackEngine.core.render
         }
 
         private NVector DepthFieldDisk() {
-            var point = NVector.RandomUnitDisk();
+            var point = MathSetting.RandomUnitDisk();
             return cameraOrigin + (point.X() * defocusDiskU) + (point.Y() * defocusDiskV);
         }
     }

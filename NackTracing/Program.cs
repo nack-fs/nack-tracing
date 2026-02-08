@@ -88,10 +88,10 @@ namespace NackTracing
             camera.Render(world);
 
             sw.Stop();
-            showElapsedTime(sw);
+            ShowElapsedTime(sw);
         }
 
-        private static void showElapsedTime(Stopwatch sw) {
+        private static void ShowElapsedTime(Stopwatch sw) {
             TimeSpan ts = sw.Elapsed;
             string elapsedTime = String.Format("{1:00}m:{2:00}s.{3:00}ms",
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
