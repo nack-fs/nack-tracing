@@ -156,7 +156,9 @@ namespace NackEngine.core.render
                 + ((y + offset.Y()) * deltaW);
             var rayOrigin = (depthFieldAngle<=0)? cameraOrigin : DepthFieldDisk();
             var rayDirection = pixelSample - rayOrigin;
-            return new Ray(rayOrigin, rayDirection);
+            var rayTime = MathSetting.RandomDouble();
+
+            return new Ray(rayOrigin, rayDirection, rayTime);
         }
 
         private NVector Sample() {

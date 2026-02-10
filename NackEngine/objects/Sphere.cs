@@ -16,6 +16,9 @@ namespace NackEngine.objects
         private double radius;
         private Material material;
 
+        private NVector movement;
+        private bool isMoving;
+
         public Sphere(Point center, double radius, Material material)
         {
             this.center = center;
@@ -23,8 +26,21 @@ namespace NackEngine.objects
             this.material = material;
         }
 
+        // Constructor for a sphere in movement
+        public Sphere(Point center1, Point center2, double radius, Material material)
+        {
+            this.center = center1;
+            this.radius = Math.Max(0, radius);
+            this.material = material;
+
+            this.movement = center2 - center1;
+            this.isMoving = true;
+        }
+
         public bool Hit(Ray ray, Range rayT,out HitStruct hit)
         {
+            Point center = GetCenter(ray.Time());
+
             NVector oc = center - ray.Origin();
             var a = ray.Direction().LengthSquared();
             var h = NVector.Dot(ray.Direction(), oc);
@@ -54,6 +70,12 @@ namespace NackEngine.objects
             hit.Material = material;
 
             return true;
+        }
+
+        private Point GetCenter(double time)
+        {
+            if (!isMoving) return center;
+            return center + (movement * time);
         }
     }
 }

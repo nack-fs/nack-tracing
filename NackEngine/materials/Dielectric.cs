@@ -36,7 +36,7 @@ namespace NackEngine.materials
             else {
                 direction = RayPhysics.Reflect(unitDirection, hit.Normal);
             }
-            bounced = new Ray(hit.Point, direction);
+            bounced = new Ray(hit.Point, direction, ray.Time());
             return true;
         }
 

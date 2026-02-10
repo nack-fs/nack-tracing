@@ -23,7 +23,7 @@ namespace NackEngine.materials
         {
             NVector reflected = RayPhysics.Reflect(ray.Direction(), hit.Normal);
             reflected = NVector.UnitVector(reflected) + (fuzz * MathSetting.RandomUnitVector());
-            bounced = new Ray(hit.Point, reflected);
+            bounced = new Ray(hit.Point, reflected, ray.Time());
             attenuation = albedo;
             return (NVector.Dot(bounced.Direction(), hit.Normal)>0); 
         }

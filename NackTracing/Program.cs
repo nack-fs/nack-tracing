@@ -36,6 +36,8 @@ namespace NackTracing
                         {
                             var albedo = NVector.Random() * NVector.Random();
                             sphereMaterial = new Diffuse(new Color(albedo));
+                            var center2 = center + new NVector(0, MathSetting.RandomDouble(0, 0.5), 0);
+                            world.AddObject(new Sphere(center, center2, 0.2, sphereMaterial));
                         }
                         else if (chooseMat < 0.95)
                         {
@@ -64,7 +66,7 @@ namespace NackTracing
             Camera camera = new Camera(
                 aspectRatio: 16.0 / 9.0,
                 imageWidth: 400,
-                numSamples: 40,
+                numSamples: 100,
                 maxDepth: 50,
                 fieldView: 20, // Zoom
 

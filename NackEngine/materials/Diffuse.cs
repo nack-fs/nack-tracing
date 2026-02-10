@@ -23,7 +23,7 @@ namespace NackEngine.materials
             if (bounceDirection.LengthSquared() < 1e-8) {
                 bounceDirection = hit.Normal;
             }
-            bounced = new Ray(hit.Point, bounceDirection);
+            bounced = new Ray(hit.Point, bounceDirection, ray.Time());
             attenuation = this.albedo;
             return true;
         }
