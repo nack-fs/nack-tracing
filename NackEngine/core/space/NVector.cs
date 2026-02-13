@@ -8,13 +8,14 @@ namespace NackEngine.core.space
         double y;
         double z;
 
-        public NVector(double x, double y, double z) {
+        public NVector(double x, double y, double z)
+        {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public double X() { return this.x;}
+        public double X() { return this.x; }
         public double Y() { return this.y; }
         public double Z() { return this.z; }
 
@@ -66,6 +67,20 @@ namespace NackEngine.core.space
         {
             return new NVector(MathSetting.RandomDouble(min, max),
                 MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
+        }
+
+        public double getComponent(int index)
+        {
+            if (index < 0 || index >= 3)
+            {
+                switch (index)
+                {
+                    case 0: return x;
+                    case 1: return y;
+                    case 2: return z;
+                }
+            }
+            throw new IndexOutOfRangeException();
         }
     }
 }

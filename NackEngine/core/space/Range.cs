@@ -43,11 +43,25 @@ namespace NackEngine.core.space
             return max;
         }
 
+        public void SetMin(double min) {
+            this.min = min;
+        }
+
+        public void SetMax(double max)
+        {
+            this.max = max;
+        }
+
         public double Clamp(double x)
         {
             if (x < min) return min;
             if (x > max) return max;
             return x;
+        }
+
+        public Range Expand(double delta) {
+            var padding = delta / 2;
+            return new Range(min - padding, max + padding);
         }
     }
 }
