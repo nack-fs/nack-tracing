@@ -17,6 +17,12 @@ namespace NackEngine.math
             return min + (max - min) * Random.Shared.NextDouble();
         }
 
+        // Random integer in [min, max]
+        public static int RandomInteger(int min, int max)
+        {
+            return (int)RandomDouble(min, max+1);
+        }
+
         public static NVector RandomUnitVector()
         {
             while (true)

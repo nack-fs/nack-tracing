@@ -7,6 +7,7 @@ using System.Diagnostics;
 using NackEngine.math;
 using NackEngine.core.render;
 using NackEngine.core.space;
+using NackEngine.core.physics.bounding;
 
 
 namespace NackTracing
@@ -87,7 +88,11 @@ namespace NackTracing
             sw.Start();
 
             // ---------- RENDER ------------
-            camera.Render(world);
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);

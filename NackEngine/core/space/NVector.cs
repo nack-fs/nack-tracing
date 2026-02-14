@@ -69,18 +69,12 @@ namespace NackEngine.core.space
                 MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
         }
 
-        public double getComponent(int index)
+        public double GetComponent(int index) => index switch
         {
-            if (index < 0 || index >= 3)
-            {
-                switch (index)
-                {
-                    case 0: return x;
-                    case 1: return y;
-                    case 2: return z;
-                }
-            }
-            throw new IndexOutOfRangeException();
-        }
+            0 => x,
+            1 => y,
+            2 => z,
+            _ => throw new IndexOutOfRangeException()
+        };
     }
 }

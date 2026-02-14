@@ -23,6 +23,12 @@ namespace NackEngine.core.space
             this.min = min; this.max=max;
         }
 
+        public Range(Range a, Range b)
+        {
+            this.min = Math.Min(a.Min(), b.Min());
+            this.max = Math.Max(a.Max(), b.Max());
+        }
+
         public double Size() {
             return max - min;
         }

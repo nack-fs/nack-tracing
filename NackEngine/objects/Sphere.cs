@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NackEngine.core.physics;
+using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
 using Range = NackEngine.core.space.Range;
@@ -15,6 +16,7 @@ namespace NackEngine.objects
         private Point center;
         private double radius;
         private Material material;
+        private AABBox aabbox;
 
         private NVector movement;
         private bool isMoving;
@@ -24,9 +26,16 @@ namespace NackEngine.objects
             this.center = center;
             this.radius = Math.Max(0, radius);
             this.material = material;
+
+            InitializeAABBoxStatic(center, radius);
         }
 
-        // Constructor for a sphere in movement
+        private void InitializeAABBoxStatic(Point center, double radius) {
+            NVector rvec = new NVector(radius, radius, radius);
+            this.aabbox = new AABBox(center - rvec, center + rvec);
+        }
+
+        // Constructor for a dynamic sphere in movement
         public Sphere(Point center1, Point center2, double radius, Material material)
         {
             this.center = center1;
@@ -35,6 +44,16 @@ namespace NackEngine.objects
 
             this.movement = center2 - center1;
             this.isMoving = true;
+
+            InitializeAABBoxDynamic(center1, center2, radius);
+        }
+
+        private void InitializeAABBoxDynamic(Point center1, Point center2, double radius)
+        {
+            NVector rvec = new NVector(radius, radius, radius);
+            AABBox box1 = new AABBox(center1 - rvec, center1 + rvec);
+            AABBox box2 = new AABBox(center2 - rvec, center2 + rvec);
+            this.aabbox = new AABBox(box1, box2);
         }
 
         public bool Hit(Ray ray, Range rayT,out HitStruct hit)
@@ -76,6 +95,10 @@ namespace NackEngine.objects
         {
             if (!isMoving) return center;
             return center + (movement * time);
+        }
+
+        public AABBox BoundingBox() {
+            return aabbox;
         }
     }
 }

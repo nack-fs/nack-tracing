@@ -1,6 +1,8 @@
 ﻿using NackEngine.core.physics;
+using NackEngine.core.space;
+using Range = NackEngine.core.space.Range;
 
-namespace NackEngine.core.space
+namespace NackEngine.core.physics.bounding
 {
     using Point = NVector;
 
@@ -22,6 +24,14 @@ namespace NackEngine.core.space
             this.Z = (a.Z() <= b.Z()) ? new Range(a.Z(), b.Z()) : new Range(b.Z(), a.Z());
         }
 
+        // Constructor to merge two bounding boxes
+        public AABBox(AABBox box1, AABBox box2)
+        {
+            this.X = new Range(box1.X, box2.X);
+            this.Y = new Range(box1.Y, box2.Y);
+            this.Z = new Range(box1.Z, box2.Z);
+        }
+
         public Range Axis(int n)
         {
             return (n == 1) ? Y : ((n == 2) ? Z : X);
@@ -38,8 +48,8 @@ namespace NackEngine.core.space
             for (int ax = 0; ax < 3; ax++)
             {
                 Range axis = Axis(ax);
-                double invD = 1.0 / rayDirection.getComponent(ax);
-                double origin = rayOrigin.getComponent(ax);
+                double invD = 1.0 / rayDirection.GetComponent(ax);
+                double origin = rayOrigin.GetComponent(ax);
 
                 double t0 = (axis.Min() - origin) * invD;
                 double t1 = (axis.Max() - origin) * invD;
