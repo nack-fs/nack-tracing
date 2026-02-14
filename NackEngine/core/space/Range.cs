@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NackEngine.core
+namespace NackEngine.core.space
 {
     public class Range
     {
@@ -21,6 +21,12 @@ namespace NackEngine.core
 
         public Range(double min, double max) {
             this.min = min; this.max=max;
+        }
+
+        public Range(Range a, Range b)
+        {
+            this.min = Math.Min(a.Min(), b.Min());
+            this.max = Math.Max(a.Max(), b.Max());
         }
 
         public double Size() {
@@ -43,11 +49,25 @@ namespace NackEngine.core
             return max;
         }
 
+        public void SetMin(double min) {
+            this.min = min;
+        }
+
+        public void SetMax(double max)
+        {
+            this.max = max;
+        }
+
         public double Clamp(double x)
         {
             if (x < min) return min;
             if (x > max) return max;
             return x;
+        }
+
+        public Range Expand(double delta) {
+            var padding = delta / 2;
+            return new Range(min - padding, max + padding);
         }
     }
 }

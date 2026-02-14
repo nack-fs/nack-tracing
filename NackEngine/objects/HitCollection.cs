@@ -1,42 +1,56 @@
-﻿using NackEngine.core;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Range = NackEngine.core.Range;
+﻿using NackEngine.core.physics;
+using NackEngine.core.physics.bounding;
+using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects
 {
     public class HitCollection : Hittable
     {
         private List<Hittable> objects;
+        private AABBox aabbox;
+        private bool initialized;
 
-        public HitCollection() {
+        public HitCollection()
+        {
             this.objects = new List<Hittable>();
         }
 
-        public void addObject(Hittable obj) {
-            if (!objects.Contains(obj)) { 
-                objects.Add(obj);
+        public void AddObject(Hittable obj)
+        {
+            objects.Add(obj);
+
+            if (!initialized)
+            {
+                aabbox = obj.BoundingBox();
+                initialized = true;
+            }
+            else
+            {
+                aabbox = new AABBox(aabbox, obj.BoundingBox());
             }
         }
 
-        public void removeObject(Hittable obj) {
+        public void RemoveObject(Hittable obj)
+        {
             objects.Remove(obj);
         }
 
-        public void clear() { 
+        public void Clear()
+        {
             objects.Clear();
         }
 
-        public bool Hit(Ray ray, Range rayT,out HitStruct hit)
+        public bool Hit(Ray ray, Range rayT, out HitStruct hit)
         {
             HitStruct tmpHit = new HitStruct();
             bool hitAnything = false;
             var closestSoFar = rayT.Max();
             hit = default;
 
-            foreach(Hittable obj in objects) {
-                if (obj.Hit(ray, new Range(rayT.Min(),closestSoFar), out tmpHit)) {
+            foreach (Hittable obj in objects)
+            {
+                if (obj.Hit(ray, new Range(rayT.Min(), closestSoFar), out tmpHit))
+                {
                     hitAnything = true;
                     closestSoFar = tmpHit.T;
                     hit = tmpHit;
@@ -44,5 +58,12 @@ namespace NackEngine.objects
             }
             return hitAnything;
         }
+
+        public AABBox BoundingBox()
+        {
+            return aabbox;
+        }
+
+        public List<Hittable> GetObjects() { return objects; }
     }
 }

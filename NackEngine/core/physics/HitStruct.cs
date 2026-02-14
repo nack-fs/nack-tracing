@@ -1,19 +1,21 @@
-﻿using System;
+﻿using NackEngine.core.render;
+using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NackEngine.core
+namespace NackEngine.core.physics
 {
     using Point = NVector;
     public struct HitStruct
     {
-        public Point Point { set; get; }
-        public NVector Normal { set; get; }
-        public double T { set; get; }
+        public Point Point { get; set; }
+        public NVector Normal { get; set; }
+        public double T { get; set; }
 
-        public bool FrontFace { set;  get; }
+        public bool FrontFace { get; set; }
 
-        public Material Material { set; get; }
+        public Material Material { get; set; }
 
         public void setFaceNormal(Ray ray, NVector owNormal) {
             this.FrontFace = NVector.Dot(ray.Direction(), owNormal) <0;
