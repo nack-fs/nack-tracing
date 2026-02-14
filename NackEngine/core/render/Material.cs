@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NackEngine.core.physics;
+using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NackEngine.core
+namespace NackEngine.core.render
 {
     public interface Material
     {

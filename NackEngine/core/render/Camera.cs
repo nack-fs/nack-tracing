@@ -1,15 +1,17 @@
 ﻿using ExportConfig;
+using NackEngine.core.physics;
+using NackEngine.core.space;
 using NackEngine.math;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using NackEngine.core;
 
 
-namespace NackEngine.core
+namespace NackEngine.core.render
 {
     using Point = NVector;
+    using Range = space.Range;
 
     public class Camera
     {
@@ -119,7 +121,7 @@ namespace NackEngine.core
             this.defocusDiskV = v * defocusRadius;
         }
 
-        public void setLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
+        public void SetLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
             this.lookPoint = lookPoint;
             this.lookTarget = lookTarget;
             this.vup = vup;
@@ -154,7 +156,9 @@ namespace NackEngine.core
                 + ((y + offset.Y()) * deltaW);
             var rayOrigin = (depthFieldAngle<=0)? cameraOrigin : DepthFieldDisk();
             var rayDirection = pixelSample - rayOrigin;
-            return new Ray(rayOrigin, rayDirection);
+            var rayTime = MathSetting.RandomDouble();
+
+            return new Ray(rayOrigin, rayDirection, rayTime);
         }
 
         private NVector Sample() {
@@ -164,7 +168,7 @@ namespace NackEngine.core
         }
 
         private NVector DepthFieldDisk() {
-            var point = NVector.RandomUnitDisk();
+            var point = MathSetting.RandomUnitDisk();
             return cameraOrigin + (point.X() * defocusDiskU) + (point.Y() * defocusDiskV);
         }
     }

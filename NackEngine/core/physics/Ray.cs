@@ -1,22 +1,27 @@
-﻿using System;
+﻿using NackEngine.core.space;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Point = NackEngine.core.NVector;
+using Point = NackEngine.core.space.NVector;
 
-namespace NackEngine.core
+namespace NackEngine.core.physics
 {
     public struct Ray
     {
         private Point origin;
         private NVector direction;
+        private double timeMilis;
 
         public Ray() { }
 
-        public Ray(Point origin, Point direction)
+        public Ray(Point origin, Point direction) : this(origin, direction, 0) { }
+
+        public Ray(Point origin, Point direction, double timeMilis)
         {
             this.origin = origin;
             this.direction = direction;
+            this.timeMilis = timeMilis;
         }
 
         public Point Origin() {
@@ -29,6 +34,10 @@ namespace NackEngine.core
 
         public Point At(double t) { 
             return origin + t * direction;
+        }
+
+        public double Time() {
+            return timeMilis;
         }
     }
 }
