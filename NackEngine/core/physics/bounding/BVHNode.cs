@@ -15,7 +15,13 @@ namespace NackEngine.core.physics.bounding
 
         public BVHNode(List<Hittable> objects, int start, int end)
         {
-            int axis = MathSetting.RandomInteger(0, 2);
+            aabbox = AABBox.EMPTY;
+
+            for (int i = start; i < end; i++) {
+                aabbox = new AABBox(aabbox, objects[i].BoundingBox());
+            }
+
+            int axis = aabbox.LongestAxis();
 
             IComparer<Hittable> comparer = (axis == 0) ? new BoxXCompare()
                                            : (axis == 1) ? new BoxYCompare()
@@ -67,16 +73,13 @@ namespace NackEngine.core.physics.bounding
                 return false;
             }
 
-            // Comprobamos el hijo izquierdo
             bool hitLeft = left.Hit(ray, range, out HitStruct leftRec);
 
-            // Comprobamos el hijo derecho, pero con un rango acortado si hemos golpeado a la izquierda.
             var rightRange = new space.Range(range.Min(), hitLeft ? leftRec.T : range.Max());
             bool hitRight = right.Hit(ray, rightRange, out HitStruct rightRec);
 
             if (hitLeft && hitRight)
             {
-                // Si golpeamos ambos, devolvemos el más cercano
                 hit = (leftRec.T < rightRec.T) ? leftRec : rightRec;
                 return true;
             }

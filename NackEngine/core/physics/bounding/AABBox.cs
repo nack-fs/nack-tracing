@@ -8,6 +8,9 @@ namespace NackEngine.core.physics.bounding
 
     public struct AABBox
     {
+        public static AABBox EMPTY = new AABBox(Range.EMPTY, Range.EMPTY, Range.EMPTY);
+        public static AABBox UNIVERSE = new AABBox(Range.UNIVERSE, Range.UNIVERSE, Range.UNIVERSE);
+
         public Range X, Y, Z;
 
         public AABBox() { }
@@ -67,6 +70,16 @@ namespace NackEngine.core.physics.bounding
                 }
             }
             return true;
+        }
+
+        public int LongestAxis() {
+            if (X.Size() < Y.Size())
+            {
+                return X.Size() > Z.Size() ? 0 : 2;
+            }
+            else {
+                return Y.Size() > Z.Size() ? 1 : 2;
+            }
         }
 
     }
