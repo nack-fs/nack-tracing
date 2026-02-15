@@ -2,12 +2,13 @@
 using System.IO;
 using NackEngine.objects;
 using Range = NackEngine.core.space.Range;
-using NackEngine.materials;
+using NackEngine.core.render.materials;
 using System.Diagnostics;
 using NackEngine.math;
 using NackEngine.core.render;
 using NackEngine.core.space;
 using NackEngine.core.physics.bounding;
+using NackEngine.core.render.textures;
 
 
 namespace NackTracing
@@ -21,8 +22,8 @@ namespace NackTracing
             //// World
             HitCollection world = new HitCollection();
 
-            var groundMaterial = new Diffuse(new Color(0.5, 0.5, 0.5));
-            world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, groundMaterial));
+            var testTexture = new TestTexture(0.32, Color.BLUE_NAVY, Color.WHITE);
+            world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, new Diffuse(testTexture)));
 
             double ballSize = 0.2;
             for (int a = -11; a < 11; a++) {
