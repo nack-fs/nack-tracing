@@ -19,6 +19,12 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
+            //BasicScene();
+            //CheckeredSpheres();
+            Earth();
+        }
+
+        private static void BasicScene() {
             //// World
             HitCollection world = new HitCollection();
 
@@ -26,12 +32,15 @@ namespace NackTracing
             world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, new Diffuse(testTexture)));
 
             double ballSize = 0.2;
-            for (int a = -11; a < 11; a++) {
-                for (int b = -11; b < 11; b++) {
+            for (int a = -11; a < 11; a++)
+            {
+                for (int b = -11; b < 11; b++)
+                {
                     var chooseMat = MathSetting.RandomDouble();
-                    var center = new Point(a+0.9* MathSetting.RandomDouble(), 0.2, b+ 0.9 * MathSetting.RandomDouble());
+                    var center = new Point(a + 0.9 * MathSetting.RandomDouble(), 0.2, b + 0.9 * MathSetting.RandomDouble());
 
-                    if ((center - new Point(4, ballSize, 0)).Length() > 0.9) {
+                    if ((center - new Point(4, ballSize, 0)).Length() > 0.9)
+                    {
                         Material sphereMaterial;
 
                         if (chooseMat < 0.8)
@@ -47,7 +56,8 @@ namespace NackTracing
                             var fuzz = MathSetting.RandomDouble(0, 0.5);
                             sphereMaterial = new Metal(new Color(albedo), fuzz);
                         }
-                        else {
+                        else
+                        {
                             sphereMaterial = new Dielectric(1.5);
                         }
                         world.AddObject(new Sphere(center, ballSize, sphereMaterial));
@@ -76,11 +86,11 @@ namespace NackTracing
                 depthFieldAngle: 0.6,
                 focusDistance: 10.0
             );
-                
+
             camera.SetLookPoint(
-                    new Point(13,2,3), // Look point
-                    new Point(0,0,0), // Look target
-                    new NVector(0,1,0) // vup
+                    new Point(13, 2, 3), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
             );
 
             Console.WriteLine("Iniciando render...");
@@ -105,6 +115,91 @@ namespace NackTracing
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             Console.WriteLine($"\nRender finalizado en: {elapsedTime}");
+        }
+
+        private static void CheckeredSpheres() {
+            HitCollection world = new HitCollection();
+
+            var testTexture = new TestTexture(0.32, Color.BLUE_NAVY, Color.WHITE);
+
+            world.AddObject(new Sphere(new Point(0, -10, 0), 10, new Diffuse(testTexture)));
+            world.AddObject(new Sphere(new Point(0, 10, 0), 10, new Diffuse(testTexture)));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(13, 2, 3), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void Earth() {
+            HitCollection world = new HitCollection();
+
+            var testPath = @"C:\Users\ignac\Downloads\earthmap.jpg";
+            var earthTexture = new ImageTexture(testPath);
+            var earthSurface = new Diffuse(earthTexture);
+
+            world.AddObject(new Sphere(new Point(0, 0, 0), 2, earthSurface));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(0, 0, 12), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
         }
     }
 }

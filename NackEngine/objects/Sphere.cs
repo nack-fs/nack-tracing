@@ -73,7 +73,6 @@ namespace NackEngine.objects
 
             var sqrtDis = Math.Sqrt(discriminant);
 
-            // Find the nearest root
             var root = (h - sqrtDis) / a;
             if (!rayT.Surrounds(root)) {
                 root = (h + sqrtDis) / a;
@@ -86,6 +85,11 @@ namespace NackEngine.objects
             hit.Point = ray.At(hit.T);
             NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
+
+            var uv = GetUV(owNormal);
+            hit.U = uv.u;
+            hit.V = uv.v;
+
             hit.Material = material;
 
             return true;
@@ -99,6 +103,16 @@ namespace NackEngine.objects
 
         public AABBox BoundingBox() {
             return aabbox;
+        }
+
+        private (double u, double v) GetUV(Point point) {
+            var theta = Math.Acos(-point.Y());
+            var phi = Math.Atan2(-point.Z(), point.X()) + Math.PI;
+
+            double u = phi / (2 * Math.PI);
+            double v = theta / Math.PI;
+
+            return (u, v);
         }
     }
 }
