@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using NackEngine.core.physics;
 using NackEngine.core.render;
+using NackEngine.core.render.textures;
 using NackEngine.core.space;
 using NackEngine.math;
 
-namespace NackEngine.materials
+namespace NackEngine.core.render.materials
 {
     public class Diffuse : Material
     {
-        private Color albedo;
+        private Texture texture;
 
-        public Diffuse(Color albedo)
+        public Diffuse(Texture texture)
         {
-            this.albedo = albedo;
+            this.texture = texture;
         }
+
+        public Diffuse(Color albedo) : this(new SolidColor(albedo)) { }
 
         public bool Bounce(Ray ray, HitStruct hit,out Color attenuation,out Ray bounced)
         {
@@ -24,7 +27,7 @@ namespace NackEngine.materials
                 bounceDirection = hit.Normal;
             }
             bounced = new Ray(hit.Point, bounceDirection, ray.Time());
-            attenuation = this.albedo;
+            attenuation = this.texture.Value(hit.U, hit.V, hit.Point);
             return true;
         }
     }
