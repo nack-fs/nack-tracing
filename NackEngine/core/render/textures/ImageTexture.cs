@@ -1,10 +1,8 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
+using NackEngine.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace NackEngine.core.render.textures
 {
@@ -16,10 +14,14 @@ namespace NackEngine.core.render.textures
         private int bytes;
 
 
-        public ImageTexture(string filename) {
+        public ImageTexture(string filename)
+        {
+            string path = TextureConfig.GetImagePath(filename);
+            if (string.IsNullOrEmpty(path)) { path = filename; }
+
             try
             {
-                using (var image = new Bitmap(filename))
+                using (var image = new Bitmap(path))
                 {
                     width = image.Width;
                     height = image.Height;
@@ -36,15 +38,16 @@ namespace NackEngine.core.render.textures
                     image.UnlockBits(bmpData);
                 }
             }
-            catch (Exception) {
-                Console.WriteLine($"ERROR: No se pudo cargar la textura: {filename}");
+            catch (Exception e)
+            {
+                Console.WriteLine($"[ERROR] The texture {filename} could not be loaded... Because {e.Message}");
                 this.pixelData = null;
             }
         }
 
         public Color Value(double u, double v, NVector point)
         {
-            if (pixelData == null) { return new Color(1,0,1); } // ERROR
+            if (pixelData == null) { return new Color(1, 0, 1); } // ERROR
 
             u = Math.Clamp(u, 0.0, 1.0);
             v = 1.0 - Math.Clamp(v, 0.0, 1.0);

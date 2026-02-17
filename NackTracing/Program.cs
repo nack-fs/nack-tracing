@@ -162,11 +162,13 @@ namespace NackTracing
         private static void Earth() {
             HitCollection world = new HitCollection();
 
-            var testPath = @"C:\Users\ignac\Downloads\earthmap.jpg";
-            var earthTexture = new ImageTexture(testPath);
+            var earthTexture = new ImageTexture("EARTH");
+            var marsTexture = new ImageTexture("MARS");
             var earthSurface = new Diffuse(earthTexture);
+            var marsSurface = new Diffuse(marsTexture);
 
-            world.AddObject(new Sphere(new Point(0, 0, 0), 2, earthSurface));
+            world.AddObject(new Sphere(new Point(0, 2, 0), 1.5, earthSurface));
+            world.AddObject(new Sphere(new Point(0, -2, 0), 1.5, marsSurface));
 
             // Camera
             Camera camera = new Camera(
