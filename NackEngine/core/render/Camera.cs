@@ -40,6 +40,10 @@ namespace NackEngine.core.render
         private NVector defocusDiskU;
         private NVector defocusDiskV;
 
+        // -----------------------
+
+        public Color[] PixelBuffer { get; private set; }
+
         public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
             int numSamples = 10, int maxDepth = 10, double fieldView = 90,
             double depthFieldAngle = 0, double focusDistance = 10)
@@ -53,28 +57,44 @@ namespace NackEngine.core.render
             this.focusDistance = focusDistance;
         }
 
-        public void Render(Hittable world) {
-            Initialize();
+        public void Render(Hittable world)
+        {
+            if (PixelBuffer == null || PixelBuffer.Length != imageWidth * imageHeight)
+            {
+                InitializeRender();
+            }
 
-            Color[] pixelColors = new Color[imageWidth * imageHeight];
+            Color[] accumulationBuffer = new Color[imageWidth * imageHeight];
 
-            Parallel.For(0, imageHeight, y => {
-                for (int x = 0; x < imageWidth; x++)
+            for (int sample = 1; sample <= numSamples; sample++)
+            {
+                Console.Title = $"Render {sample} / {numSamples}";
+
+                Parallel.For(0, imageHeight, y =>
                 {
-                    Color pixelColor = new Color(0, 0, 0);
-                    for (int sample = 0; sample < numSamples; sample++)
+                    for (int x = 0; x < imageWidth; x++)
                     {
                         Ray ray = GetRay(x, y);
-                        pixelColor += RayColor(ray, maxDepth, world);
+                        Color newColor = RayColor(ray, maxDepth, world);
+
+                        int index = y * imageWidth + x;
+
+                        accumulationBuffer[index] += newColor;
                     }
-                    pixelColors[y * imageWidth + x] = pixelColor * samplesScale;
-                }
-            });
+                });
+
+                double currentScale = 1.0 / sample;
+
+                Parallel.For(0, PixelBuffer.Length, i =>
+                {
+                    PixelBuffer[i] = accumulationBuffer[i] * currentScale;
+                });
+            }
 
             StringBuilder imageData = new StringBuilder();
-
-            for (int i = 0; i < pixelColors.Length; i++) {
-                imageData.AppendLine(pixelColors[i].ToString());
+            for (int i = 0; i < PixelBuffer.Length; i++)
+            {
+                imageData.AppendLine(PixelBuffer[i].ToString());
             }
 
             PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
@@ -119,6 +139,12 @@ namespace NackEngine.core.render
             var defocusRadius = focusDistance * Math.Tan(double.DegreesToRadians(depthFieldAngle / 2));
             this.defocusDiskU = u * defocusRadius;
             this.defocusDiskV = v * defocusRadius;
+        }
+
+        public void InitializeRender()
+        {
+            Initialize();
+            PixelBuffer = new Color[imageWidth * imageHeight];
         }
 
         public void SetLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
