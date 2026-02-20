@@ -22,7 +22,8 @@ namespace NackTracing
             //BasicScene();
             //CheckeredSpheres();
             //EarthAndMars();
-            PerlinTest();
+            //PerlinTest();
+            PlanesScene();
         }
 
         private static void BasicScene() {
@@ -230,6 +231,67 @@ namespace NackTracing
 
             camera.SetLookPoint(
                     new Point(13, 2, 3), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void PlanesScene()
+        {
+            HitCollection world = new HitCollection();
+
+            var left = new Diffuse(Color.BLUE_WATER);
+            var back = new Diffuse(Color.PINK_HOT);
+            var right = new Diffuse(Color.BEIGE_SAND);
+            var upper = new Diffuse(Color.CYAN_NEON);
+            var lower = new Diffuse(Color.YELLOW_EGG);
+
+
+            world.AddObject(new Plane(new Point(-3, -2, 5),
+                    new NVector(0,0,-4),new NVector(0, 4, 0),
+                    left));
+            world.AddObject(new Plane(new Point(-2, -2, 0),
+                     new NVector(4, 0, 0), new NVector(0, 4, 0),
+                     back));
+            world.AddObject(new Plane(new Point(3, -2, 1),
+                     new NVector(0, 0, 4),new NVector(0, 4, 0),
+                     right));
+            world.AddObject(new Plane(new Point(-2, 3, 1),
+                     new NVector(4, 0, 0),new NVector(0, 0, 4),
+                     upper));
+            world.AddObject(new Plane(new Point(-2, -3, 5),
+                    new NVector(4, 0, 0),new NVector(0, 0, -4),
+                    lower));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 80, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(0, 0, 9), // Look point
                     new Point(0, 0, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
