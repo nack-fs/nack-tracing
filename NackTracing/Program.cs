@@ -255,28 +255,24 @@ namespace NackTracing
         {
             HitCollection world = new HitCollection();
 
-            var left = new Diffuse(Color.BLUE_WATER);
-            var back = new Diffuse(Color.PINK_HOT);
-            var right = new Diffuse(Color.BEIGE_SAND);
-            var upper = new Diffuse(Color.CYAN_NEON);
-            var lower = new Diffuse(Color.YELLOW_EGG);
+            var dollarTexture = new Diffuse(new ImageTexture("DOLLAR_TEX"));
 
 
             world.AddObject(new Plane(new Point(-3, -2, 5),
-                    new NVector(0,0,-4),new NVector(0, 4, 0),
-                    left));
+                    new NVector(0,0,-4),new NVector(0, 4/2, 0),
+                    dollarTexture));
             world.AddObject(new Plane(new Point(-2, -2, 0),
-                     new NVector(4, 0, 0), new NVector(0, 4, 0),
-                     back));
+                     new NVector(4, 0, 0), new NVector(0, 4/2, 0),
+                     dollarTexture));
             world.AddObject(new Plane(new Point(3, -2, 1),
-                     new NVector(0, 0, 4),new NVector(0, 4, 0),
-                     right));
+                     new NVector(0, 0, 4),new NVector(0, 4/2, 0),
+                     dollarTexture));
             world.AddObject(new Plane(new Point(-2, 3, 1),
-                     new NVector(4, 0, 0),new NVector(0, 0, 4),
-                     upper));
+                     new NVector(4, 0, 0),new NVector(0, 0, 4/2),
+                     dollarTexture));
             world.AddObject(new Plane(new Point(-2, -3, 5),
-                    new NVector(4, 0, 0),new NVector(0, 0, -4),
-                    lower));
+                    new NVector(4, 0, 0),new NVector(0, 0, -4/2),
+                    dollarTexture));
 
             // Camera
             Camera camera = new Camera(
