@@ -14,7 +14,7 @@ namespace NackEngine.core.render.textures
 
         public Color Value(double u, double v, NVector point)
         {
-            return new Color(1, 1, 1) * noise.Noise(point*scale);
+            return new Color(.5, .5, .5) * (1 + Math.Sin(scale * point.Z() + 10 * noise.Turbulence(point, 7)));
         }
     }
 }
