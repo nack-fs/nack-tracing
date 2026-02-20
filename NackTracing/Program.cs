@@ -25,8 +25,8 @@ namespace NackTracing
             //EarthAndMars();
             //PerlinTest();
             //PlanesScene();
-            LightTest();
-            //CornellBox();
+            //LightTest();
+            CornellBox();
         }
 
         private static void BasicScene() {
@@ -389,26 +389,36 @@ namespace NackTracing
                 red));
 
             world.AddObject(new Plane(new Point(343, 554, 332),
-                new NVector(-130, 555, 0), new NVector(0, 0, 555),
-                red));
+                new NVector(-130, 0, 0), new NVector(0, 0, -105),
+                light));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(555, 555, 555),
+                new NVector(-555, 0, 0), new NVector(0, 0, -555),
+                grey));
+
+            world.AddObject(new Plane(new Point(0, 0, 555),
+                new NVector(555, 0, 0), new NVector(0, 555, 0),
+                grey));
 
             // Camera
             Camera camera = new Camera(
-                aspectRatio: 16.0 / 9.0,
-                imageWidth: 1080,
-                numSamples: 100,
+                aspectRatio: 1.0,
+                imageWidth: 600,
+                numSamples: 500,
                 maxDepth: 50,
-                fieldView: 20, // Zoom
+                fieldView: 40, // Zoom
 
                 // Depth of field
                 depthFieldAngle: 0
             );
 
-            camera.SetBackgroundColor(Color.BLACK);
-
             camera.SetLookPoint(
-                    new Point(26, 3, 6), // Look point
-                    new Point(0, 2, 0), // Look target
+                    new Point(278, 278, -800), // Look point
+                    new Point(278, 278, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
 

@@ -53,7 +53,7 @@ namespace NackEngine.core.render
             this.depthFieldAngle = depthFieldAngle;
             this.focusDistance = focusDistance;
 
-            this.background = Color.WHITE;
+            this.background = Color.BLACK;
         }
 
         public void Render(Hittable world) {
