@@ -13,11 +13,10 @@ namespace NackEngine.core.physics.bounding
 
         public Range X, Y, Z;
 
-        public AABBox() { }
-
         public AABBox(Range X, Range Y, Range Z)
         {
             this.X = X; this.Y = Y; this.Z = Z;
+            MinPadding();
         }
 
         public AABBox(Point a, Point b)
@@ -25,6 +24,7 @@ namespace NackEngine.core.physics.bounding
             this.X = (a.X() <= b.X()) ? new Range(a.X(), b.X()) : new Range(b.X(), a.X());
             this.Y = (a.Y() <= b.Y()) ? new Range(a.Y(), b.Y()) : new Range(b.Y(), a.Y());
             this.Z = (a.Z() <= b.Z()) ? new Range(a.Z(), b.Z()) : new Range(b.Z(), a.Z());
+            MinPadding();
         }
 
         // Constructor to merge two bounding boxes
@@ -33,6 +33,7 @@ namespace NackEngine.core.physics.bounding
             this.X = new Range(box1.X, box2.X);
             this.Y = new Range(box1.Y, box2.Y);
             this.Z = new Range(box1.Z, box2.Z);
+            MinPadding();
         }
 
         public Range Axis(int n)
@@ -80,6 +81,13 @@ namespace NackEngine.core.physics.bounding
             else {
                 return Y.Size() > Z.Size() ? 1 : 2;
             }
+        }
+
+        private void MinPadding() {
+            double d = 0.0001;
+            if (X.Size() < d) X = X.Expand(d);
+            if (Y.Size() < d) Y = Y.Expand(d);
+            if (Z.Size() < d) Z = Z.Expand(d);
         }
 
     }

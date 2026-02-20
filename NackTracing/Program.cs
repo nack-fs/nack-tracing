@@ -21,7 +21,9 @@ namespace NackTracing
         {
             //BasicScene();
             //CheckeredSpheres();
-            Earth();
+            //EarthAndMars();
+            //PerlinTest();
+            PlanesScene();
         }
 
         private static void BasicScene() {
@@ -159,7 +161,7 @@ namespace NackTracing
             ShowElapsedTime(sw);
         }
 
-        private static void Earth() {
+        private static void EarthAndMars() {
             HitCollection world = new HitCollection();
 
             var earthTexture = new ImageTexture("EARTH");
@@ -184,6 +186,108 @@ namespace NackTracing
 
             camera.SetLookPoint(
                     new Point(0, 0, 12), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void PerlinTest()
+        {
+            HitCollection world = new HitCollection();
+
+            var perlinTexture = new NoiseTexture(4);
+            var perlinSurface = new Diffuse(perlinTexture);
+
+
+            world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, perlinSurface));
+            world.AddObject(new Sphere(new Point(0, 2, 0), 2, perlinSurface));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(13, 2, 3), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void PlanesScene()
+        {
+            HitCollection world = new HitCollection();
+
+            var dollarTexture = new Diffuse(new ImageTexture("DOLLAR_TEX"));
+
+
+            world.AddObject(new Plane(new Point(-3, -2, 5),
+                    new NVector(0,0,-4),new NVector(0, 4/2, 0),
+                    dollarTexture));
+            world.AddObject(new Plane(new Point(-2, -2, 0),
+                     new NVector(4, 0, 0), new NVector(0, 4/2, 0),
+                     dollarTexture));
+            world.AddObject(new Plane(new Point(3, -2, 1),
+                     new NVector(0, 0, 4),new NVector(0, 4/2, 0),
+                     dollarTexture));
+            world.AddObject(new Plane(new Point(-2, 3, 1),
+                     new NVector(4, 0, 0),new NVector(0, 0, 4/2),
+                     dollarTexture));
+            world.AddObject(new Plane(new Point(-2, -3, 5),
+                    new NVector(4, 0, 0),new NVector(0, 0, -4/2),
+                    dollarTexture));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 80, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(0, 0, 9), // Look point
                     new Point(0, 0, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
