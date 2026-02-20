@@ -19,9 +19,9 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
-            //BasicScene();
+            BasicScene();
             //CheckeredSpheres();
-            Earth();
+            //Earth();
         }
 
         private static void BasicScene() {
