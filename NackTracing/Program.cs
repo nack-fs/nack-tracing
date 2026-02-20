@@ -379,7 +379,8 @@ namespace NackTracing
             var lime = new Diffuse(Color.GREEN_LIME);
             var light = new DiffuseLight(new Color(15, 15, 15));
 
-        
+            // Cornell Box
+
             world.AddObject(new Plane(new Point(555, 0, 0),
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
                 lime));
@@ -404,11 +405,15 @@ namespace NackTracing
                 new NVector(555, 0, 0), new NVector(0, 555, 0),
                 grey));
 
+            // Boxes
+            world.AddObject(new Box(new Point(130,0,65), new Point(295,165,230),grey));
+            world.AddObject(new Box(new Point(265, 0, 295), new Point(430, 330, 460), grey));
+
             // Camera
             Camera camera = new Camera(
                 aspectRatio: 1.0,
                 imageWidth: 600,
-                numSamples: 500,
+                numSamples: 200,
                 maxDepth: 50,
                 fieldView: 40, // Zoom
 
