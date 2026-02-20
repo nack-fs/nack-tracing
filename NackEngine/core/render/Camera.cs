@@ -19,6 +19,7 @@ namespace NackEngine.core.render
         public int imageWidth;
         public int numSamples;
         public int maxDepth;
+        private Color background;
 
         public double fieldView;
         public Point lookPoint = new Point(0,0,0);
@@ -51,6 +52,8 @@ namespace NackEngine.core.render
             this.fieldView = fieldView;
             this.depthFieldAngle = depthFieldAngle;
             this.focusDistance = focusDistance;
+
+            this.background = Color.WHITE;
         }
 
         public void Render(Hittable world) {
@@ -128,25 +131,24 @@ namespace NackEngine.core.render
         }
 
         private Color RayColor(Ray ray, int depth ,Hittable world) {
-            if (depth <= 0) { return new Color(0, 0, 0); }
+            if (depth <= 0) { return Color.BLACK; }
 
             HitStruct hit;
-            if (world.Hit(ray, Range.DEFAULT, out hit))
-            {
-                Ray bounced = default;
-                Color attenuation = default;
-                if (hit.Material.Bounce(ray, hit, out attenuation, out bounced))
-                {
-                    return attenuation * RayColor(bounced, depth - 1, world);
-                }
-                return new Color(0, 0, 0);
+            if (!world.Hit(ray, Range.DEFAULT, out hit)) {
+                return background;
+            }
+            Ray scattered;
+            Color attenuation;
+            bool hasScatter = hit.Material.Bounce(ray, hit, out attenuation, out scattered);
+
+            Color colorEmitted = hit.Material.Emitted(hit.U, hit.V, hit.Point);
+
+            if (!hasScatter) {
+                return colorEmitted;
             }
 
-            NVector unitDirection = NVector.UnitVector(ray.Direction());
-            var a = 0.5 * (unitDirection.Y() + 1.0);
-            Color white = new Color(1.0, 1.0, 1.0);
-            Color lightBlue = new Color(0.5, 0.7, 1.0);
-            return white * (1.0 - a) + lightBlue * a;
+            Color colorScatter = attenuation * RayColor(scattered, depth - 1, world);
+            return colorEmitted + colorScatter;
         }
 
         private Ray GetRay(int x, int y) {
@@ -162,7 +164,6 @@ namespace NackEngine.core.render
         }
 
         private NVector Sample() {
-            // From [-0.5,-0.5] to [0.5,0.5]
             return new NVector(MathSetting.RandomDouble() - 0.5,
                 MathSetting.RandomDouble() - 0.5, 0);
         }
@@ -170,6 +171,10 @@ namespace NackEngine.core.render
         private NVector DepthFieldDisk() {
             var point = MathSetting.RandomUnitDisk();
             return cameraOrigin + (point.X() * defocusDiskU) + (point.Y() * defocusDiskV);
+        }
+
+        public void SetBackgroundColor(Color color) { 
+            this.background = color;
         }
     }
 }

@@ -9,6 +9,7 @@ using NackEngine.core.render;
 using NackEngine.core.space;
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render.textures;
+using NackEngine.core.render.materials.emissive;
 
 
 namespace NackTracing
@@ -23,7 +24,9 @@ namespace NackTracing
             //CheckeredSpheres();
             //EarthAndMars();
             //PerlinTest();
-            PlanesScene();
+            //PlanesScene();
+            LightTest();
+            //CornellBox();
         }
 
         private static void BasicScene() {
@@ -286,9 +289,126 @@ namespace NackTracing
                 depthFieldAngle: 0
             );
 
+            camera.SetBackgroundColor(new Color(0.7,0.8,1.0));
+
             camera.SetLookPoint(
                     new Point(0, 0, 9), // Look point
                     new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void LightTest()
+        {
+            HitCollection world = new HitCollection();
+
+            var perlinTexture = new NoiseTexture(4);
+
+            world.AddObject(new Sphere(
+                new Point(0,-1000,0), 1000,
+                new Diffuse(perlinTexture)));
+
+            world.AddObject(new Sphere(
+                new Point(0, 2, 0), 2,
+                new Diffuse(perlinTexture)));
+
+            var diffuseLight = new DiffuseLight(new Color(4,4,4));
+            world.AddObject(new Sphere(
+                new Point(0, 7, 0), 2,
+                diffuseLight));
+            world.AddObject(new Plane(new Point(3,1,-2),
+                new NVector(2,0,0), new NVector(0, 2, 0), diffuseLight));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            camera.SetLookPoint(
+                    new Point(26, 3, 6), // Look point
+                    new Point(0, 2, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void CornellBox()
+        {
+            HitCollection world = new HitCollection();
+
+            var red = new Diffuse(Color.RED_MODERN);
+            var grey = new Diffuse(Color.GREY_LIGHT);
+            var lime = new Diffuse(Color.GREEN_LIME);
+            var light = new DiffuseLight(new Color(15, 15, 15));
+
+        
+            world.AddObject(new Plane(new Point(555, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                lime));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                red));
+
+            world.AddObject(new Plane(new Point(343, 554, 332),
+                new NVector(-130, 555, 0), new NVector(0, 0, 555),
+                red));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 1080,
+                numSamples: 100,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            camera.SetLookPoint(
+                    new Point(26, 3, 6), // Look point
+                    new Point(0, 2, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
 
