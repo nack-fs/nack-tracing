@@ -1,6 +1,6 @@
-﻿using NackEngine.core.physics;
-using NackEngine.core.space;
+﻿using NackEngine.core.space;
 using Range = NackEngine.core.space.Range;
+using Axis = NackEngine.core.space.NVector.Axis;
 
 namespace NackEngine.core.physics.bounding
 {
@@ -8,13 +8,15 @@ namespace NackEngine.core.physics.bounding
 
     public struct AABBox
     {
-        public Range X, Y, Z;
+        public static AABBox EMPTY = new AABBox(Range.EMPTY, Range.EMPTY, Range.EMPTY);
+        public static AABBox UNIVERSE = new AABBox(Range.UNIVERSE, Range.UNIVERSE, Range.UNIVERSE);
 
-        public AABBox() { }
+        public Range X, Y, Z;
 
         public AABBox(Range X, Range Y, Range Z)
         {
             this.X = X; this.Y = Y; this.Z = Z;
+            MinPadding();
         }
 
         public AABBox(Point a, Point b)
@@ -22,20 +24,24 @@ namespace NackEngine.core.physics.bounding
             this.X = (a.X() <= b.X()) ? new Range(a.X(), b.X()) : new Range(b.X(), a.X());
             this.Y = (a.Y() <= b.Y()) ? new Range(a.Y(), b.Y()) : new Range(b.Y(), a.Y());
             this.Z = (a.Z() <= b.Z()) ? new Range(a.Z(), b.Z()) : new Range(b.Z(), a.Z());
+            MinPadding();
         }
 
-        // Constructor to merge two bounding boxes
         public AABBox(AABBox box1, AABBox box2)
         {
             this.X = new Range(box1.X, box2.X);
             this.Y = new Range(box1.Y, box2.Y);
             this.Z = new Range(box1.Z, box2.Z);
+            MinPadding();
         }
 
-        public Range Axis(int n)
+        public Range GetRangeAxis(Axis axis) => axis switch
         {
-            return (n == 1) ? Y : ((n == 2) ? Z : X);
-        }
+            Axis.X => this.X,
+            Axis.Y => this.Y,
+            Axis.Z => this.Z,
+            _ => throw new ArgumentException()
+        };
 
         public bool Hit(Ray ray, Range rayT)
         {
@@ -47,14 +53,17 @@ namespace NackEngine.core.physics.bounding
 
             for (int ax = 0; ax < 3; ax++)
             {
-                Range axis = Axis(ax);
-                double invD = 1.0 / rayDirection.GetComponent(ax);
-                double origin = rayOrigin.GetComponent(ax);
+                Axis axis = (Axis)ax;
+                Range rangeAxis = GetRangeAxis(axis);
 
-                double t0 = (axis.Min() - origin) * invD;
-                double t1 = (axis.Max() - origin) * invD;
+                double invD = 1.0 / rayDirection.GetComponent(axis);
+                double origin = rayOrigin.GetComponent(axis);
 
-                if (invD < 0.0f) {
+                double t0 = (rangeAxis.Min() - origin) * invD;
+                double t1 = (rangeAxis.Max() - origin) * invD;
+
+                if (invD < 0.0f)
+                {
                     (t0, t1) = (t1, t0);
                 }
 
@@ -68,6 +77,30 @@ namespace NackEngine.core.physics.bounding
             }
             return true;
         }
+
+        public int LongestAxis()
+        {
+            if (X.Size() < Y.Size())
+            {
+                return X.Size() > Z.Size() ? 0 : 2;
+            }
+            else
+            {
+                return Y.Size() > Z.Size() ? 1 : 2;
+            }
+        }
+
+        private void MinPadding()
+        {
+            double d = 0.0001;
+            if (X.Size() < d) X = X.Expand(d);
+            if (Y.Size() < d) Y = Y.Expand(d);
+            if (Z.Size() < d) Z = Z.Expand(d);
+        }
+
+
+        public static AABBox operator +(AABBox aabbox, NVector offset) =>
+            new AABBox(aabbox.X + offset.X(), aabbox.Y + offset.Y(), aabbox.Z + offset.Z());
 
     }
 }

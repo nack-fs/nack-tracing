@@ -8,6 +8,8 @@ namespace NackEngine.core.space
         double y;
         double z;
 
+        public enum Axis { X, Y, Z}
+
         public NVector(double x, double y, double z)
         {
             this.x = x;
@@ -69,12 +71,21 @@ namespace NackEngine.core.space
                 MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
         }
 
-        public double GetComponent(int index) => index switch
+        public double GetComponent(Axis axis) => axis switch
         {
-            0 => x,
-            1 => y,
-            2 => z,
+            Axis.X => x,
+            Axis.Y => y,
+            Axis.Z => z,
             _ => throw new IndexOutOfRangeException()
         };
+
+        public NVector Rotate(double sinTheta, double cosTheta, Axis axis) => axis switch
+        {
+            Axis.X => new NVector(x, cosTheta * y - sinTheta * z, sinTheta * y + cosTheta * z),
+            Axis.Y => new NVector(cosTheta * x + sinTheta * z, y, -sinTheta * x + cosTheta * z),
+            Axis.Z => new NVector(cosTheta * x - sinTheta * y, sinTheta * x + cosTheta * y, z),
+            _ => throw new IndexOutOfRangeException()
+        };
+
     }
 }

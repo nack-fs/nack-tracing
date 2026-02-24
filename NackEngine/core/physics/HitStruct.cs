@@ -13,8 +13,12 @@ namespace NackEngine.core.physics
         public NVector Normal { get; set; }
         public double T { get; set; }
 
-        public bool FrontFace { get; set; }
+        // Cordinates 2D (U, V)
+        public double U { get; set; }
 
+        public double V { get; set; }
+
+        public bool FrontFace { get; set; }
         public Material Material { get; set; }
 
         public void setFaceNormal(Ray ray, NVector owNormal) {
