@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NackEngine.core.space
+﻿namespace NackEngine.core.space
 {
     public class Range
     {
@@ -19,8 +15,9 @@ namespace NackEngine.core.space
             this.min = double.MinValue; this.max = double.MaxValue;
         }
 
-        public Range(double min, double max) {
-            this.min = min; this.max=max;
+        public Range(double min, double max)
+        {
+            this.min = min; this.max = max;
         }
 
         public Range(Range a, Range b)
@@ -29,27 +26,33 @@ namespace NackEngine.core.space
             this.max = Math.Max(a.Max(), b.Max());
         }
 
-        public double Size() {
+        public double Size()
+        {
             return max - min;
         }
 
-        public bool Contains(double z) { 
+        public bool Contains(double z)
+        {
             return min <= z && z <= max;
         }
 
-        public bool Surrounds(double z) {
+        public bool Surrounds(double z)
+        {
             return min < z && z < max;
         }
 
-        public double Min() {
+        public double Min()
+        {
             return min;
         }
 
-        public double Max() {
+        public double Max()
+        {
             return max;
         }
 
-        public void SetMin(double min) {
+        public void SetMin(double min)
+        {
             this.min = min;
         }
 
@@ -65,9 +68,13 @@ namespace NackEngine.core.space
             return x;
         }
 
-        public Range Expand(double delta) {
+        public Range Expand(double delta)
+        {
             var padding = delta / 2;
             return new Range(min - padding, max + padding);
         }
+
+        public static Range operator +(Range range, double displacement) =>
+            new Range(range.min + displacement, range.max + displacement);
     }
 }

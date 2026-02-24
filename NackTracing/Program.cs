@@ -1,19 +1,22 @@
-﻿using System.Text;
-using System.IO;
-using NackEngine.objects;
-using Range = NackEngine.core.space.Range;
-using NackEngine.core.render.materials;
-using System.Diagnostics;
-using NackEngine.math;
-using NackEngine.core.render;
-using NackEngine.core.space;
+﻿using NackEngine.core.physics;
 using NackEngine.core.physics.bounding;
-using NackEngine.core.render.textures;
+using NackEngine.core.render;
+using NackEngine.core.render.materials;
 using NackEngine.core.render.materials.emissive;
+using NackEngine.core.render.textures;
+using NackEngine.core.space;
+using NackEngine.math;
+using NackEngine.objects;
+using NackEngine.objects.modifiers;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using Range = NackEngine.core.space.Range;
 
 
 namespace NackTracing
 {
+    using static NackEngine.core.space.NVector;
     using Point = NVector;
 
     internal class Program
@@ -406,8 +409,15 @@ namespace NackTracing
                 grey));
 
             // Boxes
-            world.AddObject(new Box(new Point(130,0,65), new Point(295,165,230),grey));
-            world.AddObject(new Box(new Point(265, 0, 295), new Point(430, 330, 460), grey));
+            Hittable box1 = new Box(new Point(0, 0, 0), new Point(165, 330, 165), grey);
+            box1 = new Rotate(box1, 15.0, Axis.Y);
+            box1 = new Translate(box1, new Point(265, 0, 295));
+            world.AddObject(box1);
+
+            Hittable box2 = new Box(new Point(0, 0, 0), new Point(165, 165, 165), grey);
+            box2 = new Rotate(box2, -18.0, Axis.Y);
+            box2 = new Translate(box2, new Point(130, 0, 65));
+            world.AddObject(box2);
 
             // Camera
             Camera camera = new Camera(
