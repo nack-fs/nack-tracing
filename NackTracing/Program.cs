@@ -31,7 +31,9 @@ namespace NackTracing
             //PlanesScene();
             //LightTest();
             //CornellBox();
-            CornellSmoke();
+            //CornellSmoke();
+            //FinalScene(800, 10000, 40);
+            FinalScene(400, 250, 4);
         }
 
         private static void BasicScene() {
@@ -516,6 +518,106 @@ namespace NackTracing
 
             camera.SetLookPoint(
                     new Point(278, 278, -800), // Look point
+                    new Point(278, 278, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void FinalScene(int imageWidth, int numSamples, int maxDepth)
+        {
+            HitCollection boxes = new HitCollection();
+            var ground = new Diffuse(new Color(0.48, 0.83, 0.53));
+
+            int numBoxes = 20;
+            for (int i = 0; i < numBoxes; i++) {
+                for (int j = 0; j < numBoxes; j++) {
+                    var w = 100.0;
+                    var x0 = -1000.0 + i * w;
+                    var z0 = -1000.0 + j * w;
+                    var y0 = 0.0;
+                    var x1 = x0 + w;
+                    var y1 = MathSetting.RandomDouble(1, 101);
+                    var z1 = z0 + w;
+
+                    boxes.AddObject(new Box(new Point(x0, y0, z0), new Point(x1, y1, z1), ground));
+                }
+            }
+
+            HitCollection world = new HitCollection();
+
+            world.AddObject(new BVHNode(boxes));
+
+            var light = new DiffuseLight(new Color(7, 7, 7));
+            world.AddObject(new Plane(new Point(123,554,147),
+                    new NVector(300,0,0), new NVector(0,0,265), light
+                ));
+
+            var center1 = new Point(400, 400, 200);
+            var center2 = center1 + new NVector(30, 0, 0);
+            var sphereMaterial = new Diffuse(new Color(0.7, 0.3, 0.1));
+            world.AddObject(new Sphere(center1, center2, 50, sphereMaterial));
+
+            world.AddObject(new Sphere(new Point(260, 150, 45), 50, new Dielectric(1.5)));
+            world.AddObject(new Sphere(
+                new Point(0, 150, 145), 50, new Metal(new Color(0.8, 0.8, 0.9), 1.0)
+            ));
+
+            var boundary = new Sphere(new Point(360, 150, 145), 70, new Dielectric(1.5));
+            world.AddObject(boundary);
+            world.AddObject(new ConstantVolume(boundary, 0.2, new Color(0.2, 0.4, 0.9)));
+
+            var boundary2 = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
+            world.AddObject(new ConstantVolume(boundary2, 0.0001, new Color(1, 1, 1)));
+
+            var earthMat = new Diffuse(new ImageTexture("EARTH"));
+            world.AddObject(new Sphere(new Point(400, 200, 400), 100, earthMat));
+
+            var perlinTexture = new NoiseTexture(0.1);
+            world.AddObject(new Sphere(new Point(220, 280, 300), 80, new Diffuse(perlinTexture)));
+
+            HitCollection boxes2 = new HitCollection();
+            var white = new Diffuse(new Color(0.73, 0.73, 0.73));
+            int ns = 1000;
+            for (int j = 0; j < ns; j++)
+            {
+                boxes2.AddObject(new Sphere(NVector.Random(0, 165), 10, white));
+            }
+
+            Hittable boxNode = new BVHNode(boxes2);
+            Hittable rotatedBox = new Rotate(boxNode, 15, Axis.Y);
+            Hittable translatedBox = new Translate(rotatedBox, new NVector(-100, 270, 395));
+
+            world.AddObject(translatedBox);
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: imageWidth,
+                numSamples: numSamples,
+                maxDepth: maxDepth,
+                fieldView: 40, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(478, 278, -600), // Look point
                     new Point(278, 278, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
