@@ -8,6 +8,7 @@ using NackEngine.core.space;
 using NackEngine.math;
 using NackEngine.objects;
 using NackEngine.objects.modifiers;
+using NackEngine.objects.volumes;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -29,7 +30,8 @@ namespace NackTracing
             //PerlinTest();
             //PlanesScene();
             //LightTest();
-            CornellBox();
+            //CornellBox();
+            CornellSmoke();
         }
 
         private static void BasicScene() {
@@ -418,6 +420,87 @@ namespace NackTracing
             box2 = new Rotate(box2, -18.0, Axis.Y);
             box2 = new Translate(box2, new Point(130, 0, 65));
             world.AddObject(box2);
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: 600,
+                numSamples: 200,
+                maxDepth: 50,
+                fieldView: 40, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetLookPoint(
+                    new Point(278, 278, -800), // Look point
+                    new Point(278, 278, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void CornellSmoke() {
+            HitCollection world = new HitCollection();
+
+            var red = new Diffuse(Color.RED_MODERN);
+            var grey = new Diffuse(Color.GREY_LIGHT);
+            var lime = new Diffuse(Color.GREEN_LIME);
+            var light = new DiffuseLight(new Color(7, 7, 7));
+
+            // Cornell Box
+
+            world.AddObject(new Plane(new Point(555, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                lime));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                red));
+
+            world.AddObject(new Plane(new Point(113, 554, 127),
+                new NVector(330, 0, 0), new NVector(0, 0, 305),
+                light));
+
+            world.AddObject(new Plane(new Point(0, 555, 0),
+                new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(0, 0, 555),
+                new NVector(555, 0, 0), new NVector(0, 555, 0),
+                grey));
+
+
+            // Boxes
+            Hittable box1 = new Box(new Point(0, 0, 0), new Point(160, 330, 165), grey);
+            box1 = new Rotate(box1, 15.0, Axis.Y);
+            box1 = new Translate(box1, new Point(265, 0, 295));
+
+            Hittable box2 = new Box(new Point(0, 0, 0), new Point(165, 165, 165), grey);
+            box2 = new Rotate(box2, -18.0, Axis.Y);
+            box2 = new Translate(box2, new Point(130, 0, 65));
+
+            world.AddObject(new ConstantVolume(box1, 0.01, Color.BLACK));
+            world.AddObject(new ConstantVolume(box1, 0.01, Color.WHITE));
 
             // Camera
             Camera camera = new Camera(
