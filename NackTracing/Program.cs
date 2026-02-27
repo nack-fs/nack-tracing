@@ -24,16 +24,19 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+
             //BasicScene();
             //CheckeredSpheres();
             //EarthAndMars();
             //PerlinTest();
             //PlanesScene();
             //LightTest();
-            //CornellBox();
+            CornellBox();
             //CornellSmoke();
-            //FinalScene(800, 10000, 40);
-            FinalScene(400, 250, 4);
+            //FinalScene(800, 1000, 20);
+            //FinalScene(400, 250, 4);
+            //FinalScene(250, 50, 4);
         }
 
         private static void BasicScene() {
@@ -541,7 +544,7 @@ namespace NackTracing
         private static void FinalScene(int imageWidth, int numSamples, int maxDepth)
         {
             HitCollection boxes = new HitCollection();
-            var ground = new Diffuse(new Color(0.48, 0.83, 0.53));
+            var ground = new Diffuse(new Color("#C2E2FA"));
 
             int numBoxes = 20;
             for (int i = 0; i < numBoxes; i++) {
@@ -569,7 +572,7 @@ namespace NackTracing
 
             var center1 = new Point(400, 400, 200);
             var center2 = center1 + new NVector(30, 0, 0);
-            var sphereMaterial = new Diffuse(new Color(0.7, 0.3, 0.1));
+            var sphereMaterial = new Diffuse(new Color("#FF5B5B"));
             world.AddObject(new Sphere(center1, center2, 50, sphereMaterial));
 
             world.AddObject(new Sphere(new Point(260, 150, 45), 50, new Dielectric(1.5)));
@@ -581,21 +584,22 @@ namespace NackTracing
             world.AddObject(boundary);
             world.AddObject(new ConstantVolume(boundary, 0.2, new Color(0.2, 0.4, 0.9)));
 
-            var boundary2 = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
-            world.AddObject(new ConstantVolume(boundary2, 0.0001, new Color(1, 1, 1)));
+            boundary = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
+            world.AddObject(new ConstantVolume(boundary, 0.0001, Color.WHITE));
 
-            var earthMat = new Diffuse(new ImageTexture("EARTH"));
+            var earthMat = new Diffuse(new ImageTexture("MARS"));
             world.AddObject(new Sphere(new Point(400, 200, 400), 100, earthMat));
 
             var perlinTexture = new NoiseTexture(0.1);
             world.AddObject(new Sphere(new Point(220, 280, 300), 80, new Diffuse(perlinTexture)));
 
             HitCollection boxes2 = new HitCollection();
-            var white = new Diffuse(new Color(0.73, 0.73, 0.73));
+            var fuzz = MathSetting.RandomDouble(0, 0.5);
+            var gold = new Metal(Color.GOLD, fuzz);
             int ns = 1000;
             for (int j = 0; j < ns; j++)
             {
-                boxes2.AddObject(new Sphere(NVector.Random(0, 165), 10, white));
+                boxes2.AddObject(new Sphere(NVector.Random(0, 165), 10, gold));
             }
 
             Hittable boxNode = new BVHNode(boxes2);
