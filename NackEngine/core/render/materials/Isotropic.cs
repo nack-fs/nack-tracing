@@ -1,6 +1,7 @@
 ﻿using NackEngine.core.physics;
 using NackEngine.core.render.textures;
 using NackEngine.math;
+using NackEngine.math.probdensities;
 
 namespace NackEngine.core.render.materials
 {
@@ -18,11 +19,20 @@ namespace NackEngine.core.render.materials
             this.texture = new SolidColor(albedo);
         }
 
-        public bool Bounce(Ray ray, HitStruct hit, out Color attenuation, out Ray bounced)
+        public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)
         {
-            bounced = new Ray(hit.Point, MathSetting.RandomUnitVector(), ray.Time());
-            attenuation = texture.Value(hit.U, hit.V, hit.Point);
+            scatter = new ScatterStruct();
+            scatter.Attenuation = texture.Value(hit.U, hit.V, hit.Point);
+            scatter.ProbDensity = new SphereProbDensity();
+            scatter.SkipProb = false;
+            scatter.Bounced = default;
+
             return true;
+        }
+
+        public double Scatter(Ray ray, HitStruct hit, Ray scattered)
+        {
+            return 1.0 / (4.0 * Math.PI);
         }
     }
 }

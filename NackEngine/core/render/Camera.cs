@@ -1,5 +1,6 @@
 ﻿using ExportConfig;
 using NackEngine.core.physics;
+using NackEngine.core.render.materials;
 using NackEngine.core.space;
 using NackEngine.math;
 using System;
@@ -170,18 +171,34 @@ namespace NackEngine.core.render
             if (!world.Hit(ray, Range.DEFAULT, out hit)) {
                 return background;
             }
-            Ray scattered;
-            Color attenuation;
-            bool hasScatter = hit.Material.Bounce(ray, hit, out attenuation, out scattered);
-
             Color colorEmitted = hit.Material.Emitted(hit.U, hit.V, hit.Point);
+
+            ScatterStruct scatter;
+            bool hasScatter = hit.Material.Bounce(ray, hit, out scatter);
 
             if (!hasScatter) {
                 return colorEmitted;
             }
 
-            Color colorScatter = attenuation * RayColor(scattered, depth - 1, world);
-            return colorEmitted + colorScatter;
+            if (scatter.SkipProb)
+            {
+                Color colorScatter = scatter.Attenuation * RayColor(scatter.Bounced, depth - 1, world);
+                return colorEmitted + colorScatter;
+            }
+            else {
+                NVector direction = scatter.ProbDensity.Generate();
+                Ray scattered = new Ray(hit.Point, direction, ray.Time());
+
+                double probability = scatter.ProbDensity.Value(scattered.Direction());
+                if (probability <= 0) { return colorEmitted; }
+                double scatterpdf = hit.Material.Scatter(ray, hit, scattered);
+
+                Color sampleColor = RayColor(scattered, depth - 1, world);
+                Color colorScatter = (scatter.Attenuation * scatterpdf * sampleColor) * (1.0 / probability);
+                return colorEmitted + colorScatter;
+            }
+
+            
         }
 
         private Ray GetRay(int x, int y, int gridX, int gridY) {

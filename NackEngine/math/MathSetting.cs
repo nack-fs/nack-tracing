@@ -54,5 +54,18 @@ namespace NackEngine.math
                 }
             }
         }
+
+        public static NVector RandomCosineDirection()
+        {
+            var r1 = MathSetting.RandomDouble();
+            var r2 = MathSetting.RandomDouble();
+            var z = Math.Sqrt(1 - r2);
+
+            var phi = 2 * Math.PI * r1;
+            var x = Math.Cos(phi) * Math.Sqrt(r2);
+            var y = Math.Sin(phi) * Math.Sqrt(r2);
+
+            return new NVector(x, y, z);
+        }
     }
 }
