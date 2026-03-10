@@ -108,6 +108,13 @@ namespace NackEngine.core.render
             return new Color(a.vector + b.vector);
         }
 
-
+        public Color Clamp(double min, double max)
+        {
+            return new Color(
+                Math.Clamp(this.vector.X(), min, max),
+                Math.Clamp(this.vector.Y(), min, max),
+                Math.Clamp(this.vector.Z(), min, max)
+            );
+        }
     }
 }

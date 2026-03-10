@@ -1,6 +1,7 @@
 ﻿using NackEngine.core.space;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace NackEngine.math
@@ -53,6 +54,19 @@ namespace NackEngine.math
                     return p;
                 }
             }
+        }
+
+        public static NVector RandomCosineDirection()
+        {
+            var r1 = MathSetting.RandomDouble();
+            var r2 = MathSetting.RandomDouble();
+            var z = Math.Sqrt(1 - r2);
+
+            var phi = 2 * Math.PI * r1;
+            var x = Math.Cos(phi) * Math.Sqrt(r2);
+            var y = Math.Sin(phi) * Math.Sqrt(r2);
+
+            return new NVector(x, y, z);
         }
     }
 }
