@@ -1,4 +1,5 @@
 ﻿using NackEngine.core.physics;
+using NackEngine.core.render.materials;
 using NackEngine.core.space;
 
 namespace NackEngine.core.render
@@ -7,8 +8,11 @@ namespace NackEngine.core.render
 
     public interface Material
     {
-        public bool Bounce(Ray ray, HitStruct hit, out Color attenuation,
-            out Ray bounced);
+        public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter);
+
+        public double ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
+            return 0;
+        }
 
         public Color Emitted(double u, double v, Point point)
         {

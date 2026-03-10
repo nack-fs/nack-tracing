@@ -17,9 +17,13 @@ namespace NackEngine.core.render.materials
             this.indexRefraction = indexRefraction;
         }
 
-        public bool Bounce(Ray ray, HitStruct hit, out Color attenuation, out Ray bounced)
+        public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)
         {
-            attenuation = new Color(1.0,1.0,1.0);
+            scatter = new ScatterStruct();
+            scatter.Attenuation = new Color(1.0,1.0,1.0);
+            scatter.SkipProb = true;
+            scatter.ProbDensity = null;
+
             double ri = hit.FrontFace ? (1.0 / indexRefraction) : indexRefraction;
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
@@ -36,7 +40,7 @@ namespace NackEngine.core.render.materials
             else {
                 direction = RayPhysics.Reflect(unitDirection, hit.Normal);
             }
-            bounced = new Ray(hit.Point, direction, ray.Time());
+            scatter.Bounced = new Ray(hit.Point, direction, ray.Time());
             return true;
         }
 

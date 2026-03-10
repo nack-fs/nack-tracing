@@ -8,6 +8,7 @@ using NackEngine.core.space;
 using NackEngine.math;
 using NackEngine.objects;
 using NackEngine.objects.modifiers;
+using NackEngine.objects.volumes;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -23,6 +24,8 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+
             //BasicScene();
             //CheckeredSpheres();
             //EarthAndMars();
@@ -30,6 +33,10 @@ namespace NackTracing
             //PlanesScene();
             //LightTest();
             CornellBox();
+            //CornellSmoke();
+            //FinalScene(800, 1000, 20);
+            //FinalScene(400, 250, 4);
+            //FinalScene(250, 50, 4);
         }
 
         private static void BasicScene() {
@@ -392,9 +399,11 @@ namespace NackTracing
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
                 red));
 
-            world.AddObject(new Plane(new Point(343, 554, 332),
+            var planeLight = new Plane(new Point(343, 554, 332),
                 new NVector(-130, 0, 0), new NVector(0, 0, -105),
-                light));
+                light);
+
+            world.AddObject(planeLight);
 
             world.AddObject(new Plane(new Point(0, 0, 0),
                 new NVector(555, 0, 0), new NVector(0, 0, 555),
@@ -430,6 +439,88 @@ namespace NackTracing
                 // Depth of field
                 depthFieldAngle: 0
             );
+            camera.SetBackgroundColor(Color.BLACK);
+
+            camera.SetLookPoint(
+                    new Point(278, 278, -800), // Look point
+                    new Point(278, 278, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld, planeLight);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void CornellSmoke() {
+            HitCollection world = new HitCollection();
+
+            var red = new Diffuse(Color.RED_MODERN);
+            var grey = new Diffuse(Color.GREY_LIGHT);
+            var lime = new Diffuse(Color.GREEN_LIME);
+            var light = new DiffuseLight(new Color(7, 7, 7));
+
+            // Cornell Box
+
+            world.AddObject(new Plane(new Point(555, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                lime));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(0, 555, 0), new NVector(0, 0, 555),
+                red));
+
+            world.AddObject(new Plane(new Point(113, 554, 127),
+                new NVector(330, 0, 0), new NVector(0, 0, 305),
+                light));
+
+            world.AddObject(new Plane(new Point(0, 555, 0),
+                new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(0, 0, 0),
+                new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(0, 0, 555),
+                new NVector(555, 0, 0), new NVector(0, 555, 0),
+                grey));
+
+
+            // Boxes
+            Hittable box1 = new Box(new Point(0, 0, 0), new Point(160, 330, 165), grey);
+            box1 = new Rotate(box1, 15.0, Axis.Y);
+            box1 = new Translate(box1, new Point(265, 0, 295));
+
+            Hittable box2 = new Box(new Point(0, 0, 0), new Point(165, 165, 165), grey);
+            box2 = new Rotate(box2, -18.0, Axis.Y);
+            box2 = new Translate(box2, new Point(130, 0, 65));
+
+            world.AddObject(new ConstantVolume(box1, 0.01, Color.BLACK));
+            world.AddObject(new ConstantVolume(box1, 0.01, Color.WHITE));
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: 600,
+                numSamples: 200,
+                maxDepth: 50,
+                fieldView: 40, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
 
             camera.SetLookPoint(
                     new Point(278, 278, -800), // Look point
@@ -448,6 +539,110 @@ namespace NackTracing
             var bvhWorld = new BVHNode(world);
 
             camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+        }
+
+        private static void FinalScene(int imageWidth, int numSamples, int maxDepth)
+        {
+            HitCollection boxes = new HitCollection();
+            var ground = new Diffuse(new Color("#C2E2FA"));
+
+            int numBoxes = 20;
+            for (int i = 0; i < numBoxes; i++) {
+                for (int j = 0; j < numBoxes; j++) {
+                    var w = 100.0;
+                    var x0 = -1000.0 + i * w;
+                    var z0 = -1000.0 + j * w;
+                    var y0 = 0.0;
+                    var x1 = x0 + w;
+                    var y1 = MathSetting.RandomDouble(1, 101);
+                    var z1 = z0 + w;
+
+                    boxes.AddObject(new Box(new Point(x0, y0, z0), new Point(x1, y1, z1), ground));
+                }
+            }
+
+            HitCollection world = new HitCollection();
+
+            world.AddObject(new BVHNode(boxes));
+
+            var light = new DiffuseLight(new Color(7, 7, 7));
+            var planeLight = new Plane(new Point(123, 554, 147),
+                    new NVector(300, 0, 0), new NVector(0, 0, 265), light
+            );
+            world.AddObject(planeLight);
+
+            var center1 = new Point(400, 400, 200);
+            var center2 = center1 + new NVector(30, 0, 0);
+            var sphereMaterial = new Diffuse(new Color("#FF5B5B"));
+            world.AddObject(new Sphere(center1, center2, 50, sphereMaterial));
+
+            world.AddObject(new Sphere(new Point(260, 150, 45), 50, new Dielectric(1.5)));
+            world.AddObject(new Sphere(
+                new Point(0, 150, 145), 50, new Metal(new Color(0.8, 0.8, 0.9), 1.0)
+            ));
+
+            var boundary = new Sphere(new Point(360, 150, 145), 70, new Dielectric(1.5));
+            world.AddObject(boundary);
+            world.AddObject(new ConstantVolume(boundary, 0.2, new Color(0.2, 0.4, 0.9)));
+
+            boundary = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
+            world.AddObject(new ConstantVolume(boundary, 0.0001, Color.WHITE));
+
+            var earthMat = new Diffuse(new ImageTexture("MARS"));
+            world.AddObject(new Sphere(new Point(400, 200, 400), 100, earthMat));
+
+            var perlinTexture = new NoiseTexture(0.1);
+            world.AddObject(new Sphere(new Point(220, 280, 300), 80, new Diffuse(perlinTexture)));
+
+            HitCollection boxes2 = new HitCollection();
+            var fuzz = MathSetting.RandomDouble(0, 0.5);
+            var gold = new Metal(Color.GOLD, fuzz);
+            int ns = 1000;
+            for (int j = 0; j < ns; j++)
+            {
+                boxes2.AddObject(new Sphere(NVector.Random(0, 165), 10, gold));
+            }
+
+            Hittable boxNode = new BVHNode(boxes2);
+            Hittable rotatedBox = new Rotate(boxNode, 15, Axis.Y);
+            Hittable translatedBox = new Translate(rotatedBox, new NVector(-100, 270, 395));
+
+            world.AddObject(translatedBox);
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 1.0,
+                imageWidth: imageWidth,
+                numSamples: numSamples,
+                maxDepth: maxDepth,
+                fieldView: 40, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            camera.SetLookPoint(
+                    new Point(478, 278, -600), // Look point
+                    new Point(278, 278, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            camera.Render(bvhWorld, planeLight);
 
             sw.Stop();
             ShowElapsedTime(sw);

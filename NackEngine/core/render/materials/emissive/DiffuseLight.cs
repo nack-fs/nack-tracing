@@ -21,10 +21,9 @@ namespace NackEngine.core.render.materials.emissive
             this.texture = new SolidColor(emit);
         }
 
-        public bool Bounce(Ray ray, HitStruct hit, out Color attenuation, out Ray bounced)
+        public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)
         {
-            attenuation = default;
-            bounced = default;
+            scatter = default;
             return false;
         }
 

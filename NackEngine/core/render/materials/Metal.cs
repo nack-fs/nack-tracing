@@ -19,13 +19,19 @@ namespace NackEngine.core.render.materials
             this.fuzz = Math.Min(fuzz, 1);
         }
 
-        public bool Bounce(Ray ray, HitStruct hit, out Color attenuation, out Ray bounced)
+        public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)
         {
+            scatter = new ScatterStruct();
+            scatter.SkipProb = true;
+            scatter.ProbDensity = null;
+
+            scatter.Attenuation = albedo;
+
             NVector reflected = RayPhysics.Reflect(ray.Direction(), hit.Normal);
             reflected = NVector.UnitVector(reflected) + (fuzz * MathSetting.RandomUnitVector());
-            bounced = new Ray(hit.Point, reflected, ray.Time());
-            attenuation = albedo;
-            return (NVector.Dot(bounced.Direction(), hit.Normal)>0); 
+            scatter.Bounced = new Ray(hit.Point, reflected, ray.Time());
+            
+            return (NVector.Dot(scatter.Bounced.Direction(), hit.Normal)>0); 
         }
     }
 }
