@@ -26,13 +26,13 @@ namespace NackTracing
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
-            BasicScene();
+            //BasicScene();
             //CheckeredSpheres();
             //EarthAndMars();
             //PerlinTest();
             //PlanesScene();
             //LightTest();
-            //CornellBox();
+            CornellBox();
             //CornellSmoke();
             //FinalScene(800, 1000, 20);
             //FinalScene(400, 250, 4);
