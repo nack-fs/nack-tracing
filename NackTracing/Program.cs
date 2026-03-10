@@ -26,13 +26,13 @@ namespace NackTracing
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
-            //BasicScene();
+            BasicScene();
             //CheckeredSpheres();
             //EarthAndMars();
             //PerlinTest();
             //PlanesScene();
             //LightTest();
-            CornellBox();
+            //CornellBox();
             //CornellSmoke();
             //FinalScene(800, 1000, 20);
             //FinalScene(400, 250, 4);
@@ -399,9 +399,11 @@ namespace NackTracing
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
                 red));
 
-            world.AddObject(new Plane(new Point(343, 554, 332),
+            var planeLight = new Plane(new Point(343, 554, 332),
                 new NVector(-130, 0, 0), new NVector(0, 0, -105),
-                light));
+                light);
+
+            world.AddObject(planeLight);
 
             world.AddObject(new Plane(new Point(0, 0, 0),
                 new NVector(555, 0, 0), new NVector(0, 0, 555),
@@ -437,6 +439,7 @@ namespace NackTracing
                 // Depth of field
                 depthFieldAngle: 0
             );
+            camera.SetBackgroundColor(Color.BLACK);
 
             camera.SetLookPoint(
                     new Point(278, 278, -800), // Look point
@@ -454,7 +457,7 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            camera.Render(bvhWorld, planeLight);
 
             sw.Stop();
             ShowElapsedTime(sw);
@@ -566,9 +569,10 @@ namespace NackTracing
             world.AddObject(new BVHNode(boxes));
 
             var light = new DiffuseLight(new Color(7, 7, 7));
-            world.AddObject(new Plane(new Point(123,554,147),
-                    new NVector(300,0,0), new NVector(0,0,265), light
-                ));
+            var planeLight = new Plane(new Point(123, 554, 147),
+                    new NVector(300, 0, 0), new NVector(0, 0, 265), light
+            );
+            world.AddObject(planeLight);
 
             var center1 = new Point(400, 400, 200);
             var center2 = center1 + new NVector(30, 0, 0);
@@ -620,6 +624,8 @@ namespace NackTracing
                 depthFieldAngle: 0
             );
 
+            camera.SetBackgroundColor(Color.BLACK);
+
             camera.SetLookPoint(
                     new Point(478, 278, -600), // Look point
                     new Point(278, 278, 0), // Look target
@@ -636,7 +642,7 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            camera.Render(bvhWorld, planeLight);
 
             sw.Stop();
             ShowElapsedTime(sw);

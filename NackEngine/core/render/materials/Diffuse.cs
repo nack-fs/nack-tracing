@@ -32,7 +32,7 @@ namespace NackEngine.core.render.materials
             return true;
         }
 
-        public double Scatter(Ray ray, HitStruct hit, Ray scattered) {
+        public double ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
             var cos = NVector.Dot(hit.Normal, NVector.UnitVector(scattered.Direction()));
             return (cos < 0) ? 0 : cos / Math.PI;
         }

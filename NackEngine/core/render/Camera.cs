@@ -3,6 +3,7 @@ using NackEngine.core.physics;
 using NackEngine.core.render.materials;
 using NackEngine.core.space;
 using NackEngine.math;
+using NackEngine.math.probdensities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,6 +22,7 @@ namespace NackEngine.core.render
         public int numSamples;
         public int maxDepth;
         private Color background;
+        private double maxIntensity;
 
         public double fieldView;
         public Point lookPoint = new Point(0,0,0);
@@ -43,11 +45,12 @@ namespace NackEngine.core.render
         private NVector defocusDiskV;
         private int sqrtSPP;
         private double invSqrtSPP;
+        private bool defaultBackground = true;
 
 
         public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
             int numSamples = 10, int maxDepth = 10, double fieldView = 90,
-            double depthFieldAngle = 0, double focusDistance = 10)
+            double depthFieldAngle = 0, double focusDistance = 10, double maxIntensity = 5.0)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
@@ -56,11 +59,12 @@ namespace NackEngine.core.render
             this.fieldView = fieldView;
             this.depthFieldAngle = depthFieldAngle;
             this.focusDistance = focusDistance;
+            this.maxIntensity = maxIntensity;
 
-            this.background = Color.BLACK;
+            this.background = Color.WHITE;
         }
 
-        public void Render(Hittable world)
+        public void Render(Hittable world, Hittable lights = null)
         {
             Initialize();
             Color[] pixelColors = new Color[imageWidth * imageHeight];
@@ -76,7 +80,7 @@ namespace NackEngine.core.render
                     for (int gridY = 0; gridY < sqrtSPP; gridY++) {
                         for (int gridX = 0; gridX < sqrtSPP; gridX++) {
                             Ray ray = GetRay(x, y, gridX, gridY);
-                            pixelColor += RayColor(ray, maxDepth, world);
+                            pixelColor += RayColor(ray, maxDepth, world, lights);
                         }
                     }
                     pixelColors[y * imageWidth + x] = pixelColor * samplesScale;
@@ -164,12 +168,18 @@ namespace NackEngine.core.render
             this.vup = vup;
         }
 
-        private Color RayColor(Ray ray, int depth ,Hittable world) {
+        private Color RayColor(Ray ray, int depth ,Hittable world, Hittable lights = null) {
             if (depth <= 0) { return Color.BLACK; }
 
             HitStruct hit;
-            if (!world.Hit(ray, Range.DEFAULT, out hit)) {
-                return background;
+            if (!world.Hit(ray, Range.DEFAULT, out hit))
+            {
+                if (defaultBackground) {
+                    NVector unitDirection = NVector.UnitVector(ray.Direction());
+                    double t = 0.5 * (unitDirection.Y() + 1.0);
+                    return Color.WHITE * (1.0 - t) + new Color(0.5, 0.7, 1.0) * t;
+                }
+                return this.background;
             }
             Color colorEmitted = hit.Material.Emitted(hit.U, hit.V, hit.Point);
 
@@ -182,23 +192,36 @@ namespace NackEngine.core.render
 
             if (scatter.SkipProb)
             {
-                Color colorScatter = scatter.Attenuation * RayColor(scatter.Bounced, depth - 1, world);
+                Color colorScatter = scatter.Attenuation * RayColor(scatter.Bounced, depth - 1, world, lights);
                 return colorEmitted + colorScatter;
             }
-            else {
-                NVector direction = scatter.ProbDensity.Generate();
-                Ray scattered = new Ray(hit.Point, direction, ray.Time());
+            else
+            {
+                ProbDensity p;
+                if (lights == null)
+                {
+                    p = scatter.ProbDensity;
+                }
+                else
+                {
+                    var lightProb = new HittableProbDensity(lights, hit.Point);
+                    p = new MixProbDensity(lightProb, scatter.ProbDensity);
+                }
 
-                double probability = scatter.ProbDensity.Value(scattered.Direction());
+                Ray scatteredRay = new Ray(hit.Point, p.Generate(), ray.Time());
+
+                double probability = p.Value(scatteredRay.Direction());
+
                 if (probability <= 0) { return colorEmitted; }
-                double scatterpdf = hit.Material.Scatter(ray, hit, scattered);
 
-                Color sampleColor = RayColor(scattered, depth - 1, world);
+                double scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);
+
+                Color sampleColor = RayColor(scatteredRay, depth - 1, world, lights);
                 Color colorScatter = (scatter.Attenuation * scatterpdf * sampleColor) * (1.0 / probability);
+
+                colorScatter = colorScatter.Clamp(0, maxIntensity);
                 return colorEmitted + colorScatter;
             }
-
-            
         }
 
         private Ray GetRay(int x, int y, int gridX, int gridY) {
@@ -226,6 +249,7 @@ namespace NackEngine.core.render
 
         public void SetBackgroundColor(Color color) { 
             this.background = color;
+            this.defaultBackground = false;
         }
     }
 }

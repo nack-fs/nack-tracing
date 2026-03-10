@@ -2,6 +2,7 @@
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
+using NackEngine.math;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,8 @@ namespace NackEngine.objects
         private double D;
         private NVector w;
 
+        private double area;
+
         public Plane(Point corner, NVector u, NVector v, Material material) { 
             this.corner = corner;
             this.u = u;
@@ -32,6 +35,8 @@ namespace NackEngine.objects
             this.normal = NVector.UnitVector(n);
             this.D = NVector.Dot(normal, corner);
             this.w = n / NVector.Dot(n,n);
+
+            this.area = NVector.Cross(u, v).Length();
 
             InitializeBoundingBox();
         }
@@ -86,6 +91,25 @@ namespace NackEngine.objects
             hit.U = a;
             hit.V = b;
             return true;
+        }
+
+        public double Probability(Point origin, NVector direction) {
+            HitStruct hit;
+            if (!this.Hit(new Ray(origin, direction), Range.DEFAULT, out hit)) {
+                return 0;
+            }
+
+            var distanceSquared = hit.T * hit.T * direction.LengthSquared();
+            var cos = Math.Abs(NVector.Dot(direction, hit.Normal) / direction.Length());
+
+            return distanceSquared / (cos * area);
+        }
+
+        public NVector Random(Point origin) {
+            var p = corner +
+                (MathSetting.RandomDouble() * u) +
+                (MathSetting.RandomDouble() * v);
+            return p - origin;
         }
     }
 }
