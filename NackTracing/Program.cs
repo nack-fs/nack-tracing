@@ -1,10 +1,13 @@
-﻿using NackEngine.core.physics;
+﻿using ExportConfig;
+using NackEngine.core.physics;
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.render.materials;
+using NackEngine.core.render.materials.debug;
 using NackEngine.core.render.materials.emissive;
 using NackEngine.core.render.textures;
 using NackEngine.core.space;
+using NackEngine.IO;
 using NackEngine.math;
 using NackEngine.objects;
 using NackEngine.objects.modifiers;
@@ -32,11 +35,14 @@ namespace NackTracing
             //PerlinTest();
             //PlanesScene();
             //LightTest();
-            CornellBox();
+            //CornellBox();
             //CornellSmoke();
             //FinalScene(800, 1000, 20);
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
+
+            Monkey();
+
         }
 
         private static void BasicScene() {
@@ -118,10 +124,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void ShowElapsedTime(Stopwatch sw) {
@@ -168,17 +178,21 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void EarthAndMars() {
             HitCollection world = new HitCollection();
 
-            var earthTexture = new ImageTexture("EARTH");
-            var marsTexture = new ImageTexture("MARS");
+            var earthTexture = ImageLoader.Load("EARTH");
+            var marsTexture = ImageLoader.Load("MARS");
             var earthSurface = new Diffuse(earthTexture);
             var marsSurface = new Diffuse(marsTexture);
 
@@ -213,10 +227,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void PerlinTest()
@@ -258,17 +276,21 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void PlanesScene()
         {
             HitCollection world = new HitCollection();
 
-            var dollarTexture = new Diffuse(new ImageTexture("DOLLAR_TEX"));
+            var dollarTexture = new Diffuse(ImageLoader.Load("DOLLAR_TEX"));
 
 
             world.AddObject(new Plane(new Point(-3, -2, 5),
@@ -317,10 +339,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void LightTest()
@@ -374,10 +400,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void CornellBox()
@@ -457,10 +487,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld, planeLight);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void CornellSmoke() {
@@ -538,10 +572,14 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
 
         private static void FinalScene(int imageWidth, int numSamples, int maxDepth)
@@ -591,7 +629,7 @@ namespace NackTracing
             boundary = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
             world.AddObject(new ConstantVolume(boundary, 0.0001, Color.WHITE));
 
-            var earthMat = new Diffuse(new ImageTexture("MARS"));
+            var earthMat = new Diffuse(ImageLoader.Load("MARS"));
             world.AddObject(new Sphere(new Point(400, 200, 400), 100, earthMat));
 
             var perlinTexture = new NoiseTexture(0.1);
@@ -642,10 +680,74 @@ namespace NackTracing
             // BVH World
             var bvhWorld = new BVHNode(world);
 
-            camera.Render(bvhWorld, planeLight);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
+        }
+
+        private static void Monkey()
+        {
+            //// World
+            HitCollection world = new HitCollection();
+
+            var testTexture = new TestTexture(0.32, Color.BLUE_NAVY, Color.WHITE);
+            //world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, new Diffuse(testTexture)));
+
+            Material material1 = new Dielectric(1.5);
+            //world.AddObject(new Sphere(new Point(0, 1, 0), 1.0, material1));
+
+            Material red = new Diffuse(Color.RED_MODERN);
+            //world.AddObject(new Sphere(new Point(-4, 1, 0), 1.0, material2));
+
+            Material gold = new Metal(Color.GOLD, 0.0);
+            //world.AddObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
+
+
+            HitCollection monkeyMesh = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\monkey.obj", red);
+            world.AddObject(monkeyMesh);
+
+            // Camera
+            Camera camera = new Camera(
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 500,
+                numSamples: 150,
+                maxDepth: 50,
+                fieldView: 20, // Zoom
+
+                // Depth of field
+                depthFieldAngle: 0.6,
+                focusDistance: 10.0
+            );
+
+            camera.SetLookPoint(
+                    new Point(13, 2, 3), // Look point
+                    new Point(0, 0, 0), // Look target
+                    new NVector(0, 1, 0) // vup
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+
+            // BVH World
+            var bvhWorld = new BVHNode(world);
+
+            var render = camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
         }
     }
 }

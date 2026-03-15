@@ -1,8 +1,4 @@
 ﻿using NackEngine.core.space;
-using NackEngine.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace NackEngine.core.render.textures
 {
@@ -13,36 +9,12 @@ namespace NackEngine.core.render.textures
         private int height;
         private int bytes;
 
-
-        public ImageTexture(string filename)
+        public ImageTexture(byte[] pixelData, int width, int height, int bytes)
         {
-            string path = TextureConfig.GetImagePath(filename);
-            if (string.IsNullOrEmpty(path)) { path = filename; }
-
-            try
-            {
-                using (var image = new Bitmap(path))
-                {
-                    width = image.Width;
-                    height = image.Height;
-
-                    var rectangle = new Rectangle(0, 0, width, height);
-                    var bmpData = image.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-                    bytes = Math.Abs(bmpData.Stride);
-                    int totalBytes = bytes * height;
-                    pixelData = new byte[totalBytes];
-
-                    Marshal.Copy(bmpData.Scan0, pixelData, 0, totalBytes);
-
-                    image.UnlockBits(bmpData);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[ERROR] The texture {filename} could not be loaded... Because {e.Message}");
-                this.pixelData = null;
-            }
+            this.pixelData = pixelData;
+            this.width = width;
+            this.height = height;
+            this.bytes = bytes;
         }
 
         public Color Value(double u, double v, NVector point)

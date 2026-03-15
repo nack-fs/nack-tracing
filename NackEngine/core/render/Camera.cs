@@ -1,13 +1,8 @@
-﻿using ExportConfig;
-using NackEngine.core.physics;
+﻿using NackEngine.core.physics;
 using NackEngine.core.render.materials;
 using NackEngine.core.space;
 using NackEngine.math;
 using NackEngine.math.probdensities;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 
 
 namespace NackEngine.core.render
@@ -19,22 +14,23 @@ namespace NackEngine.core.render
     {
         public double aspectRatio;
         public int imageWidth;
+        public int imageHeight;
+
         public int numSamples;
         public int maxDepth;
         private Color background;
         private double maxIntensity;
 
         public double fieldView;
-        public Point lookPoint = new Point(0,0,0);
+        public Point lookPoint = new Point(0, 0, 0);
         public Point lookTarget = new Point(0, 0, -1);
-        public NVector vup = new NVector(0,1,0);
+        public NVector vup = new NVector(0, 1, 0);
 
         public double depthFieldAngle;
         public double focusDistance;
 
         // -----------------------
 
-        private int imageHeight;
         private Point cameraOrigin;
         private Point pixel00;
         private NVector deltaH;
@@ -48,7 +44,7 @@ namespace NackEngine.core.render
         private bool defaultBackground = true;
 
 
-        public Camera(double aspectRatio = 1.0, int imageWidth = 100, 
+        public Camera(double aspectRatio = 1.0, int imageWidth = 100,
             int numSamples = 10, int maxDepth = 10, double fieldView = 90,
             double depthFieldAngle = 0, double focusDistance = 10, double maxIntensity = 5.0)
         {
@@ -64,7 +60,7 @@ namespace NackEngine.core.render
             this.background = Color.WHITE;
         }
 
-        public void Render(Hittable world, Hittable lights = null)
+        public Color[] Render(Hittable world, Hittable lights = null)
         {
             Initialize();
             Color[] pixelColors = new Color[imageWidth * imageHeight];
@@ -77,10 +73,16 @@ namespace NackEngine.core.render
                 for (int x = 0; x < imageWidth; x++)
                 {
                     Color pixelColor = new Color(0, 0, 0);
-                    for (int gridY = 0; gridY < sqrtSPP; gridY++) {
-                        for (int gridX = 0; gridX < sqrtSPP; gridX++) {
+                    for (int gridY = 0; gridY < sqrtSPP; gridY++)
+                    {
+                        for (int gridX = 0; gridX < sqrtSPP; gridX++)
+                        {
                             Ray ray = GetRay(x, y, gridX, gridY);
-                            pixelColor += RayColor(ray, maxDepth, world, lights);
+                            Color sampleColor = RayColor(ray, maxDepth, world, lights);
+                            if (!sampleColor.IsNaN())
+                            {
+                                pixelColor += sampleColor;
+                            }
                         }
                     }
                     pixelColors[y * imageWidth + x] = pixelColor * samplesScale;
@@ -88,15 +90,7 @@ namespace NackEngine.core.render
 
                 Interlocked.Increment(ref rowsDone);
             });
-
-            StringBuilder imageData = new StringBuilder();
-
-            for (int i = 0; i < pixelColors.Length; i++){
-                imageData.AppendLine(pixelColors[i].ToString());
-            }
-
-            PNGExport export = new PNGExport(imageWidth, imageHeight, "rendernew");
-            export.ExportFile(imageData);
+            return pixelColors;
         }
 
         private void ShowProgress(Func<int> getRowsDone, int totalRows)
@@ -119,10 +113,11 @@ namespace NackEngine.core.render
             Console.Title = $"Renderizando: {percent:F1}% ({current}/{total} filas)";
         }
 
-        private void Initialize() {
+        private void Initialize()
+        {
             this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
 
-            this.sqrtSPP =  (int) Math.Sqrt(numSamples);
+            this.sqrtSPP = (int)Math.Sqrt(numSamples);
             this.samplesScale = 1.0 / (sqrtSPP * sqrtSPP);
             this.invSqrtSPP = 1.0 / sqrtSPP;
 
@@ -137,7 +132,7 @@ namespace NackEngine.core.render
             // Camera coordinate frame (u,v,w)
             this.w = NVector.UnitVector(lookPoint - lookTarget);
             this.u = NVector.UnitVector(NVector.Cross(vup, w));
-            this.v = NVector.Cross(w,u);
+            this.v = NVector.Cross(w, u);
 
             /*
              * Vectors
@@ -162,19 +157,22 @@ namespace NackEngine.core.render
             this.defocusDiskV = v * defocusRadius;
         }
 
-        public void SetLookPoint(Point lookPoint, Point lookTarget, NVector vup) {
+        public void SetLookPoint(Point lookPoint, Point lookTarget, NVector vup)
+        {
             this.lookPoint = lookPoint;
             this.lookTarget = lookTarget;
             this.vup = vup;
         }
 
-        private Color RayColor(Ray ray, int depth ,Hittable world, Hittable lights = null) {
+        private Color RayColor(Ray ray, int depth, Hittable world, Hittable lights = null)
+        {
             if (depth <= 0) { return Color.BLACK; }
 
             HitStruct hit;
             if (!world.Hit(ray, Range.DEFAULT, out hit))
             {
-                if (defaultBackground) {
+                if (defaultBackground)
+                {
                     NVector unitDirection = NVector.UnitVector(ray.Direction());
                     double t = 0.5 * (unitDirection.Y() + 1.0);
                     return Color.WHITE * (1.0 - t) + new Color(0.5, 0.7, 1.0) * t;
@@ -186,7 +184,8 @@ namespace NackEngine.core.render
             ScatterStruct scatter;
             bool hasScatter = hit.Material.Bounce(ray, hit, out scatter);
 
-            if (!hasScatter) {
+            if (!hasScatter)
+            {
                 return colorEmitted;
             }
 
@@ -212,11 +211,14 @@ namespace NackEngine.core.render
 
                 double probability = p.Value(scatteredRay.Direction());
 
-                if (probability <= 0) { return colorEmitted; }
+                var tol = 0.0000001;
+                if (probability <= tol) { return colorEmitted; }
 
                 double scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);
 
                 Color sampleColor = RayColor(scatteredRay, depth - 1, world, lights);
+                if (sampleColor.IsNaN()) return colorEmitted;
+
                 Color colorScatter = (scatter.Attenuation * scatterpdf * sampleColor) * (1.0 / probability);
 
                 colorScatter = colorScatter.Clamp(0, maxIntensity);
@@ -224,30 +226,34 @@ namespace NackEngine.core.render
             }
         }
 
-        private Ray GetRay(int x, int y, int gridX, int gridY) {
+        private Ray GetRay(int x, int y, int gridX, int gridY)
+        {
             var offset = Sample(gridX, gridY);
             var pixelSample = pixel00
                 + ((x + offset.X()) * deltaH)
                 + ((y + offset.Y()) * deltaW);
-            var rayOrigin = (depthFieldAngle<=0)? cameraOrigin : DepthFieldDisk();
+            var rayOrigin = (depthFieldAngle <= 0) ? cameraOrigin : DepthFieldDisk();
             var rayDirection = pixelSample - rayOrigin;
             var rayTime = MathSetting.RandomDouble();
 
             return new Ray(rayOrigin, rayDirection, rayTime);
         }
 
-        private NVector Sample(int gridX, int gridY) {
+        private NVector Sample(int gridX, int gridY)
+        {
             double posXgrid = ((gridX + MathSetting.RandomDouble()) * invSqrtSPP) - 0.5;
             double posYgrid = ((gridY + MathSetting.RandomDouble()) * invSqrtSPP) - 0.5;
             return new NVector(posXgrid, posYgrid, 0);
         }
 
-        private NVector DepthFieldDisk() {
+        private NVector DepthFieldDisk()
+        {
             var point = MathSetting.RandomUnitDisk();
             return cameraOrigin + (point.X() * defocusDiskU) + (point.Y() * defocusDiskV);
         }
 
-        public void SetBackgroundColor(Color color) { 
+        public void SetBackgroundColor(Color color)
+        {
             this.background = color;
             this.defaultBackground = false;
         }
