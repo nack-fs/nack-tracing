@@ -708,14 +708,18 @@ namespace NackTracing
             //world.AddObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
 
 
-            HitCollection monkeyMesh = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\monkey.obj", red);
-            world.AddObject(monkeyMesh);
+            HitCollection monkeyMesh = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\monkey.obj", gold);
+
+            // BVH World
+            var bvhMonkey = new BVHNode(monkeyMesh);
+
+            world.AddObject(bvhMonkey);
 
             // Camera
             Camera camera = new Camera(
-                aspectRatio: 16.0 / 9.0,
-                imageWidth: 500,
-                numSamples: 150,
+                aspectRatio: 1.0,
+                imageWidth: 1080,
+                numSamples: 300,
                 maxDepth: 50,
                 fieldView: 20, // Zoom
 
@@ -737,7 +741,6 @@ namespace NackTracing
 
             // ---------- RENDER ------------
 
-            // BVH World
             var bvhWorld = new BVHNode(world);
 
             var render = camera.Render(bvhWorld);
