@@ -40,8 +40,8 @@ namespace NackTracing
             //FinalScene(800, 1000, 20);
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
-
-            Monkey();
+            //Monkey();
+            CPU_NACK();
 
         }
 
@@ -741,6 +741,54 @@ namespace NackTracing
 
             // ---------- RENDER ------------
 
+            var bvhWorld = new BVHNode(world);
+
+            var render = camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            export.ExportFile(render);
+        }
+
+        private static void CPU_NACK() {
+            HitCollection world = new HitCollection();
+
+            Material white = new Diffuse(Color.BLUE_NAVY);
+            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE.obj", white);
+
+            var bvhCPU = new BVHNode(CPUObj);
+
+            world.AddObject(bvhCPU);
+
+            Camera camera = BlenderAdapter.CreateCamera(
+                // Location Camera in Blender
+                X: -9.2436,
+                Y: -12.738,
+                Z: 9.0725,
+
+                // Location of the object to view
+                targetX: 0,
+                targetY: 0,
+                targetZ: 0,
+
+                // Lens properties
+                focalLengthMM: 50.0,
+
+                // Render properties
+                aspectRatio: 16.0 / 9.0,
+                imageWidth: 200,
+                numSamples: 100
+            );
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
             var bvhWorld = new BVHNode(world);
 
             var render = camera.Render(bvhWorld);
