@@ -756,12 +756,34 @@ namespace NackTracing
         private static void CPU_NACK() {
             HitCollection world = new HitCollection();
 
-            Material white = new Diffuse(Color.BLUE_NAVY);
-            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE.obj", white);
+            var groundMaterial = new Diffuse(Color.GREY_DARK);
+            world.AddObject(new Plane(
+                new Point(-500, -10, -500),
+                new NVector(1000, 0, 0),
+                new NVector(0, 0, 1000),
+                groundMaterial
+            ));
+
+            Material blue = new Diffuse(Color.BLUE_NAVY);
+            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE_1\\CPU_FUTURE.obj", blue);
 
             var bvhCPU = new BVHNode(CPUObj);
 
             world.AddObject(bvhCPU);
+
+            var lightMaterial = new DiffuseLight(new Color(50, 50, 50));
+
+            
+            var ceilingLight = new Plane(
+                new Point(-5, 8, -5),
+                new NVector(10, 0, 0),
+                new NVector(0, 0, 10),
+                lightMaterial
+            );
+
+            world.AddObject(ceilingLight);
+            HitCollection lights = new HitCollection();
+            lights.AddObject(ceilingLight);
 
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
@@ -783,6 +805,8 @@ namespace NackTracing
                 numSamples: 100
             );
 
+            camera.SetBackgroundColor(Color.BLACK);
+
             Console.WriteLine("Iniciando render...");
             Stopwatch sw = new Stopwatch();
 
@@ -791,7 +815,7 @@ namespace NackTracing
             // ---------- RENDER ------------
             var bvhWorld = new BVHNode(world);
 
-            var render = camera.Render(bvhWorld);
+            var render = camera.Render(bvhWorld, lights);
 
             sw.Stop();
             ShowElapsedTime(sw);
