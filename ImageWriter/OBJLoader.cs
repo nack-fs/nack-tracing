@@ -51,23 +51,43 @@ namespace NackEngine.IO
                     }
 
                     Point[] vertices = new Point[mesh.VertexCount];
+                    NVector[] UVs = new NVector[mesh.VertexCount];
+
+                    bool hasUVs = mesh.HasTextureCoords(0);
 
                     for (int i = 0; i < mesh.VertexCount; i++)
                     {
                         vertices[i] = new Point(mesh.Vertices[i].X,
                                                 mesh.Vertices[i].Y,
                                                 mesh.Vertices[i].Z);
+
+                        if (hasUVs)
+                        {
+                            var texCoordinate = mesh.TextureCoordinateChannels[0][i];
+                            UVs[i] = new NVector(texCoordinate.X, texCoordinate.Y, 0);
+                        }
+                        else {
+                            UVs[i] = new NVector(0, 0, 0);
+                        }
                     }
 
                     foreach (var face in mesh.Faces)
                     {
                         if (face.IndexCount == 3)
                         {
-                            Point v0 = vertices[face.Indices[0]];
-                            Point v1 = vertices[face.Indices[1]];
-                            Point v2 = vertices[face.Indices[2]];
+                            int i0 = face.Indices[0];
+                            int i1 = face.Indices[1];
+                            int i2 = face.Indices[2];
 
-                            world.AddObject(new Triangle(v0, v1, v2, actualMaterial));
+                            Point v0 = vertices[i0];
+                            Point v1 = vertices[i1];
+                            Point v2 = vertices[i2];
+
+                            NVector uv0 = UVs[i0];
+                            NVector uv1 = UVs[i1];
+                            NVector uv2 = UVs[i2];
+
+                            world.AddObject(new Triangle(v0, v1, v2, uv0, uv1, uv2, actualMaterial));
 
                             totalTriangles++;
                         }

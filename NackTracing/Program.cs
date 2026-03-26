@@ -765,7 +765,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE_1\\CPU_FUTURE.obj", blue);
+            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE\\CPU_FUTURE.obj", blue);
 
             var bvhCPU = new BVHNode(CPUObj);
 

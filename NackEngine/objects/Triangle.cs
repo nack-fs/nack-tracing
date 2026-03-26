@@ -20,10 +20,17 @@ namespace NackEngine.objects
         private NVector normal;
         private double area;
 
-        public Triangle(Point v0, Point v1, Point v2, Material material) { 
+        private NVector uv0, uv1, uv2;
+
+        public Triangle(Point v0, Point v1, Point v2, NVector uv0,
+            NVector uv1, NVector uv2, Material material) { 
             this.v0 = v0; 
             this.v1 = v1;
             this.v2 = v2;
+
+            this.uv0 = uv0;
+            this.uv1 = uv1;
+            this.uv2 = uv2;
 
             this.material = material;
 
@@ -89,6 +96,10 @@ namespace NackEngine.objects
             hit.Point = ray.At(t);
             hit.setFaceNormal(ray, normal);
             hit.Material = material;
+
+            double w = 1.0 - u - v;
+            hit.U = (w * uv0.X()) + (u * uv1.X()) + (v * uv2.X());
+            hit.V = (w * uv0.Y()) + (u * uv1.Y()) + (v * uv2.Y());
 
             return true;
         }

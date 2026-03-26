@@ -15,7 +15,6 @@ namespace NackEngine.objects
     public class Box : Hittable
     {
         private HitCollection sides = new HitCollection();
-        //private AABBox aabbox;
 
         public Box(Point a, Point b, Material material)
         {
