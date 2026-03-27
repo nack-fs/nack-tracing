@@ -36,8 +36,10 @@ namespace NackEngine.IO
                 string basePath = Path.GetDirectoryName(filepath);
                 List<Material> materials = new List<Material>();
 
-                if (scene.HasMaterials) {
-                    foreach (var mat in scene.Materials) {
+                if (scene.HasMaterials)
+                {
+                    foreach (var mat in scene.Materials)
+                    {
                         materials.Add(ConvertMaterial(mat, basePath, defaultMaterial));
                     }
                 }
@@ -46,7 +48,8 @@ namespace NackEngine.IO
                 foreach (var mesh in scene.Meshes)
                 {
                     Material actualMaterial = defaultMaterial;
-                    if (mesh.MaterialIndex >= 0 && mesh.MaterialIndex < materials.Count) {
+                    if (mesh.MaterialIndex >= 0 && mesh.MaterialIndex < materials.Count)
+                    {
                         actualMaterial = materials[mesh.MaterialIndex] ?? defaultMaterial;
                     }
 
@@ -66,7 +69,8 @@ namespace NackEngine.IO
                             var texCoordinate = mesh.TextureCoordinateChannels[0][i];
                             UVs[i] = new NVector(texCoordinate.X, texCoordinate.Y, 0);
                         }
-                        else {
+                        else
+                        {
                             UVs[i] = new NVector(0, 0, 0);
                         }
                     }
@@ -103,11 +107,11 @@ namespace NackEngine.IO
             return world;
         }
 
-        private static Material ConvertMaterial(Assimp.Material mtl, string basePath, Material def) {
+        private static Material ConvertMaterial(Assimp.Material mtl, string basePath, Material def)
+        {
             string matName = mtl.Name.ToLower();
             bool isExplicitMetal = matName.Contains("metal");
             bool isExplicitGlass = matName.Contains("glass");
-
 
             if (isExplicitGlass || (mtl.HasOpacity && mtl.Opacity < 0.99f))
             {
@@ -115,38 +119,44 @@ namespace NackEngine.IO
                 return new Dielectric(refractionIndex);
             }
 
-            if (isExplicitMetal || (mtl.HasShininess && mtl.Shininess > 800.0f))
+            if (isExplicitMetal)
             {
                 Color albedo = Color.WHITE;
-                if (mtl.HasColorSpecular)
-                {
-                    albedo = new Color(mtl.ColorSpecular.R, mtl.ColorSpecular.G, mtl.ColorSpecular.B);
-                }
-                else if (mtl.HasColorDiffuse)
+
+                if (mtl.HasColorDiffuse)
                 {
                     albedo = new Color(mtl.ColorDiffuse.R, mtl.ColorDiffuse.G, mtl.ColorDiffuse.B);
                 }
-
+                else if (mtl.HasColorSpecular)
+                {
+                    albedo = new Color(mtl.ColorSpecular.R, mtl.ColorSpecular.G, mtl.ColorSpecular.B);
+                }
                 double fuzz = 0.45;
-
                 return new Metal(albedo, fuzz);
             }
 
-            if (mtl.HasTextureDiffuse) {
+            if (mtl.HasTextureDiffuse)
+            {
                 string textFilename = mtl.TextureDiffuse.FilePath;
                 string textPath = Path.Combine(basePath, textFilename);
-                Console.WriteLine($"Cargando textura: {textFilename}");
 
                 var imageTexture = ImageLoader.Load(textPath);
                 return new Diffuse(imageTexture);
             }
-            if (mtl.HasColorDiffuse) {
+
+            if (mtl.HasColorDiffuse)
+            {
                 var color = mtl.ColorDiffuse;
+
+                if (color.R == 0 && color.G == 0 && color.B == 0 && mtl.HasColorAmbient)
+                {
+                    color = mtl.ColorAmbient;
+                }
+
                 return new Diffuse(new Color(color.R, color.G, color.B));
             }
-
-            Console.WriteLine($"[WARN] Material {mtl.Name} does not have texture or color. Using default");
             return def ?? new Diffuse(Color.PINK_HOT);
+
         }
     }
 }

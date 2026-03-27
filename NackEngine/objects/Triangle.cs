@@ -71,7 +71,9 @@ namespace NackEngine.objects
             NVector h = NVector.Cross(direction, edge2);
             double a = NVector.Dot(edge1, h);
 
-            if (a > -double.Epsilon && a < double.Epsilon) {
+            double tol = 1e-3;
+            if (a > -tol && a < tol)
+            {
                 return false;
             }
 

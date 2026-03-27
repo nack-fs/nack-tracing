@@ -41,8 +41,8 @@ namespace NackTracing
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
             //Monkey();
-            CPU_NACK();
-
+            //CPU_NACK();
+            SALVAVIDAS();
         }
 
         private static void BasicScene() {
@@ -771,9 +771,8 @@ namespace NackTracing
 
             world.AddObject(bvhCPU);
 
-            var lightMaterial = new DiffuseLight(new Color(50, 50, 50));
+            var lightMaterial = new DiffuseLight(new Color(3, 3, 3));
 
-            
             var ceilingLight = new Plane(
                 new Point(-5, 8, -5),
                 new NVector(10, 0, 0),
@@ -802,7 +801,7 @@ namespace NackTracing
                 // Render properties
                 aspectRatio: 16.0 / 9.0,
                 imageWidth: 200,
-                numSamples: 100
+                numSamples: 400
             );
 
             camera.SetBackgroundColor(Color.BLACK);
@@ -821,8 +820,82 @@ namespace NackTracing
             ShowElapsedTime(sw);
 
             Console.WriteLine("Guardando imagen...");
-            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "rendernew");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "CPU_NACK");
+            export.ExportFile(render);
+        }
+
+        private static void SALVAVIDAS()
+        {
+            HitCollection world = new HitCollection();
+
+            var groundMaterial = new Diffuse(Color.GREY_DARK);
+            world.AddObject(new Plane(
+                new Point(-500, -10, -500),
+                new NVector(1000, 0, 0),
+                new NVector(0, 0, 1000),
+                groundMaterial
+            ));
+
+            Material blue = new Diffuse(Color.BLUE_NAVY);
+            HitCollection SalvavidasObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\SALVAVIDAS\\SALVAVIDAS.obj", blue);
+
+            var bvhSalvavidas = new BVHNode(SalvavidasObj);
+
+            world.AddObject(bvhSalvavidas);
+
+            var lightMaterial = new DiffuseLight(new Color(10, 10, 10));
+
+            var ceilingLight = new Plane(
+                new Point(-5, 8, -5),
+                new NVector(10, 0, 0),
+                new NVector(0, 0, 10),
+                lightMaterial
+            );
+
+            world.AddObject(ceilingLight);
+            HitCollection lights = new HitCollection();
+            lights.AddObject(ceilingLight);
+
+            Camera camera = BlenderAdapter.CreateCamera(
+                // Location Camera in Blender
+                X: -5.52395,
+                Y: -8.95188,
+                Z: 1.51004,
+
+                // Location of the object to view
+                targetX: 0,
+                targetY: 0,
+                targetZ: 0,
+
+                // Lens properties
+                focalLengthMM: 50.0,
+
+                // Render properties
+                aspectRatio: 1.0,
+                imageWidth: 200,
+                numSamples: 400
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+            var bvhWorld = new BVHNode(world);
+
+            var render = camera.Render(bvhWorld, lights);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "Salvavidas");
             export.ExportFile(render);
         }
     }
+
+   
 }
