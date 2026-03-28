@@ -41,8 +41,8 @@ namespace NackTracing
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
             //Monkey();
-            //CPU_NACK();
-            SALVAVIDAS();
+            CPU_NACK();
+            //SALVAVIDAS();
         }
 
         private static void BasicScene() {
@@ -771,6 +771,7 @@ namespace NackTracing
 
             world.AddObject(bvhCPU);
 
+            HitCollection lights = new HitCollection();
             var lightMaterial = new DiffuseLight(new Color(3, 3, 3));
 
             var ceilingLight = new Plane(
@@ -780,9 +781,17 @@ namespace NackTracing
                 lightMaterial
             );
 
+            var smallLight = new Plane(
+                new Point(-3, 6.75, -3),
+                new NVector(10, 0, 0),
+                new NVector(0, 0, 10),
+                lightMaterial
+            );
+
             world.AddObject(ceilingLight);
-            HitCollection lights = new HitCollection();
             lights.AddObject(ceilingLight);
+            world.AddObject(smallLight);
+            lights.AddObject(smallLight);
 
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
@@ -800,8 +809,8 @@ namespace NackTracing
 
                 // Render properties
                 aspectRatio: 16.0 / 9.0,
-                imageWidth: 200,
-                numSamples: 400
+                imageWidth: 1080,
+                numSamples: 1200
             );
 
             camera.SetBackgroundColor(Color.BLACK);
@@ -872,8 +881,8 @@ namespace NackTracing
 
                 // Render properties
                 aspectRatio: 1.0,
-                imageWidth: 200,
-                numSamples: 400
+                imageWidth: 1000,
+                numSamples: 500
             );
 
             camera.SetBackgroundColor(Color.BLACK);

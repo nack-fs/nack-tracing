@@ -182,16 +182,16 @@ namespace NackEngine.core.render
             Color colorEmitted = hit.Material.Emitted(hit.U, hit.V, hit.Point);
 
             ScatterStruct scatter;
-            bool hasScatter = hit.Material.Bounce(ray, hit, out scatter);
-
-            if (!hasScatter)
+            if (!hit.Material.Bounce(ray, hit, out scatter))
             {
                 return colorEmitted;
             }
 
             if (scatter.SkipProb)
             {
-                Color colorScatter = scatter.Attenuation * RayColor(scatter.Bounced, depth - 1, world, lights);
+                double offset = 1e-4;
+                Ray offsetRay = new Ray(hit.Point + hit.Normal * offset, scatter.Bounced.Direction(), ray.Time());
+                Color colorScatter = scatter.Attenuation * RayColor(offsetRay, depth - 1, world, lights);
                 return colorEmitted + colorScatter;
             }
             else
@@ -207,11 +207,12 @@ namespace NackEngine.core.render
                     p = new MixProbDensity(lightProb, scatter.ProbDensity);
                 }
 
-                Ray scatteredRay = new Ray(hit.Point, p.Generate(), ray.Time());
+                double offset = 1e-4;
+                Ray scatteredRay = new Ray(hit.Point + hit.Normal * offset, p.Generate(), ray.Time());
 
                 double probability = p.Value(scatteredRay.Direction());
 
-                var tol = 0.0000001;
+                var tol = 1e-8;
                 if (probability <= tol) { return colorEmitted; }
 
                 double scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);

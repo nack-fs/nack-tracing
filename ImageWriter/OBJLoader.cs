@@ -116,7 +116,22 @@ namespace NackEngine.IO
             if (isExplicitGlass || (mtl.HasOpacity && mtl.Opacity < 0.99f))
             {
                 double refractionIndex = 1.5;
-                return new Dielectric(refractionIndex);
+
+                if (mtl.HasReflectivity && mtl.Reflectivity > 1.0f) {
+                    refractionIndex = mtl.Reflectivity;
+                }
+
+                Color glassColor = Color.WHITE;
+                if (mtl.HasColorTransparent
+                    && (mtl.ColorTransparent.R > 0 || mtl.ColorTransparent.G > 0 || mtl.ColorTransparent.B > 0))
+                {
+                    glassColor = new Color(mtl.ColorTransparent.R, mtl.ColorTransparent.G, mtl.ColorTransparent.B);
+                }
+                else if (mtl.HasColorDiffuse
+                    && (mtl.ColorDiffuse.R < 1 || mtl.ColorDiffuse.G < 1 || mtl.ColorDiffuse.B < 1)) {
+                    glassColor = new Color(mtl.ColorDiffuse.R, mtl.ColorDiffuse.G, mtl.ColorDiffuse.B);
+                }
+                return new Dielectric(refractionIndex, glassColor);
             }
 
             if (isExplicitMetal)

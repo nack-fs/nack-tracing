@@ -57,6 +57,10 @@ namespace NackEngine.objects
                 Math.Max(v0.Z(), Math.Max(v1.Z(), v2.Z()))
             );
 
+            double padding = 0.001;
+            min = new Point(min.X() - padding, min.Y() - padding, min.Z() - padding);
+            max = new Point(max.X() + padding, max.Y() + padding, max.Z() + padding);
+
             this.aabbox = new AABBox(min, max);
         }
 
@@ -71,8 +75,7 @@ namespace NackEngine.objects
             NVector h = NVector.Cross(direction, edge2);
             double a = NVector.Dot(edge1, h);
 
-            double tol = 1e-3;
-            if (a > -tol && a < tol)
+            if (Math.Abs(a) < 1e-15)
             {
                 return false;
             }
@@ -81,12 +84,14 @@ namespace NackEngine.objects
             NVector s = ray.Origin() - v0;
             double u = f * NVector.Dot(s, h);
 
-            if (u < 0.0 || u > 1.0) { return false; }
+            double eps = 1e-8;
+
+            if (u < -eps || u > 1.0 + eps) return false;
 
             NVector q = NVector.Cross(s, edge1);
             double v = f * NVector.Dot(direction, q);
 
-            if (v < 0.0 || u + v > 1.0) { return false; }
+            if (v < -eps || u + v > 1.0 + eps) return false;
 
             double t = f * NVector.Dot(edge2, q);
 
