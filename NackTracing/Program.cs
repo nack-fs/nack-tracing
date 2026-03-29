@@ -41,8 +41,8 @@ namespace NackTracing
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
             //Monkey();
-            CPU_NACK();
-            //SALVAVIDAS();
+            //CPU_NACK();
+            SALVAVIDAS();
         }
 
         private static void BasicScene() {
@@ -865,11 +865,13 @@ namespace NackTracing
             HitCollection lights = new HitCollection();
             lights.AddObject(ceilingLight);
 
+            double zoom = 1.5;
+
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
-                X: -5.52395,
-                Y: -8.95188,
-                Z: 1.51004,
+                X: -5.52395 * zoom,
+                Y: -8.95188 * zoom,
+                Z: 1.51004 * zoom,
 
                 // Location of the object to view
                 targetX: 0,
@@ -881,7 +883,7 @@ namespace NackTracing
 
                 // Render properties
                 aspectRatio: 1.0,
-                imageWidth: 1000,
+                imageWidth: 1080,
                 numSamples: 500
             );
 
