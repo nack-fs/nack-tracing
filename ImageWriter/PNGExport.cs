@@ -2,6 +2,7 @@
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using NackColor = NackEngine.core.render.Color;
 
 namespace ExportConfig
 {
@@ -18,36 +19,30 @@ namespace ExportConfig
             this.fileName = fileName;
         }
 
-        public void ExportFile(StringBuilder data)
+        public void ExportFile(NackColor[] pixelColors)
         {
 
             using var bitmap = new Bitmap(imageWidth, imageHeight, PixelFormat.Format24bppRgb);
-            using (var reader = new StringReader(data.ToString()))
             {
                 for (int y = 0; y < imageHeight; y++)
                 {
                     for (int x = 0; x < imageWidth; x++)
                     {
-                        string? line = reader.ReadLine();
-                        if (line == null) { break; }
+                        var col = pixelColors[y * imageWidth + x];
 
-                        // Separación "R G B"
-                        string[] rgbValues = line.Split(' ',
-                            StringSplitOptions.RemoveEmptyEntries);
+                        double r = (col.Vector().X() > 0) ? Math.Sqrt(col.Vector().X()) : 0;
+                        double g = (col.Vector().Y() > 0) ? Math.Sqrt(col.Vector().Y()) : 0;
+                        double b = (col.Vector().Z() > 0) ? Math.Sqrt(col.Vector().Z()) : 0;
 
-                        if (rgbValues.Length == 3)
-                        {
-                            byte r = byte.Parse(rgbValues[0]);
-                            byte g = byte.Parse(rgbValues[1]);
-                            byte b = byte.Parse(rgbValues[2]);
+                        int ir = (int)(256 * Math.Clamp(r, 0.0, 0.999));
+                        int ig = (int)(256 * Math.Clamp(g, 0.0, 0.999));
+                        int ib = (int)(256 * Math.Clamp(b, 0.0, 0.999));
 
-                            Color pixelColor = Color.FromArgb(r, g, b);
-                            bitmap.SetPixel(x, y, pixelColor);
-                        }
+                        Color pixelColor = Color.FromArgb(ir, ig, ib);
+                        bitmap.SetPixel(x, y, pixelColor);
                     }
                 }
             }
-
             string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string downloadsPath = Path.Combine(userProfilePath, "Downloads");
             Directory.CreateDirectory(downloadsPath);

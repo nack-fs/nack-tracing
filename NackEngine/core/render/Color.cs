@@ -108,6 +108,11 @@ namespace NackEngine.core.render
             return new Color(a.vector + b.vector);
         }
 
+        public bool IsNaN()
+        {
+            return vector.IsNaN();
+        }
+
         public Color Clamp(double min, double max)
         {
             return new Color(

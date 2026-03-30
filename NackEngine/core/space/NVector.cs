@@ -87,5 +87,8 @@ namespace NackEngine.core.space
             _ => throw new IndexOutOfRangeException()
         };
 
+        public bool IsNaN() {
+            return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z);
+        }
     }
 }

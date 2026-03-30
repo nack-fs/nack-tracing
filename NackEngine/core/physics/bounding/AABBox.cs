@@ -98,7 +98,6 @@ namespace NackEngine.core.physics.bounding
             if (Z.Size() < d) Z = Z.Expand(d);
         }
 
-
         public static AABBox operator +(AABBox aabbox, NVector offset) =>
             new AABBox(aabbox.X + offset.X(), aabbox.Y + offset.Y(), aabbox.Z + offset.Z());
 

@@ -55,11 +55,19 @@ namespace NackEngine.IO
                 string relativePath = Path.Combine(AppContext.BaseDirectory, "assets", path);
                 if (File.Exists(relativePath)) { return relativePath; }
 
-                Console.WriteLine($"Texture '{texture}' not found in {path}");
+                Console.WriteLine($"[WARN] La ruta del JSON para '{texture}' no existe.");
+                return null;
             }
-            else
+
+            if (File.Exists(texture))
             {
-                Console.WriteLine($"Texture '{texture}' is not registered in nack-configuration.json");
+                return texture;
+            }
+
+            string localPath = Path.Combine(AppContext.BaseDirectory, "assets", texture);
+            if (File.Exists(localPath))
+            {
+                return localPath;
             }
             return null;
         }
