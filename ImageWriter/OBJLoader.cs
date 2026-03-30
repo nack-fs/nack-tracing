@@ -22,7 +22,7 @@ namespace NackEngine.IO
 
                 Scene scene = importer.ImportFile(filepath,
                     PostProcessSteps.Triangulate |
-                    PostProcessSteps.GenerateNormals |
+                    PostProcessSteps.GenerateSmoothNormals |
                     PostProcessSteps.JoinIdenticalVertices
                 );
 
@@ -55,14 +55,24 @@ namespace NackEngine.IO
 
                     Point[] vertices = new Point[mesh.VertexCount];
                     NVector[] UVs = new NVector[mesh.VertexCount];
+                    NVector[] normals = new NVector[mesh.VertexCount];
 
                     bool hasUVs = mesh.HasTextureCoords(0);
+                    bool hasNormals = mesh.HasNormals;
 
                     for (int i = 0; i < mesh.VertexCount; i++)
                     {
                         vertices[i] = new Point(mesh.Vertices[i].X,
                                                 mesh.Vertices[i].Y,
                                                 mesh.Vertices[i].Z);
+
+                        if (hasNormals)
+                        {
+                            normals[i] = new NVector(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z);
+                        }
+                        else {
+                            normals[i] = new NVector(0, 1, 0);
+                        }
 
                         if (hasUVs)
                         {
@@ -91,7 +101,11 @@ namespace NackEngine.IO
                             NVector uv1 = UVs[i1];
                             NVector uv2 = UVs[i2];
 
-                            world.AddObject(new Triangle(v0, v1, v2, uv0, uv1, uv2, actualMaterial));
+                            NVector n0 = normals[i0];
+                            NVector n1 = normals[i1];
+                            NVector n2 = normals[i2];
+
+                            world.AddObject(new Triangle(v0, v1, v2, uv0, uv1, uv2, n0, n1, n2, actualMaterial));
 
                             totalTriangles++;
                         }

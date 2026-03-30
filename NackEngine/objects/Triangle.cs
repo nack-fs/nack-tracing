@@ -21,12 +21,14 @@ namespace NackEngine.objects
         private double area;
 
         private NVector uv0, uv1, uv2;
+        private NVector n0, n1, n2;
 
-        public Triangle(Point v0, Point v1, Point v2, NVector uv0,
-            NVector uv1, NVector uv2, Material material) { 
-            this.v0 = v0; 
-            this.v1 = v1;
-            this.v2 = v2;
+        public Triangle(Point v0, Point v1, Point v2, 
+            NVector uv0,NVector uv1, NVector uv2,
+            NVector n0, NVector n1, NVector n2,  Material material) { 
+
+            this.v0 = v0; this.v1 = v1; this.v2 = v2;
+            this.n0 = n0; this.n1 = n1; this.n2 = n2;
 
             this.uv0 = uv0;
             this.uv1 = uv1;
@@ -101,12 +103,16 @@ namespace NackEngine.objects
 
             hit.T = t;
             hit.Point = ray.At(t);
-            hit.setFaceNormal(ray, normal);
             hit.Material = material;
 
             double w = 1.0 - u - v;
+
+            NVector smoothNormal = (n0 * w) + (n1 * u) + (n2 * v);
+
+
             hit.U = (w * uv0.X()) + (u * uv1.X()) + (v * uv2.X());
             hit.V = (w * uv0.Y()) + (u * uv1.Y()) + (v * uv2.Y());
+            hit.setFaceNormal(ray, NVector.UnitVector(smoothNormal));
 
             return true;
         }
