@@ -15,6 +15,8 @@ El motor es capaz de generar imágenes sintéticas con un alto grado de realismo
 
 El proyecto persigue dos objetivos fundamentales: primero, construir una arquitectura de software robusta y escalable mediante la aplicación de patrones de diseño orientados a objetos, gestionando así la complejidad de la escena y facilitando su reutilización. Segundo, centrarse en la optimización del rendimiento, abordando el alto coste computacional inherente al trazado de rayos mediante mejoras tanto a nivel de algoritmo como de código para maximizar la eficiencia y reducir los tiempos de renderizado.
 
+<img width="1080" height="607" alt="image23" src="https://github.com/user-attachments/assets/ff9b6948-1bbc-4ad4-9555-ae320d9804d2" />
+
 ## 🛠️ Tecnologías
 *   **Lenguaje:** C#
 *   **Plataforma:** .NET
