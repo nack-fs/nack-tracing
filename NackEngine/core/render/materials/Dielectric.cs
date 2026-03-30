@@ -11,16 +11,18 @@ namespace NackEngine.core.render.materials
     public class Dielectric : Material
     {
         private double indexRefraction;
+        private Color albedo;
 
-        public Dielectric(double indexRefraction)
+        public Dielectric(double indexRefraction, Color? albedo = null)
         {
             this.indexRefraction = indexRefraction;
+            this.albedo = albedo ?? Color.WHITE;
         }
 
         public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)
         {
             scatter = new ScatterStruct();
-            scatter.Attenuation = new Color(1.0,1.0,1.0);
+            scatter.Attenuation = albedo;
             scatter.SkipProb = true;
             scatter.ProbDensity = null;
 
