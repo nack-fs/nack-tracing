@@ -75,7 +75,7 @@ namespace NackEngine.core.physics.bounding
 
             bool hitLeft = left.Hit(ray, range, out HitStruct leftRec);
 
-            var rightRange = new space.Range(range.Min(), hitLeft ? leftRec.T : range.Max());
+            var rightRange = new Range(range.Min(), hitLeft ? leftRec.T : range.Max());
             bool hitRight = right.Hit(ray, rightRange, out HitStruct rightRec);
 
             if (hitLeft && hitRight)

@@ -19,20 +19,20 @@ namespace NackEngine.objects
         public Box(Point a, Point b, Material material)
         {
             var min = new Point(
-                Math.Min(a.X(), b.X()),
-                Math.Min(a.Y(), b.Y()),
-                Math.Min(a.Z(), b.Z())
+                MathF.Min(a.X(), b.X()),
+                MathF.Min(a.Y(), b.Y()),
+                MathF.Min(a.Z(), b.Z())
             );
 
             var max = new Point(
-                Math.Max(a.X(), b.X()),
-                Math.Max(a.Y(), b.Y()),
-                Math.Max(a.Z(), b.Z())
+                MathF.Max(a.X(), b.X()),
+                MathF.Max(a.Y(), b.Y()),
+                MathF.Max(a.Z(), b.Z())
             );
 
-            var dx = new NVector(max.X() - min.X(), 0, 0);
-            var dy = new NVector(0, max.Y() - min.Y(), 0);
-            var dz = new NVector(0, 0, max.Z() - min.Z());
+            var dx = new NVector(max.X() - min.X(), 0f, 0f);
+            var dy = new NVector(0f, max.Y() - min.Y(), 0f);
+            var dz = new NVector(0f, 0f, max.Z() - min.Z());
 
             sides.AddObject(new Plane(new Point(min.X(), min.Y(), max.Z()), dx, dy, material));
             sides.AddObject(new Plane(new Point(max.X(), min.Y(), max.Z()), -dz, dy, material));

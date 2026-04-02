@@ -19,7 +19,7 @@ namespace NackEngine.math.probdensities
             this.origin = origin;
         }
 
-        public double Value(NVector direction) => wrappedObj.Probability(origin, direction);
+        public float Value(NVector direction) => wrappedObj.Probability(origin, direction);
         public NVector Generate() => wrappedObj.Random(origin);
     }
 }

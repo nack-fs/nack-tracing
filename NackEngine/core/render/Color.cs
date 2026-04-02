@@ -42,7 +42,7 @@ namespace NackEngine.core.render
 
         private NVector vector;
 
-        public Color(double r, double g, double b) {
+        public Color(float r, float g, float b) {
             this.vector = new NVector(r, g, b);
         }
 
@@ -57,7 +57,7 @@ namespace NackEngine.core.render
             byte g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
             byte b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
-            this.vector = new NVector(r / 255.0, g / 255.0, b / 255.0);
+            this.vector = new NVector(r / 255.0f, g / 255.0f, b / 255.0f);
         }
 
         public Color(NVector vector) {
@@ -68,8 +68,8 @@ namespace NackEngine.core.render
             return this.vector;
         }
 
-        private double Linear2Gamma(double linear) {
-            return (linear > 0) ? Math.Sqrt(linear) : 0;
+        private float Linear2Gamma(float linear) {
+            return (linear > 0) ? MathF.Sqrt(linear) : 0f;
         }
 
         public override string ToString() {
@@ -81,7 +81,7 @@ namespace NackEngine.core.render
             g = Linear2Gamma(g);
             b = Linear2Gamma(b);
 
-            Range intensity = new Range(0.000,0.999);
+            Range intensity = new Range(0.000f,0.999f);
             int ir = (int)(256 * intensity.Clamp(r));
             int ig = (int)(256 * intensity.Clamp(g));
             int ib = (int)(256 * intensity.Clamp(b));
@@ -98,7 +98,7 @@ namespace NackEngine.core.render
             return new Color(a.vector * b.vector);
         }
 
-        public static Color operator *(Color a, double b)
+        public static Color operator *(Color a, float b)
         {
             return new Color(a.vector * b);
         }
@@ -113,7 +113,7 @@ namespace NackEngine.core.render
             return vector.IsNaN();
         }
 
-        public Color Clamp(double min, double max)
+        public Color Clamp(float min, float max)
         {
             return new Color(
                 Math.Clamp(this.vector.X(), min, max),

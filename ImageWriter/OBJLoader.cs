@@ -129,7 +129,7 @@ namespace NackEngine.IO
 
             if (isExplicitGlass || (mtl.HasOpacity && mtl.Opacity < 0.99f))
             {
-                double refractionIndex = 1.5;
+                float refractionIndex = 1.5f;
 
                 if (mtl.HasReflectivity && mtl.Reflectivity > 1.0f) {
                     refractionIndex = mtl.Reflectivity;
@@ -160,7 +160,7 @@ namespace NackEngine.IO
                 {
                     albedo = new Color(mtl.ColorSpecular.R, mtl.ColorSpecular.G, mtl.ColorSpecular.B);
                 }
-                double fuzz = 0.45;
+                float fuzz = 0.45f;
                 return new Metal(albedo, fuzz);
             }
 

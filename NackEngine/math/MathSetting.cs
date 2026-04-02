@@ -8,20 +8,22 @@ namespace NackEngine.math
 {
     public static class MathSetting
     {
-        public static double RandomDouble()
+
+        private static Random rand = new Random();
+
+        public static float RandomFloat()
         {
-            return Random.Shared.NextDouble();
+            return (float)rand.NextDouble();
         }
 
-        public static double RandomDouble(double min, double max)
+        public static float RandomFloat(float min, float max)
         {
-            return min + (max - min) * Random.Shared.NextDouble();
+            return min + (max - min) * RandomFloat();
         }
 
-        // Random integer in [min, max]
         public static int RandomInteger(int min, int max)
         {
-            return (int)RandomDouble(min, max+1);
+            return rand.Next(min, max + 1);
         }
 
         public static NVector RandomUnitVector()
@@ -30,9 +32,9 @@ namespace NackEngine.math
             {
                 var p = NVector.Random(-1, 1);
                 var len = p.LengthSquared();
-                if (1e-160 < len && len <= 1)
+                if (1e-160f < len && len <= 1)
                 {
-                    return p / Math.Sqrt(len);
+                    return p / MathF.Sqrt(len);
                 }
             }
         }
@@ -40,7 +42,7 @@ namespace NackEngine.math
         public static NVector RandomOnHemisphere(NVector normal)
         {
             NVector onUnitSphere = RandomUnitVector();
-            return (NVector.Dot(onUnitSphere, normal) > 0.0) ?
+            return (NVector.Dot(onUnitSphere, normal) > 0.0f) ?
                     onUnitSphere : -onUnitSphere;
         }
 
@@ -48,8 +50,8 @@ namespace NackEngine.math
         {
             while (true)
             {
-                var p = new NVector(MathSetting.RandomDouble(-1, 1), MathSetting.RandomDouble(-1, 1), 0);
-                if (p.LengthSquared() < 1)
+                var p = new NVector(RandomFloat(-1f, 1f), RandomFloat(-1f, 1f), 0f);
+                if (p.LengthSquared() < 1f)
                 {
                     return p;
                 }
@@ -58,13 +60,13 @@ namespace NackEngine.math
 
         public static NVector RandomCosineDirection()
         {
-            var r1 = MathSetting.RandomDouble();
-            var r2 = MathSetting.RandomDouble();
-            var z = Math.Sqrt(1 - r2);
+            var r1 = RandomFloat();
+            var r2 = RandomFloat();
+            var z = MathF.Sqrt(1f - r2);
 
-            var phi = 2 * Math.PI * r1;
-            var x = Math.Cos(phi) * Math.Sqrt(r2);
-            var y = Math.Sin(phi) * Math.Sqrt(r2);
+            var phi = 2f * MathF.PI * r1;
+            var x = MathF.Cos(phi) * MathF.Sqrt(r2);
+            var y = MathF.Sin(phi) * MathF.Sqrt(r2);
 
             return new NVector(x, y, z);
         }
