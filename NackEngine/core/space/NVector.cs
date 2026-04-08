@@ -23,42 +23,54 @@ namespace NackEngine.core.space
         }
 
         public float X() => V.GetElement(0);
+
         public float Y() => V.GetElement(1);
+
         public float Z() => V.GetElement(2);
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float LengthSquared() => Dot(this, this);
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Length() => MathF.Sqrt(LengthSquared());
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator +(NVector a, NVector b) => new NVector(a.V + b.V);
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator -(NVector a, NVector b) => new NVector(a.V - b.V);
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator -(NVector a) => new NVector(-a.V);
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(NVector a, float scalar)
             => new NVector(a.V * Vector128.Create(scalar));
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(float scalar, NVector a) => a * scalar;
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(NVector a, NVector b) => new NVector(a.V * b.V);
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator /(NVector a, float scalar)
              => new NVector(a.V / Vector128.Create(scalar));
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Dot(NVector a, NVector b) {
-            Vector128<float> mul = a.V * b.V;
-            return mul.GetElement(0) + mul.GetElement(1) + mul.GetElement(2);
+        public static float Dot(NVector a, NVector b)
+        {
+            return Vector128.Dot(a.V, b.V);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,11 +1,10 @@
 ﻿namespace NackEngine.core.space
 {
-    public class Range
+    public struct Range
     {
         private float min;
         private float max;
 
-        // Default
         public static readonly Range EMPTY = new Range(float.MaxValue, float.MinValue);
         public static readonly Range UNIVERSE = new Range(float.MinValue, float.MaxValue);
         public static readonly Range DEFAULT = new Range(0.001f, float.MaxValue);

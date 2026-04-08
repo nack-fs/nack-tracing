@@ -41,8 +41,8 @@ namespace NackTracing
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
             //Monkey();
-            //CPU_NACK();
-            SALVAVIDAS();
+            CPU_NACK();
+            //SALVAVIDAS();
         }
 
         private static void BasicScene() {
