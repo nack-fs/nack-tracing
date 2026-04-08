@@ -41,8 +41,9 @@ namespace NackTracing
             //FinalScene(400, 250, 4);
             //FinalScene(250, 50, 4);
             //Monkey();
-            CPU_NACK();
+            //CPU_NACK();
             //SALVAVIDAS();
+            GPU_SCENE();
         }
 
         private static void BasicScene() {
@@ -833,7 +834,7 @@ namespace NackTracing
             export.ExportFile(render);
         }
 
-        private static void SALVAVIDAS()
+        private static void GPU_SECENE()
         {
             HitCollection world = new HitCollection();
 
@@ -904,6 +905,80 @@ namespace NackTracing
 
             Console.WriteLine("Guardando imagen...");
             PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "Salvavidas");
+            export.ExportFile(render);
+        }
+
+        private static void GPU_SCENE()
+        {
+            HitCollection world = new HitCollection();
+
+            var groundMaterial = new Diffuse(Color.GREY_DARK);
+            world.AddObject(new Plane(
+                new Point(-500, -10, -500),
+                new NVector(1000, 0, 0),
+                new NVector(0, 0, 1000),
+                groundMaterial
+            ));
+
+            Material blue = new Diffuse(Color.BLUE_NAVY);
+            HitCollection GPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\GPU_SCENE\\GPU_SCENE.obj", blue);
+
+            var bvhGPU = new BVHNode(GPUObj);
+
+            world.AddObject(bvhGPU);
+
+            var lightMaterial = new DiffuseLight(new Color(2f, 2f, 2f));
+
+            var ceilingLight = new Plane(
+                new Point(-8.52f, 6.68f, -1.85f),
+                new NVector(15f, 0, 0),
+                new NVector(0, 0, 15f),
+                lightMaterial
+            );
+
+            world.AddObject(ceilingLight);
+            HitCollection lights = new HitCollection();
+            lights.AddObject(ceilingLight);
+
+            float zoom = 0.9f;
+
+            Camera camera = BlenderAdapter.CreateCamera(
+                // Location Camera in Blender
+                X: -0.811323f * zoom,
+                Y: -9.68943f * zoom,
+                Z: 0.477847f * zoom,
+
+                // Location of the object to view
+                targetX: 1.53376f,
+                targetY: -6.12449f,
+                targetZ: 0.767201f,
+
+                // Lens properties
+                focalLengthMM: 36f,
+
+                // Render properties
+                aspectRatio: 16f/9f,
+                imageWidth: 1920,
+                numSamples: 1000
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+            var bvhWorld = new BVHNode(world);
+
+            var render = camera.Render(bvhWorld, lights);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "GPU_Nack");
             export.ExportFile(render);
         }
     }
