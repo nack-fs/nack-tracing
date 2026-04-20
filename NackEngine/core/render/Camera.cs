@@ -41,7 +41,11 @@ namespace NackEngine.core.render
         private NVector defocusDiskV;
         private int sqrtSPP;
         private float invSqrtSPP;
+
         private bool defaultBackground = true;
+        private Texture environment = null;
+        private float envSin = 0f;
+        private float envCos = 1f;
 
 
         public Camera(float aspectRatio = 1f, int imageWidth = 100,
@@ -171,6 +175,19 @@ namespace NackEngine.core.render
             HitStruct hit;
             if (!world.Hit(ray, Range.DEFAULT, out hit))
             {
+                if (environment != null) {
+                    NVector unitDirection = NVector.UnitVector(ray.Direction());
+                    unitDirection = unitDirection.Rotate(envSin, envCos, NVector.Axis.Y);
+
+                    float theta = MathF.Acos(-unitDirection.Y());
+                    float phi = MathF.Atan2(-unitDirection.Z(), unitDirection.X()) + MathF.PI;
+
+                    float u = phi / (2f * MathF.PI);
+                    float v = theta / MathF.PI;
+
+                    return environment.Value(u, v, unitDirection);
+                }
+
                 if (defaultBackground)
                 {
                     NVector unitDirection = NVector.UnitVector(ray.Direction());
@@ -257,6 +274,16 @@ namespace NackEngine.core.render
         {
             this.background = color;
             this.defaultBackground = false;
+        }
+
+        public void SetEnvironment(Texture hdri, float rotation)
+        {
+            this.environment = hdri;
+            this.defaultBackground = false;
+
+            float rad = float.DegreesToRadians(rotation);
+            this.envSin = MathF.Sin(rad);
+            this.envCos = MathF.Cos(rad);
         }
     }
 }

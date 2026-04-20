@@ -44,6 +44,7 @@ namespace NackTracing
             //CPU_NACK();
             //SALVAVIDAS();
             GPU_SCENE();
+            SALVAVIDAS_HDRI();
         }
 
         private static void BasicScene() {
@@ -834,7 +835,7 @@ namespace NackTracing
             export.ExportFile(render);
         }
 
-        private static void GPU_SECENE()
+        private static void SALVAVIDAS()
         {
             HitCollection world = new HitCollection();
 
@@ -927,18 +928,18 @@ namespace NackTracing
 
             world.AddObject(bvhGPU);
 
-            var lightMaterial = new DiffuseLight(new Color(2f, 2f, 2f));
+            //var lightMaterial = new DiffuseLight(new Color(2f, 2f, 2f));
 
-            var ceilingLight = new Plane(
-                new Point(-8.52f, 6.68f, -1.85f),
-                new NVector(15f, 0, 0),
-                new NVector(0, 0, 15f),
-                lightMaterial
-            );
+            //var ceilingLight = new Plane(
+            //    new Point(-8.52f, 6.68f, -1.85f),
+            //    new NVector(15f, 0, 0),
+            //    new NVector(0, 0, 15f),
+            //    lightMaterial
+            //);
 
-            world.AddObject(ceilingLight);
-            HitCollection lights = new HitCollection();
-            lights.AddObject(ceilingLight);
+            //world.AddObject(ceilingLight);
+            //HitCollection lights = new HitCollection();
+            //lights.AddObject(ceilingLight);
 
             float zoom = 0.9f;
 
@@ -962,7 +963,9 @@ namespace NackTracing
                 numSamples: 1000
             );
 
-            camera.SetBackgroundColor(Color.BLACK);
+            //camera.SetBackgroundColor(Color.BLACK);
+            Texture HDRI = HDRLoader.Load(@"I:\HDRIS\simons_town_rocks_4k.hdr");
+            camera.SetEnvironment(HDRI, 135f);
 
             Console.WriteLine("Iniciando render...");
             Stopwatch sw = new Stopwatch();
@@ -972,13 +975,90 @@ namespace NackTracing
             // ---------- RENDER ------------
             var bvhWorld = new BVHNode(world);
 
-            var render = camera.Render(bvhWorld, lights);
+            var render = camera.Render(bvhWorld);
 
             sw.Stop();
             ShowElapsedTime(sw);
 
             Console.WriteLine("Guardando imagen...");
-            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "GPU_Nack");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, $"GPU_Nack");
+            export.ExportFile(render);
+        }
+
+        private static void SALVAVIDAS_HDRI()
+        {
+            HitCollection world = new HitCollection();
+
+            var groundMaterial = new Diffuse(Color.WHITE);
+            world.AddObject(new Plane(
+                new Point(-5000, -10, -5000),
+                new NVector(10000, 0, 0),
+                new NVector(0, 0, 10000),
+                groundMaterial
+            ));
+
+            Material blue = new Diffuse(Color.BLUE_NAVY);
+            HitCollection SalvavidasObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\SALVAVIDAS\\SALVAVIDAS.obj", blue);
+
+            var bvhSalvavidas = new BVHNode(SalvavidasObj);
+
+            world.AddObject(bvhSalvavidas);
+
+            //var lightMaterial = new DiffuseLight(new Color(10, 10, 10));
+
+            //var ceilingLight = new Plane(
+            //    new Point(-5, 8, -5),
+            //    new NVector(10, 0, 0),
+            //    new NVector(0, 0, 10),
+            //    lightMaterial
+            //);
+
+            //world.AddObject(ceilingLight);
+            HitCollection lights = new HitCollection();
+            //lights.AddObject(ceilingLight);
+
+            float zoom = 1.5f;
+
+            Camera camera = BlenderAdapter.CreateCamera(
+                // Location Camera in Blender
+                X: -5.52395f * zoom,
+                Y: -8.95188f * zoom,
+                Z: 1.51004f * zoom,
+
+                // Location of the object to view
+                targetX: 0,
+                targetY: 0,
+                targetZ: 0,
+
+                // Lens properties
+                focalLengthMM: 50.0f,
+
+                // Render properties
+                aspectRatio: 1.0f,
+                imageWidth: 1080,
+                numSamples: 500
+            );
+
+            //camera.SetBackgroundColor(Color.BLACK);
+
+            Texture HDRI = HDRLoader.Load(@"I:\HDRIS\simons_town_rocks_4k.hdr");
+            camera.SetEnvironment(HDRI, 135f);
+
+            Console.WriteLine("Iniciando render...");
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            // ---------- RENDER ------------
+            var bvhWorld = new BVHNode(world);
+
+            var render = camera.Render(bvhWorld);
+
+            sw.Stop();
+            ShowElapsedTime(sw);
+
+            Console.WriteLine("Guardando imagen...");
+            PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "Salvavidas_HDRI");
             export.ExportFile(render);
         }
     }
