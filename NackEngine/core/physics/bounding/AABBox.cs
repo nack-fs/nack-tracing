@@ -78,6 +78,16 @@ namespace NackEngine.core.physics.bounding
             return true;
         }
 
+        public float Area() {
+            float dx = X.Size();
+            float dy = Y.Size();
+            float dz = Z.Size();
+
+            if (dx < 0 || dy < 0 || dz < 0) { return 0.0f; }
+
+            return 2.0f * (dx * dy + dy * dz + dz * dx);
+        }
+
         public int LongestAxis()
         {
             if (X.Size() < Y.Size())

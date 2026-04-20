@@ -8,12 +8,9 @@ namespace NackEngine.math
 {
     public static class MathSetting
     {
-
-        private static Random rand = new Random();
-
         public static float RandomFloat()
         {
-            return (float)rand.NextDouble();
+            return (float)Random.Shared.NextDouble();
         }
 
         public static float RandomFloat(float min, float max)
@@ -23,7 +20,7 @@ namespace NackEngine.math
 
         public static int RandomInteger(int min, int max)
         {
-            return rand.Next(min, max + 1);
+            return Random.Shared.Next(min, max + 1);
         }
 
         public static NVector RandomUnitVector()

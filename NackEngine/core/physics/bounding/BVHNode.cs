@@ -50,7 +50,46 @@ namespace NackEngine.core.physics.bounding
             {
                 objects.Sort(start, objectSpan, comparer);
 
-                int mid = start + objectSpan / 2;
+                float[] leftAreas = new float[objectSpan];
+                float[] rightAreas = new float[objectSpan];
+
+                AABBox leftBox = AABBox.EMPTY;
+                for (int i = 0; i < objectSpan; i++) {
+
+                    leftBox = new AABBox(leftBox, objects[start + i].BoundingBox());
+                    leftAreas[i] = leftBox.Area();
+                }
+
+                AABBox rightBox = AABBox.EMPTY;
+                for (int i = objectSpan - 1; i >= 0; i--)
+                {
+                    rightBox = new AABBox(rightBox, objects[start + i].BoundingBox());
+                    rightAreas[i] = rightBox.Area();
+                }
+
+                float minCost = float.MaxValue;
+                int minCostSplitIndex = start + objectSpan / 2;
+
+                for (int i = 0; i < objectSpan - 1; i++)
+                {
+                    int countLeft = i + 1;
+                    int countRight = objectSpan - countLeft;
+
+                    float cost = (countLeft * leftAreas[i]) + (countRight * rightAreas[i + 1]);
+
+                    if (cost < minCost)
+                    {
+                        minCost = cost;
+                        minCostSplitIndex = start + i + 1;
+                    }
+                }
+
+                int mid = minCostSplitIndex;
+
+                if (mid == start || mid == end)
+                {
+                    mid = start + objectSpan / 2;
+                }
 
                 left = new BVHNode(objects, start, mid);
                 right = new BVHNode(objects, mid, end);
