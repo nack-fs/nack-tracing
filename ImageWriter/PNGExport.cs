@@ -30,22 +30,13 @@ namespace ExportConfig
                     {
                         var col = pixelColors[y * imageWidth + x];
 
-                        float r = col.Vector().X();
-                        float g = col.Vector().Y();
-                        float b = col.Vector().Z();
+                        double r = (col.Vector().X() > 0) ? Math.Sqrt(col.Vector().X()) : 0;
+                        double g = (col.Vector().Y() > 0) ? Math.Sqrt(col.Vector().Y()) : 0;
+                        double b = (col.Vector().Z() > 0) ? Math.Sqrt(col.Vector().Z()) : 0;
 
-                        r = r / (r + 1.0f);
-                        g = g / (g + 1.0f);
-                        b = b / (b + 1.0f);
-
-                        r = (r > 0f) ? MathF.Sqrt(r) : 0f;
-                        g = (g > 0f) ? MathF.Sqrt(g) : 0f;
-                        b = (b > 0f) ? MathF.Sqrt(b) : 0f;
-
-                        int ir = (int)(256 * Math.Clamp(r, 0.0f, 0.999f));
-                        int ig = (int)(256 * Math.Clamp(g, 0.0f, 0.999f));
-                        int ib = (int)(256 * Math.Clamp(b, 0.0f, 0.999f));
-
+                        int ir = (int)(256 * Math.Clamp(r, 0.0, 0.999));
+                        int ig = (int)(256 * Math.Clamp(g, 0.0, 0.999));
+                        int ib = (int)(256 * Math.Clamp(b, 0.0, 0.999));
 
                         Color pixelColor = Color.FromArgb(ir, ig, ib);
                         bitmap.SetPixel(x, y, pixelColor);
