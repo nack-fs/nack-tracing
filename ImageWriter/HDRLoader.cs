@@ -11,7 +11,8 @@ namespace NackEngine.IO
     public static class HDRLoader
     {
         public static FloatImageTexture Load(string filename) {
-            string path = TextureConfig.GetImagePath(filename);
+
+            string path = AssetConfig.GetHdriPath(filename);
             if (string.IsNullOrEmpty(path)) { path = filename; }
 
             try

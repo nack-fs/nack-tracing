@@ -13,14 +13,17 @@ namespace NackEngine.IO
     {
         public static HitCollection Load(string filepath, Material defaultMaterial = null)
         {
+            string actualPath = AssetConfig.GetModelPath(filepath);
+            if (string.IsNullOrEmpty(actualPath)) { actualPath = filepath; }
+
             HitCollection world = new HitCollection();
             AssimpContext importer = new AssimpContext();
 
             try
             {
-                Console.WriteLine($"Cargando modelo OBJ: {filepath}");
+                Console.WriteLine($"Cargando modelo OBJ: {actualPath}");
 
-                Scene scene = importer.ImportFile(filepath,
+                Scene scene = importer.ImportFile(actualPath,
                     PostProcessSteps.Triangulate |
                     PostProcessSteps.GenerateSmoothNormals |
                     PostProcessSteps.JoinIdenticalVertices
@@ -29,11 +32,11 @@ namespace NackEngine.IO
                 if (scene == null || scene.SceneFlags.HasFlag(SceneFlags.Incomplete)
                     || scene.RootNode == null)
                 {
-                    Console.WriteLine($"[ERROR] Fallo al procesar el OBJ: {filepath}");
+                    Console.WriteLine($"[ERROR] Fallo al procesar el OBJ: {actualPath}");
                     return world;
                 }
 
-                string basePath = Path.GetDirectoryName(filepath);
+                string basePath = Path.GetDirectoryName(actualPath);
                 List<Material> materials = new List<Material>();
 
                 if (scene.HasMaterials)
@@ -116,7 +119,7 @@ namespace NackEngine.IO
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] Cargando el OBJ: {e.Message}");
+                Console.WriteLine($"[ERROR] Cargando el OBJ: {e.Message}, path: {actualPath}");
             }
             return world;
         }

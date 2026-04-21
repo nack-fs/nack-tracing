@@ -1,4 +1,5 @@
 ﻿using NackEngine.core.physics.bounding.comparators;
+using NackEngine.core.space;
 using NackEngine.math;
 using NackEngine.objects;
 using Range = NackEngine.core.space.Range;
@@ -28,6 +29,13 @@ namespace NackEngine.core.physics.bounding
                                            : new BoxZCompare();
 
             int objectSpan = end - start;
+
+            if (objectSpan <= 0)
+            {
+                aabbox = AABBox.EMPTY;
+                left = right = new Sphere(new NVector(0, 0, 0), 0, null);
+                return;
+            }
 
             if (objectSpan == 1)
             {

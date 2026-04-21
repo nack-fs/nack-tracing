@@ -9,7 +9,7 @@ namespace NackEngine.IO
     {
         public static ImageTexture Load(string filename)
         {
-            string path = TextureConfig.GetImagePath(filename);
+            string path = AssetConfig.GetTexturePath(filename);
             if (string.IsNullOrEmpty(path)) { path = filename; }
 
             try

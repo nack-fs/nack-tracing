@@ -1,5 +1,20 @@
 {
-  "EARTH": "C:\\Users\\ignac\\Downloads\\earth-texture.jpg",
-  "MARS": "C:\\Users\\ignac\\Downloads\\mars-texture.jpg",
-  "DOLLAR_TEX": "C:\\Users\\ignac\\Downloads\\dollarTexture.jpg"
+  "assetsBaseConfig": "C:\\Users\\ignac\\Downloads\\assets",
+
+  "textures": {
+    "EARTH": "textures/earth-texture.jpg",
+    "MARS": "textures/mars-texture.jpg",
+    "DOLLAR": "textures/dollarTexture.jpg"
+  },
+
+  "hdris": {
+    "SimonsRocks": "hdris/simons_town_rocks_4k.hdr"
+  },
+
+  "models": {
+    "CPU_NACK": "models/CPU_FUTURE/CPU_FUTURE.obj",
+    "SALVAVIDAS": "models/SALVAVIDAS/SALVAVIDAS.obj",
+    "GPU_SCENE": "models/GPU_SCENE/GPU_SCENE.obj",
+    "PELOTA_TENIS": "models/PELOTA_TENIS/PELOTA_TENIS.obj"
+  }
 }

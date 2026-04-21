@@ -27,11 +27,12 @@ namespace NackTracing
     {
         static void Main(string[] args)
         {
+            AssetConfig.Initialize();
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
             //BasicScene();
             //CheckeredSpheres();
-            //EarthAndMars();
+            EarthAndMars();
             //PerlinTest();
             //PlanesScene();
             //LightTest();
@@ -45,7 +46,7 @@ namespace NackTracing
             //SALVAVIDAS();
             //GPU_SCENE();
             //SALVAVIDAS_HDRI();
-            CPU_NACK_LITE();
+            //CPU_NACK_LITE();
         }
 
         private static void BasicScene() {
@@ -768,7 +769,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE\\CPU_FUTURE.obj", blue);
+            HitCollection CPUObj = OBJLoader.Load("CPU_NACK", blue);
 
             var bvhCPU = new BVHNode(CPUObj);
 
@@ -849,7 +850,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection CPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\CPU_FUTURE\\CPU_FUTURE.obj", blue);
+            HitCollection CPUObj = OBJLoader.Load("CPU_NACK", blue);
 
             var bvhCPU = new BVHNode(CPUObj);
 
@@ -930,7 +931,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection SalvavidasObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\SALVAVIDAS\\SALVAVIDAS.obj", blue);
+            HitCollection SalvavidasObj = OBJLoader.Load("SALVAVIDAS", blue);
 
             var bvhSalvavidas = new BVHNode(SalvavidasObj);
 
@@ -1004,7 +1005,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection GPUObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\GPU_SCENE\\GPU_SCENE.obj", blue);
+            HitCollection GPUObj = OBJLoader.Load("GPU_SCENE", blue);
 
             var bvhGPU = new BVHNode(GPUObj);
 
@@ -1046,7 +1047,7 @@ namespace NackTracing
             );
 
             //camera.SetBackgroundColor(Color.BLACK);
-            Texture HDRI = HDRLoader.Load(@"I:\HDRIS\simons_town_rocks_4k.hdr");
+            Texture HDRI = HDRLoader.Load("SimonsRocks");
             camera.SetEnvironment(HDRI, 135f);
 
             Console.WriteLine("Iniciando render...");
@@ -1080,7 +1081,7 @@ namespace NackTracing
             ));
 
             Material blue = new Diffuse(Color.BLUE_NAVY);
-            HitCollection SalvavidasObj = OBJLoader.Load("C:\\Users\\ignac\\Downloads\\SALVAVIDAS\\SALVAVIDAS.obj", blue);
+            HitCollection SalvavidasObj = OBJLoader.Load("SALVAVIDAS", blue);
 
             var bvhSalvavidas = new BVHNode(SalvavidasObj);
 
@@ -1123,7 +1124,7 @@ namespace NackTracing
 
             //camera.SetBackgroundColor(Color.BLACK);
 
-            Texture HDRI = HDRLoader.Load(@"I:\HDRIS\simons_town_rocks_4k.hdr");
+            Texture HDRI = HDRLoader.Load("SimonsRocks");
             camera.SetEnvironment(HDRI, 135f);
 
             Console.WriteLine("Iniciando render...");
