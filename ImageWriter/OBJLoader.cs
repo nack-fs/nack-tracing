@@ -21,7 +21,7 @@ namespace NackEngine.IO
 
             try
             {
-                Console.WriteLine($"Cargando modelo OBJ: {actualPath}");
+                Logger.Log($"[INFO] Loading OBJ model: {actualPath} ...");
 
                 Scene scene = importer.ImportFile(actualPath,
                     PostProcessSteps.Triangulate |
@@ -32,7 +32,7 @@ namespace NackEngine.IO
                 if (scene == null || scene.SceneFlags.HasFlag(SceneFlags.Incomplete)
                     || scene.RootNode == null)
                 {
-                    Console.WriteLine($"[ERROR] Fallo al procesar el OBJ: {actualPath}");
+                    Logger.Log($"[ERROR] Error processing the OBJ file in {actualPath}");
                     return world;
                 }
 
@@ -114,12 +114,15 @@ namespace NackEngine.IO
                         }
                     }
                 }
-                Console.WriteLine($"Modelo OBJ cargado correctamente. Total triángulos: {totalTriangles}");
-                Console.WriteLine($"Material MTL cargado correctamente. Total materiales: {materials.Count}");
+                Logger.Log("[INFO] Modelo OBJ cargado correctamente.");
+                Logger.Log($"[INFO] --- Total triángulos: {totalTriangles} ---");
+
+                Logger.Log("[INFO] Material MTL cargado correctamente.");
+                Logger.Log($"[INFO] --- Total materiales: {materials.Count} ---");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] Cargando el OBJ: {e.Message}, path: {actualPath}");
+                Logger.Log($"[ERROR] Cargando el OBJ: {e.Message}, path: {actualPath}");
             }
             return world;
         }

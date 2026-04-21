@@ -35,7 +35,7 @@ namespace NackEngine.IO
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] The texture '{filename}' could not be loaded: {e.Message}");
+                Logger.Log($"[ERROR] The texture '{filename}' could not be loaded: {e.Message}");
                 return new ImageTexture(null, 0, 0, 0);
             }
         }

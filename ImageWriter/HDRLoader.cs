@@ -23,7 +23,7 @@ namespace NackEngine.IO
                 }
             }
             catch (Exception e) {
-                Console.WriteLine($"[ERROR] No se puede cargar el HDRI '{filename}': {e.Message}");
+                Logger.Log($"[ERROR] The HDRI ‘{filename}’ cannot be loaded: {e.Message}");
                 return new FloatImageTexture(null, 0, 0);
             }
       

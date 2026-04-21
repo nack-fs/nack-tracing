@@ -47,6 +47,13 @@ namespace NackEngine.core.render
         private float envSin = 0f;
         private float envCos = 1f;
 
+        // -----------------------
+
+        public Color[] PixelBuffer { get; private set; }
+        public bool IsCompleted { get; set; } = false;
+        public int CurrentSample { get; private set; }
+
+        // -----------------------
 
         public Camera(float aspectRatio = 1f, int imageWidth = 100,
             int numSamples = 10, int maxDepth = 10, float fieldView = 90f,
@@ -62,6 +69,7 @@ namespace NackEngine.core.render
             this.maxIntensity = maxIntensity;
 
             this.background = Color.WHITE;
+            this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
         }
 
         public Color[] Render(Hittable world, Hittable lights = null)
@@ -97,6 +105,45 @@ namespace NackEngine.core.render
             return pixelColors;
         }
 
+        public void RenderPreview(Hittable world, Hittable lights = null) {
+            Initialize();
+
+            int totalPixels = imageWidth * imageHeight;
+            PixelBuffer = new Color[totalPixels];
+            Color[] accumulationBuffer = new Color[totalPixels];
+
+            int[] indexes = new int[totalPixels];
+            for (int i = 0; i < totalPixels; i++) {
+                indexes[i] = i;
+            }
+
+            for (int sample = 1; sample <= numSamples; sample++) {
+                CurrentSample = sample;
+
+                ShuffleIndexes(indexes);
+
+                Parallel.ForEach(indexes, index =>
+                {
+                    int x = index % imageWidth;
+                    int y = index / imageWidth;
+
+                    Ray ray = GetRay(x, y, 0, 0);
+
+                    Color sampleColor = RayColor(ray, maxDepth, world, lights);
+
+                    if (!sampleColor.IsNaN())
+                    {
+                        accumulationBuffer[index] += sampleColor;
+                    }
+
+                    PixelBuffer[index] = accumulationBuffer[index] * (1.0f / sample);
+                });
+
+                IsCompleted = true;
+                //Thread.Sleep(1);
+            }
+        }
+
         private void ShowProgress(Func<int> getRowsDone, int totalRows)
         {
             Task.Run(async () =>
@@ -119,8 +166,6 @@ namespace NackEngine.core.render
 
         private void Initialize()
         {
-            this.imageHeight = Math.Max(1, (int)(imageWidth / aspectRatio));
-
             this.sqrtSPP = (int)Math.Sqrt(numSamples);
             this.samplesScale = 1f / (sqrtSPP * sqrtSPP);
             this.invSqrtSPP = 1f / sqrtSPP;
@@ -284,6 +329,15 @@ namespace NackEngine.core.render
             float rad = float.DegreesToRadians(rotation);
             this.envSin = MathF.Sin(rad);
             this.envCos = MathF.Cos(rad);
+        }
+
+        private void ShuffleIndexes(int[] array) { 
+            int n = array.Length;
+
+            while (n > 1) {
+                int k = Random.Shared.Next(n--);
+                (array[n], array[k]) = (array[k], array[n]);
+            }
         }
     }
 }
