@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Range = NackEngine.core.space.Range;
+using Color = NackEngine.core.render.Color;
 
 
 namespace NackTracing
@@ -25,14 +26,17 @@ namespace NackTracing
 
     internal class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
+            UI();
+
             AssetConfig.Initialize();
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
             //BasicScene();
             //CheckeredSpheres();
-            EarthAndMars();
+            //EarthAndMars();
             //PerlinTest();
             //PlanesScene();
             //LightTest();
@@ -47,6 +51,52 @@ namespace NackTracing
             //GPU_SCENE();
             //SALVAVIDAS_HDRI();
             //CPU_NACK_LITE();
+
+            PREVIEW_CPU();
+            //CPU_NACK_LITE();
+        }
+
+        private static void UI()
+        {
+            try
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Clear();
+                Console.Title = "NACK ENGINE | CORE RENDERER | DEVELOPER ACCESS";
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(" _____________________________________________________________________________");
+                Console.Write(" [ ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("RENDERING: ACTIVE");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(" ] [ ");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("MODE: DEVELOPER RENDER ENGINE");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(" ] [ RELEASE: 7.42-STABLE ]");
+                Console.WriteLine(" _____________________________________________________________________________\n");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\n    > CORE_SUBSYSTEM_INITIALIZED...");
+                Console.WriteLine("    > RENDER_PIPELINE_READY");
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\n    -------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("    Ray Tracing Laboratory | TFG Ignacio Fernández | Univ. de Oviedo");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("    -------------------------------------------------------------------------");
+
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("[SYSTEM] ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Console stream redirected to primary output.\n");
+            }
+            catch (IOException){
+                Console.WriteLine("Default primary output.\n");
+            }
         }
 
         private static void BasicScene() {
@@ -894,7 +944,7 @@ namespace NackTracing
 
                 // Render properties
                 aspectRatio: 16.0f / 9.0f,
-                imageWidth: 400,
+                imageWidth: 600,
                 numSamples: 400
             );
 
@@ -916,6 +966,93 @@ namespace NackTracing
             Console.WriteLine("Guardando imagen...");
             PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "CPU_NACK_LITE");
             export.ExportFile(render);
+        }
+
+        private static void PREVIEW_CPU()
+        {
+            HitCollection world = new HitCollection();
+
+            var groundMaterial = new Diffuse(Color.GREY_DARK);
+            world.AddObject(new Plane(
+                new Point(-500, -10, -500),
+                new NVector(1000, 0, 0),
+                new NVector(0, 0, 1000),
+                groundMaterial
+            ));
+
+            Material blue = new Diffuse(Color.BLUE_NAVY);
+            HitCollection CPUObj = OBJLoader.Load("CPU_NACK", blue);
+
+            var bvhCPU = new BVHNode(CPUObj);
+            world.AddObject(bvhCPU);
+
+            HitCollection lights = new HitCollection();
+            var lightMaterial = new DiffuseLight(new Color(3, 3, 3));
+
+            var ceilingLight = new Plane(
+                new Point(-5, 8, -5),
+                new NVector(10, 0, 0),
+                new NVector(0, 0, 10),
+                lightMaterial
+            );
+
+            var smallLight = new Plane(
+                new Point(-3, 6.75f, -3),
+                new NVector(10, 0, 0),
+                new NVector(0, 0, 10),
+                lightMaterial
+            );
+
+            world.AddObject(ceilingLight);
+            lights.AddObject(ceilingLight);
+            world.AddObject(smallLight);
+            lights.AddObject(smallLight);
+
+            Camera camera = BlenderAdapter.CreateCamera(
+                X: -9.2436f,
+                Y: -12.738f,
+                Z: 9.0725f,
+                targetX: 0,
+                targetY: 0,
+                targetZ: 0,
+                focalLengthMM: 50.0f,
+                aspectRatio: 16.0f / 9.0f,
+                imageWidth: 600,
+                numSamples: 400
+            );
+
+            camera.SetBackgroundColor(Color.BLACK);
+
+            var bvhWorld = new BVHNode(world);
+
+            Application.EnableVisualStyles();
+
+            RenderWindow window = new RenderWindow(camera);
+
+            Console.WriteLine("Iniciando render...");
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+
+                    camera.RenderPreview(bvhWorld, lights);
+
+                    sw.Stop();
+                    ShowElapsedTime(sw);
+
+                    Console.WriteLine("Guardando imagen...");
+                    PNGExport export = new PNGExport(camera.imageWidth, camera.imageHeight, "CPU_NACK_LITE");
+                    export.ExportFile(camera.PixelBuffer);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR EN RENDER]: {ex.Message}");
+                }
+            });
+            Application.Run(window);
         }
 
         private static void SALVAVIDAS()
