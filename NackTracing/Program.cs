@@ -10,6 +10,7 @@ namespace NackTracing
         private static readonly string releaseVersion = "7.42-STABLE";
         static void Main(string[] args)
         {
+            Scene.previewMode = true;
             DeveloperUserInterface();
 
             AssetConfig.Initialize();
@@ -48,8 +49,16 @@ namespace NackTracing
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine(" _____________________________________________________________________________");
                 Console.Write(" [ ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("RENDERING: ACTIVE");
+
+                if (Scene.previewMode)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("RENDER PREVIEW: ACTIVE");
+                }
+                else {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write("RENDER PREVIEW: INACTIVE");
+                }
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(" ] [ ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -59,13 +68,13 @@ namespace NackTracing
                 Console.WriteLine(" _____________________________________________________________________________\n");
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\n    > CORE_SUBSYSTEM_INITIALIZED...");
-                Console.WriteLine("    > RENDER_PIPELINE_READY");
+                Console.WriteLine("\n    > CORE INITIALIZED...");
+                Console.WriteLine("    > RENDER PIPELINE READY");
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("\n    -------------------------------------------------------------------------");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("    Ray Tracing Laboratory | TFG Ignacio Fernández | Univ. de Oviedo");
+                Console.WriteLine("    Ray Tracing Laboratory | TFG Ignacio Fernández | University of Oviedo");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("    -------------------------------------------------------------------------");
 

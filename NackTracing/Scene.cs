@@ -21,6 +21,7 @@ namespace NackTracing
 
     public class Scene
     {
+        public static bool previewMode = false;
 
         public static void BasicScene()
         {
