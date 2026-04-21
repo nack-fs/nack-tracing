@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using NackEngine.IO;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
@@ -49,7 +50,7 @@ namespace ExportConfig
             string filePath = Path.Combine(downloadsPath, $"{fileName}.png");
 
             bitmap.Save(filePath, ImageFormat.Png);
-            Console.WriteLine($"Render completado, archivo '{fileName}.png' creado");
+            Logger.Log($"[INFO] Rendering complete, file ‘{fileName}.png’ saved successfully.");
         }
     }
 }

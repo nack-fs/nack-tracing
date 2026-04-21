@@ -30,7 +30,7 @@ namespace NackEngine.IO
             if (configData != null) { return; }
 
             if (!File.Exists(assetsConfigPath)) {
-                Console.WriteLine($"[WARN] Archivo de configuración no encontrado en {assetsConfigPath}");
+                Logger.Log($"[WARN] Configuration file not found in {assetsConfigPath}");
                 CreateEmptyConfig();
                 return;
             }
@@ -63,11 +63,11 @@ namespace NackEngine.IO
                 if (configData.Hdris == null) { configData.Hdris = new Dictionary<string, string>(); }
                 if (configData.Models == null) { configData.Models = new Dictionary<string, string>(); }
 
-                Console.WriteLine($"[INFO] Configuración cargada correctamente, de : {configData.AssetsBaseConfig}");
+                Logger.Log($"[INFO] Configuration loaded successfully from {configData.AssetsBaseConfig}");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] Leyendo el nack-config.json: {e.Message}");
+                Logger.Log($"[ERROR] Reading nack-config.json: {e.Message}");
                 CreateEmptyConfig();
             }
         }
@@ -83,7 +83,7 @@ namespace NackEngine.IO
                     return fullPath;
                 }
 
-                Console.WriteLine($"[WARN] Archivo registrado como '{name}' no encontrado en {fullPath}");
+                Logger.Log($"[WARN] File named ‘{name}’ not found in {fullPath}");
                 return null;
             }
 

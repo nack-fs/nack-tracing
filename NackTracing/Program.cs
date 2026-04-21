@@ -47,7 +47,7 @@ namespace NackTracing
                 Console.Title = "NACK ENGINE | CORE RENDERER | DEVELOPER ACCESS";
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine(" _____________________________________________________________________________");
+                Console.WriteLine($"\n    {new string('-', 50)}");
                 Console.Write(" [ ");
 
                 if (Scene.previewMode)
@@ -59,30 +59,27 @@ namespace NackTracing
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.Write("RENDER PREVIEW: INACTIVE");
                 }
+
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(" ] [ ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write("MODE: DEVELOPER RENDER ENGINE");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine($" ] [ RELEASE: {releaseVersion} ]");
-                Console.WriteLine(" _____________________________________________________________________________\n");
+                Console.WriteLine($"\n    {new string('-', 80)}");
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\n    > CORE INITIALIZED...");
+                Console.WriteLine("\n    > CORE INITIALIZED");
                 Console.WriteLine("    > RENDER PIPELINE READY");
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("\n    -------------------------------------------------------------------------");
+                Console.WriteLine($"\n    {new string('-', 80)}");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("    Ray Tracing Laboratory | TFG Ignacio Fernández | University of Oviedo");
+                Console.WriteLine("    Ray Tracing Environment | TFG - Ignacio Fernández Suárez | University of Oviedo");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("    -------------------------------------------------------------------------");
+                Console.WriteLine($"\n    {new string('-', 80)}");
 
                 Console.WriteLine("");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("[SYSTEM] ");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Console stream redirected to primary output.\n");
             }
             catch (IOException)
             {
