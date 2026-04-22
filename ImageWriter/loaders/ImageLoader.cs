@@ -3,13 +3,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace NackEngine.IO
+namespace NackEngine.IO.loaders
 {
     public static class ImageLoader
     {
         public static ImageTexture Load(string filename)
         {
-            string path = TextureConfig.GetImagePath(filename);
+            string path = AssetConfig.GetTexturePath(filename);
             if (string.IsNullOrEmpty(path)) { path = filename; }
 
             try
@@ -35,7 +35,7 @@ namespace NackEngine.IO
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] The texture '{filename}' could not be loaded: {e.Message}");
+                Logger.Log($"[ERROR] The texture '{filename}' could not be loaded: {e.Message}");
                 return new ImageTexture(null, 0, 0, 0);
             }
         }

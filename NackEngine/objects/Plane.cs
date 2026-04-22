@@ -20,10 +20,10 @@ namespace NackEngine.objects
         private AABBox aabbox;
 
         private NVector normal;
-        private double D;
+        private float D;
         private NVector w;
 
-        private double area;
+        private float area;
 
         public Plane(Point corner, NVector u, NVector v, Material material) { 
             this.corner = corner;
@@ -57,7 +57,7 @@ namespace NackEngine.objects
             hit = default;
             var dNormal = NVector.Dot(normal, ray.Direction());
 
-            double tol = 1e-8;
+            float tol = 1e-8f;
             if (Math.Abs(dNormal) < tol) {
                 return false;
             }
@@ -80,9 +80,9 @@ namespace NackEngine.objects
             return true;
         }
 
-        private bool IsInside(double a, double b, out HitStruct hit) {
+        private bool IsInside(float a, float b, out HitStruct hit) {
             hit = default;
-            Range unitRange = new Range(0, 1);
+            Range unitRange = new Range(0f, 1f);
 
             if (!unitRange.Contains(a) || !unitRange.Contains(b)) { 
                 return false;
@@ -93,22 +93,22 @@ namespace NackEngine.objects
             return true;
         }
 
-        public double Probability(Point origin, NVector direction) {
+        public float Probability(Point origin, NVector direction) {
             HitStruct hit;
             if (!this.Hit(new Ray(origin, direction), Range.DEFAULT, out hit)) {
-                return 0;
+                return 0f;
             }
 
-            var distanceSquared = hit.T * hit.T * direction.LengthSquared();
-            var cos = Math.Abs(NVector.Dot(direction, hit.Normal) / direction.Length());
+            float distanceSquared = hit.T * hit.T * direction.LengthSquared();
+            float cos = MathF.Abs(NVector.Dot(direction, hit.Normal) / direction.Length());
 
             return distanceSquared / (cos * area);
         }
 
         public NVector Random(Point origin) {
             var p = corner +
-                (MathSetting.RandomDouble() * u) +
-                (MathSetting.RandomDouble() * v);
+                (MathSetting.RandomFloat() * u) +
+                (MathSetting.RandomFloat() * v);
             return p - origin;
         }
     }

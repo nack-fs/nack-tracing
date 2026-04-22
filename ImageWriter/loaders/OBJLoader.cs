@@ -4,7 +4,7 @@ using NackEngine.core.render.materials;
 using NackEngine.core.space;
 using NackEngine.objects;
 
-namespace NackEngine.IO
+namespace NackEngine.IO.loaders
 {
     using Material = core.render.Material;
     using Point = NVector;
@@ -13,27 +13,30 @@ namespace NackEngine.IO
     {
         public static HitCollection Load(string filepath, Material defaultMaterial = null)
         {
+            string actualPath = AssetConfig.GetModelPath(filepath);
+            if (string.IsNullOrEmpty(actualPath)) { actualPath = filepath; }
+
             HitCollection world = new HitCollection();
             AssimpContext importer = new AssimpContext();
 
             try
             {
-                Console.WriteLine($"Cargando modelo OBJ: {filepath}");
+                Logger.Log($"[INFO] Loading OBJ model: {actualPath} ...");
 
-                Scene scene = importer.ImportFile(filepath,
+                Scene scene = importer.ImportFile(actualPath,
                     PostProcessSteps.Triangulate |
-                    PostProcessSteps.GenerateNormals |
+                    PostProcessSteps.GenerateSmoothNormals |
                     PostProcessSteps.JoinIdenticalVertices
                 );
 
                 if (scene == null || scene.SceneFlags.HasFlag(SceneFlags.Incomplete)
                     || scene.RootNode == null)
                 {
-                    Console.WriteLine($"[ERROR] Fallo al procesar el OBJ: {filepath}");
+                    Logger.Log($"[ERROR] Error processing the OBJ file in {actualPath}");
                     return world;
                 }
 
-                string basePath = Path.GetDirectoryName(filepath);
+                string basePath = Path.GetDirectoryName(actualPath);
                 List<Material> materials = new List<Material>();
 
                 if (scene.HasMaterials)
@@ -55,14 +58,24 @@ namespace NackEngine.IO
 
                     Point[] vertices = new Point[mesh.VertexCount];
                     NVector[] UVs = new NVector[mesh.VertexCount];
+                    NVector[] normals = new NVector[mesh.VertexCount];
 
                     bool hasUVs = mesh.HasTextureCoords(0);
+                    bool hasNormals = mesh.HasNormals;
 
                     for (int i = 0; i < mesh.VertexCount; i++)
                     {
                         vertices[i] = new Point(mesh.Vertices[i].X,
                                                 mesh.Vertices[i].Y,
                                                 mesh.Vertices[i].Z);
+
+                        if (hasNormals)
+                        {
+                            normals[i] = new NVector(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z);
+                        }
+                        else {
+                            normals[i] = new NVector(0, 1, 0);
+                        }
 
                         if (hasUVs)
                         {
@@ -91,18 +104,25 @@ namespace NackEngine.IO
                             NVector uv1 = UVs[i1];
                             NVector uv2 = UVs[i2];
 
-                            world.AddObject(new Triangle(v0, v1, v2, uv0, uv1, uv2, actualMaterial));
+                            NVector n0 = normals[i0];
+                            NVector n1 = normals[i1];
+                            NVector n2 = normals[i2];
+
+                            world.AddObject(new Triangle(v0, v1, v2, uv0, uv1, uv2, n0, n1, n2, actualMaterial));
 
                             totalTriangles++;
                         }
                     }
                 }
-                Console.WriteLine($"Modelo OBJ cargado correctamente. Total triángulos: {totalTriangles}");
-                Console.WriteLine($"Material MTL cargado correctamente. Total materiales: {materials.Count}");
+                Logger.Log("[INFO] Modelo OBJ cargado correctamente.");
+                Logger.Log($"[INFO] --- Total triángulos: {totalTriangles} ---");
+
+                Logger.Log("[INFO] Material MTL cargado correctamente.");
+                Logger.Log($"[INFO] --- Total materiales: {materials.Count} ---");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR] Cargando el OBJ: {e.Message}");
+                Logger.Log($"[ERROR] Cargando el OBJ: {e.Message}, path: {actualPath}");
             }
             return world;
         }
@@ -115,7 +135,7 @@ namespace NackEngine.IO
 
             if (isExplicitGlass || (mtl.HasOpacity && mtl.Opacity < 0.99f))
             {
-                double refractionIndex = 1.5;
+                float refractionIndex = 1.5f;
 
                 if (mtl.HasReflectivity && mtl.Reflectivity > 1.0f) {
                     refractionIndex = mtl.Reflectivity;
@@ -146,7 +166,7 @@ namespace NackEngine.IO
                 {
                     albedo = new Color(mtl.ColorSpecular.R, mtl.ColorSpecular.G, mtl.ColorSpecular.B);
                 }
-                double fuzz = 0.45;
+                float fuzz = 0.45f;
                 return new Metal(albedo, fuzz);
             }
 

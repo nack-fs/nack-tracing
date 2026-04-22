@@ -11,13 +11,13 @@ namespace NackEngine.core.physics
     {
         private Point origin;
         private NVector direction;
-        private double timeMilis;
+        private float timeMilis;
 
         public Ray() { }
 
         public Ray(Point origin, Point direction) : this(origin, direction, 0) { }
 
-        public Ray(Point origin, Point direction, double timeMilis)
+        public Ray(Point origin, Point direction, float timeMilis)
         {
             this.origin = origin;
             this.direction = direction;
@@ -32,11 +32,11 @@ namespace NackEngine.core.physics
             return direction;
         }
 
-        public Point At(double t) { 
+        public Point At(float t) { 
             return origin + t * direction;
         }
 
-        public double Time() {
+        public float Time() {
             return timeMilis;
         }
     }

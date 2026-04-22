@@ -12,9 +12,9 @@ namespace NackEngine.math.probdensities
             return MathSetting.RandomUnitVector();
         }
 
-        public double Value(NVector direction)
+        public float Value(NVector direction)
         {
-            return 1.0 / (4.0 * Math.PI);
+            return 1.0f / (4.0f * MathF.PI);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace NackEngine.core.render.materials
             return true;
         }
 
-        public double ScatterProb(Ray ray, HitStruct hit, Ray scattered)
+        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered)
         {
-            return 1.0 / (4.0 * Math.PI);
+            return 1.0f / (4.0f * MathF.PI);
         }
     }
 }

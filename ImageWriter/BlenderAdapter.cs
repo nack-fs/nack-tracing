@@ -11,25 +11,25 @@ namespace NackEngine.IO
     public static class BlenderAdapter
     {
         public static Camera CreateCamera(
-            double X, double Y, double Z,
-            double targetX, double targetY, double targetZ,
-            double focalLengthMM = 50.0,
-            double sensorHeightMM = 24.0,
-            double aspectRatio = 16.0 / 9.0,
+            float X, float Y, float Z,
+            float targetX, float targetY, float targetZ,
+            float focalLengthMM = 50.0f,
+            float sensorHeightMM = 24.0f,
+            float aspectRatio = 16.0f / 9.0f,
             int imageWidth = 1080,
             int numSamples = 100,
             int maxDepth = 50,
-            double depthFieldAngle = 0.0)
+            float depthFieldAngle = 0.0f)
         {
             // X=X, Y=Z, Z=-Y
             Point lookPoint = new Point(X, Z, -Y);
             Point lookTarget = new Point(targetX, targetZ, -targetY);
 
-            double vFovRadians = 2.0 * Math.Atan(sensorHeightMM / (2.0 * focalLengthMM));
-            double vFovDegrees = vFovRadians * (180.0 / Math.PI);
+            float vFovRadians = 2.0f * MathF.Atan(sensorHeightMM / (2.0f * focalLengthMM));
+            float vFovDegrees = vFovRadians * (180.0f / MathF.PI);
 
             NVector distanceVector = lookPoint - lookTarget;
-            double focusDist = distanceVector.Length();
+            float focusDist = distanceVector.Length();
 
             Camera camera = new Camera(
                 aspectRatio: aspectRatio,
@@ -44,7 +44,7 @@ namespace NackEngine.IO
             camera.SetLookPoint(
                 lookPoint,
                 lookTarget,
-                new NVector(0, 1, 0)
+                new NVector(0f, 1f, 0f)
             );
 
             return camera;

@@ -6,15 +6,15 @@ namespace NackEngine.core.render.textures
     public class NoiseTexture : Texture
     {
         private Perlin noise = new Perlin();
-        private double scale;
+        private float scale;
 
-        public NoiseTexture(double scale = 1) {
+        public NoiseTexture(float scale = 1f) {
             this.scale = scale;
         }
 
-        public Color Value(double u, double v, NVector point)
+        public Color Value(float u, float v, NVector point)
         {
-            return new Color(.5, .5, .5) * (1 + Math.Sin(scale * point.Z() + 10 * noise.Turbulence(point, 7)));
+            return new Color(.5f, .5f, .5f) * (1f + MathF.Sin(scale * point.Z() + 10f * noise.Turbulence(point, 7)));
         }
     }
 }

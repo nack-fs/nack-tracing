@@ -1,4 +1,5 @@
 ﻿using NackEngine.core.physics.bounding.comparators;
+using NackEngine.core.space;
 using NackEngine.math;
 using NackEngine.objects;
 using Range = NackEngine.core.space.Range;
@@ -29,6 +30,13 @@ namespace NackEngine.core.physics.bounding
 
             int objectSpan = end - start;
 
+            if (objectSpan <= 0)
+            {
+                aabbox = AABBox.EMPTY;
+                left = right = new Sphere(new NVector(0, 0, 0), 0, null);
+                return;
+            }
+
             if (objectSpan == 1)
             {
                 left = right = objects[start];
@@ -50,7 +58,46 @@ namespace NackEngine.core.physics.bounding
             {
                 objects.Sort(start, objectSpan, comparer);
 
-                int mid = start + objectSpan / 2;
+                float[] leftAreas = new float[objectSpan];
+                float[] rightAreas = new float[objectSpan];
+
+                AABBox leftBox = AABBox.EMPTY;
+                for (int i = 0; i < objectSpan; i++) {
+
+                    leftBox = new AABBox(leftBox, objects[start + i].BoundingBox());
+                    leftAreas[i] = leftBox.Area();
+                }
+
+                AABBox rightBox = AABBox.EMPTY;
+                for (int i = objectSpan - 1; i >= 0; i--)
+                {
+                    rightBox = new AABBox(rightBox, objects[start + i].BoundingBox());
+                    rightAreas[i] = rightBox.Area();
+                }
+
+                float minCost = float.MaxValue;
+                int minCostSplitIndex = start + objectSpan / 2;
+
+                for (int i = 0; i < objectSpan - 1; i++)
+                {
+                    int countLeft = i + 1;
+                    int countRight = objectSpan - countLeft;
+
+                    float cost = (countLeft * leftAreas[i]) + (countRight * rightAreas[i + 1]);
+
+                    if (cost < minCost)
+                    {
+                        minCost = cost;
+                        minCostSplitIndex = start + i + 1;
+                    }
+                }
+
+                int mid = minCostSplitIndex;
+
+                if (mid == start || mid == end)
+                {
+                    mid = start + objectSpan / 2;
+                }
 
                 left = new BVHNode(objects, start, mid);
                 right = new BVHNode(objects, mid, end);
@@ -75,7 +122,7 @@ namespace NackEngine.core.physics.bounding
 
             bool hitLeft = left.Hit(ray, range, out HitStruct leftRec);
 
-            var rightRange = new space.Range(range.Min(), hitLeft ? leftRec.T : range.Max());
+            var rightRange = new Range(range.Min(), hitLeft ? leftRec.T : range.Max());
             bool hitRight = right.Hit(ray, rightRange, out HitStruct rightRec);
 
             if (hitLeft && hitRight)
