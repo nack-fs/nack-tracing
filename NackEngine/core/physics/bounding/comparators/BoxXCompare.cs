@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Axis = NackEngine.core.space.NVector.Axis;
+﻿using Axis = NackEngine.core.space.NVector.Axis;
 
 namespace NackEngine.core.physics.bounding.comparators
 {

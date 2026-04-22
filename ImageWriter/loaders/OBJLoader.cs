@@ -4,7 +4,7 @@ using NackEngine.core.render.materials;
 using NackEngine.core.space;
 using NackEngine.objects;
 
-namespace NackEngine.IO
+namespace NackEngine.IO.loaders
 {
     using Material = core.render.Material;
     using Point = NVector;

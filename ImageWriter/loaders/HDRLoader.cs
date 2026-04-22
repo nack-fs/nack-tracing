@@ -6,7 +6,7 @@ using StbImageSharp;
 using System;
 using System.IO;
 
-namespace NackEngine.IO
+namespace NackEngine.IO.loaders
 {
     public static class HDRLoader
     {

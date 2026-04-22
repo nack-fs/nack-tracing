@@ -1,5 +1,4 @@
-﻿using NackEngine.core.space;
-using NackEngine.IO;
+﻿using NackEngine.IO;
 using System.Diagnostics;
 
 
@@ -7,14 +6,15 @@ namespace NackTracing
 {
     internal class Program
     {
-        private static readonly string releaseVersion = "7.42-STABLE";
+        private static readonly string releaseVersion = "8.01-STABLE";
         static void Main(string[] args)
         {
-            Scene.previewMode = true;
-            DeveloperUserInterface();
-
             AssetConfig.Initialize();
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+
+            Scene.previewMode = true;
+
+            DeveloperUserInterface();
 
             //Scene.BasicScene();
             //Scene.CheckeredSpheres();
@@ -25,17 +25,10 @@ namespace NackTracing
             //Scene.CornellBox();
             //Scene.CornellSmoke();
             //Scene.FinalScene(800, 1000, 20);
-            //Scene.FinalScene(400, 250, 4);
-            //Scene.FinalScene(250, 50, 4);
-            //Scene.Monkey();
-            //Scene.CPU_NACK();
-            //Scene.SALVAVIDAS();
-            //Scene.GPU_SCENE();
-            //Scene.SALVAVIDAS_HDRI();
-            //Scene.CPU_NACK_LITE();
 
-            Scene.PREVIEW_CPU();
-            //Scene.CPU_NACK_LITE();
+            //Scene.CPU_NACK();
+            Scene.SALVAVIDAS();
+            //Scene.GPU_SCENE();
         }
 
         private static void DeveloperUserInterface()
@@ -55,7 +48,8 @@ namespace NackTracing
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("RENDER PREVIEW: ACTIVE");
                 }
-                else {
+                else
+                {
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.Write("RENDER PREVIEW: INACTIVE");
                 }

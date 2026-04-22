@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace NackEngine.IO
+namespace NackEngine.IO.loaders
 {
     public static class ImageLoader
     {
