@@ -48,19 +48,19 @@ namespace NackEngine.core.physics.bounding
             Point rayOrigin = ray.Origin();
             NVector rayDirection = ray.Direction();
 
-            double tMin = rayT.Min();
-            double tMax = rayT.Max();
+            float tMin = rayT.Min();
+            float tMax = rayT.Max();
 
             for (int ax = 0; ax < 3; ax++)
             {
                 Axis axis = (Axis)ax;
                 Range rangeAxis = GetRangeAxis(axis);
 
-                double invD = 1.0 / rayDirection.GetComponent(axis);
-                double origin = rayOrigin.GetComponent(axis);
+                float invD = 1.0f / rayDirection.GetComponent(axis);
+                float origin = rayOrigin.GetComponent(axis);
 
-                double t0 = (rangeAxis.Min() - origin) * invD;
-                double t1 = (rangeAxis.Max() - origin) * invD;
+                float t0 = (rangeAxis.Min() - origin) * invD;
+                float t1 = (rangeAxis.Max() - origin) * invD;
 
                 if (invD < 0.0f)
                 {
@@ -78,6 +78,16 @@ namespace NackEngine.core.physics.bounding
             return true;
         }
 
+        public float Area() {
+            float dx = X.Size();
+            float dy = Y.Size();
+            float dz = Z.Size();
+
+            if (dx < 0 || dy < 0 || dz < 0) { return 0.0f; }
+
+            return 2.0f * (dx * dy + dy * dz + dz * dx);
+        }
+
         public int LongestAxis()
         {
             if (X.Size() < Y.Size())
@@ -92,7 +102,7 @@ namespace NackEngine.core.physics.bounding
 
         private void MinPadding()
         {
-            double d = 0.0001;
+            float d = 1e-4f;
             if (X.Size() < d) X = X.Expand(d);
             if (Y.Size() < d) Y = Y.Expand(d);
             if (Z.Size() < d) Z = Z.Expand(d);

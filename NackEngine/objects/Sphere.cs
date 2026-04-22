@@ -14,32 +14,32 @@ namespace NackEngine.objects
     public class Sphere : Hittable
     {
         private Point center;
-        private double radius;
+        private float radius;
         private Material material;
         private AABBox aabbox;
 
         private NVector movement;
         private bool isMoving;
 
-        public Sphere(Point center, double radius, Material material)
+        public Sphere(Point center, float radius, Material material)
         {
             this.center = center;
-            this.radius = Math.Max(0, radius);
+            this.radius = MathF.Max(0f, radius);
             this.material = material;
 
             InitializeAABBoxStatic(center, radius);
         }
 
-        private void InitializeAABBoxStatic(Point center, double radius) {
+        private void InitializeAABBoxStatic(Point center, float radius) {
             NVector rvec = new NVector(radius, radius, radius);
             this.aabbox = new AABBox(center - rvec, center + rvec);
         }
 
         // Constructor for a dynamic sphere in movement
-        public Sphere(Point center1, Point center2, double radius, Material material)
+        public Sphere(Point center1, Point center2, float radius, Material material)
         {
             this.center = center1;
-            this.radius = Math.Max(0, radius);
+            this.radius = Math.Max(0f, radius);
             this.material = material;
 
             this.movement = center2 - center1;
@@ -48,7 +48,7 @@ namespace NackEngine.objects
             InitializeAABBoxDynamic(center1, center2, radius);
         }
 
-        private void InitializeAABBoxDynamic(Point center1, Point center2, double radius)
+        private void InitializeAABBoxDynamic(Point center1, Point center2, float radius)
         {
             NVector rvec = new NVector(radius, radius, radius);
             AABBox box1 = new AABBox(center1 - rvec, center1 + rvec);
@@ -61,8 +61,8 @@ namespace NackEngine.objects
             Point center = GetCenter(ray.Time());
 
             NVector oc = center - ray.Origin();
-            var a = ray.Direction().LengthSquared();
-            var h = NVector.Dot(ray.Direction(), oc);
+            float a = ray.Direction().LengthSquared();
+            float h = NVector.Dot(ray.Direction(), oc);
             var c = oc.LengthSquared() - radius * radius;
             hit = default;
 
@@ -71,9 +71,9 @@ namespace NackEngine.objects
                 return false;
             }
 
-            var sqrtDis = Math.Sqrt(discriminant);
+            float sqrtDis = MathF.Sqrt(discriminant);
 
-            var root = (h - sqrtDis) / a;
+            float root = (h - sqrtDis) / a;
             if (!rayT.Surrounds(root)) {
                 root = (h + sqrtDis) / a;
                 if (!rayT.Surrounds(root)) {
@@ -86,16 +86,16 @@ namespace NackEngine.objects
             NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
 
-            var uv = GetUV(owNormal);
-            hit.U = uv.u;
-            hit.V = uv.v;
+            (float,float) uv = GetUV(owNormal);
+            hit.U = uv.Item1;
+            hit.V = uv.Item2;
 
             hit.Material = material;
 
             return true;
         }
 
-        private Point GetCenter(double time)
+        private Point GetCenter(float time)
         {
             if (!isMoving) return center;
             return center + (movement * time);
@@ -105,12 +105,12 @@ namespace NackEngine.objects
             return aabbox;
         }
 
-        private (double u, double v) GetUV(Point point) {
-            var theta = Math.Acos(-point.Y());
-            var phi = Math.Atan2(-point.Z(), point.X()) + Math.PI;
+        private (float u, float v) GetUV(Point point) {
+            var theta = MathF.Acos(-point.Y());
+            var phi = MathF.Atan2(-point.Z(), point.X()) + MathF.PI;
 
-            double u = phi / (2 * Math.PI);
-            double v = theta / Math.PI;
+            float u = phi / (2f * MathF.PI);
+            float v = theta / MathF.PI;
 
             return (u, v);
         }
