@@ -37,7 +37,7 @@ namespace NackEngine.core.render.materials
                 scatter.Attenuation = Color.WHITE;
 
                 NVector reflected = RayPhysics.Reflect(NVector.UnitVector(ray.Direction()), hit.Normal);
-                NVector fuzz = reflected + (roughness * MathSetting.RandomUnitVector());
+                NVector fuzz = NVector.UnitVector(reflected + (roughness * MathSetting.RandomUnitVector()));
 
                 if (NVector.Dot(fuzz, hit.Normal) <= 0)
                 {
