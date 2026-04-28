@@ -114,15 +114,15 @@ namespace NackEngine.IO.loaders
                         }
                     }
                 }
-                Logger.Log("[INFO] Modelo OBJ cargado correctamente.");
-                Logger.Log($"[INFO] --- Total triángulos: {totalTriangles} ---");
+                Logger.Log("[INFO] The OBJ model has been loaded successfully.");
+                Logger.Log($"[INFO] --- Total triangles: {totalTriangles} ---");
 
-                Logger.Log("[INFO] Material MTL cargado correctamente.");
-                Logger.Log($"[INFO] --- Total materiales: {materials.Count} ---");
+                Logger.Log("[INFO] MTL material loaded successfully.");
+                Logger.Log($"[INFO] --- Total materials: {materials.Count} ---");
             }
             catch (Exception e)
             {
-                Logger.Log($"[ERROR] Cargando el OBJ: {e.Message}, path: {actualPath}");
+                Logger.Log($"[ERROR] Loading the OBJ: {e.Message}, path: {actualPath}");
             }
             return world;
         }

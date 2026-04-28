@@ -16,6 +16,9 @@ The engine is capable of generating synthetic images with a high degree of visua
 
 The project has two main objectives: first, to build a robust and scalable software architecture by applying object-oriented design patterns, thus managing the complexity of the scene and facilitating its reuse. Second, to focus on performance optimization, addressing the high computational cost inherent in ray tracing through improvements at both the algorithm and code levels to maximize efficiency and reduce rendering times.
 
+<img width="1080" height="607" alt="image23" src="https://github.com/user-attachments/assets/ff9b6948-1bbc-4ad4-9555-ae320d9804d2" />
+
+
 ## 🛠️ Technologies
 *   **Language:** C#
 *   **Platform:** .NET 10
