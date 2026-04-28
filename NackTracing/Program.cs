@@ -22,11 +22,11 @@ namespace NackTracing
             //Scene.PerlinTest();
             //Scene.PlanesScene();
             //Scene.LightTest();
-            Scene.CornellBox();
-            Scene.CornellSmoke();
+            //Scene.CornellBox();
+            //Scene.CornellSmoke();
             //Scene.FinalScene(800, 1000, 20);
 
-            //Scene.CPU_NACK();
+            Scene.CPU_NACK();
             //Scene.SALVAVIDAS();
             //Scene.GPU_SCENE();
         }

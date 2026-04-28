@@ -365,7 +365,7 @@ namespace NackTracing
             Camera camera = new Camera(
                 aspectRatio: 1.0f,
                 imageWidth: 600,
-                numSamples: 200,
+                numSamples: 1000,
                 maxDepth: 50,
                 fieldView: 40,
 
@@ -390,7 +390,7 @@ namespace NackTracing
             var red = new Diffuse(Color.RED_MODERN);
             var grey = new Diffuse(Color.GREY_LIGHT);
             var lime = new Diffuse(Color.GREEN_LIME);
-            var light = new DiffuseLight(new Color(7, 7, 7));
+            var light = new DiffuseLight(new Color(15, 15, 15));
 
             world.AddObject(new Plane(new Point(555, 0, 0),
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
@@ -400,16 +400,18 @@ namespace NackTracing
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
                 red));
 
-            world.AddObject(new Plane(new Point(113, 554, 127),
-                new NVector(330, 0, 0), new NVector(0, 0, 305),
-                light));
+            var planeLight = new Plane(new Point(343, 554, 332),
+                new NVector(-130, 0, 0), new NVector(0, 0, -105),
+                light);
 
-            world.AddObject(new Plane(new Point(0, 555, 0),
-                new NVector(555, 0, 0), new NVector(0, 0, 555),
-                grey));
+            world.AddObject(planeLight);
 
             world.AddObject(new Plane(new Point(0, 0, 0),
                 new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(555, 555, 555),
+                new NVector(-555, 0, 0), new NVector(0, 0, -555),
                 grey));
 
             world.AddObject(new Plane(new Point(0, 0, 555),
@@ -425,12 +427,12 @@ namespace NackTracing
             box2 = new Translate(box2, new Point(130, 0, 65));
 
             world.AddObject(new ConstantVolume(box1, 0.01f, Color.BLACK));
-            world.AddObject(new ConstantVolume(box1, 0.01f, Color.WHITE));
+            world.AddObject(new ConstantVolume(box2, 0.01f, Color.WHITE));
 
             Camera camera = new Camera(
                 aspectRatio: 1.0f,
                 imageWidth: 600,
-                numSamples: 200,
+                numSamples: 1000,
                 maxDepth: 50,
                 fieldView: 40,
 
@@ -441,6 +443,7 @@ namespace NackTracing
                     new Point(278, 278, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
+            camera.SetBackgroundColor(Color.BLACK);
 
             var bvhWorld = new BVHNode(world);
 
