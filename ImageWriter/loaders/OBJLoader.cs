@@ -177,7 +177,8 @@ namespace NackEngine.IO.loaders
             if (mtl.HasColorSpecular)
             {
                 specular = (mtl.ColorSpecular.R + mtl.ColorSpecular.G + mtl.ColorSpecular.B) / 3.0f;
-                specular = Math.Clamp(specular * 0.3f, 0.0f, 0.5f);
+                float reflectIndex = 0.08f;
+                specular = Math.Clamp(specular * reflectIndex, 0.0f, 0.05f);
             }
 
             if (mtl.HasTextureDiffuse)
