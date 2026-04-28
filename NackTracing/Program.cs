@@ -6,7 +6,7 @@ namespace NackTracing
 {
     internal class Program
     {
-        private static readonly string releaseVersion = "8.01-STABLE";
+        private static readonly string releaseVersion = "8.05-STABLE";
         static void Main(string[] args)
         {
             AssetConfig.Initialize();
