@@ -170,13 +170,23 @@ namespace NackEngine.IO.loaders
                 return new Metal(albedo, fuzz);
             }
 
+            float roughness = mtl.HasShininess ? Math.Clamp(1.0f - (mtl.Shininess / 1000.0f), 0.0f, 1.0f) : 1.0f;
+
+            float specular = 0f;
+
+            if (mtl.HasColorSpecular)
+            {
+                specular = (mtl.ColorSpecular.R + mtl.ColorSpecular.G + mtl.ColorSpecular.B) / 3.0f;
+                specular = Math.Clamp(specular * 0.3f, 0.0f, 0.5f);
+            }
+
             if (mtl.HasTextureDiffuse)
             {
                 string textFilename = mtl.TextureDiffuse.FilePath;
                 string textPath = Path.Combine(basePath, textFilename);
 
                 var imageTexture = ImageLoader.Load(textPath);
-                return new Diffuse(imageTexture);
+                return new Diffuse(imageTexture, specular, roughness);
             }
 
             if (mtl.HasColorDiffuse)
@@ -188,7 +198,7 @@ namespace NackEngine.IO.loaders
                     color = mtl.ColorAmbient;
                 }
 
-                return new Diffuse(new Color(color.R, color.G, color.B));
+                return new Diffuse(new Color(color.R, color.G, color.B), specular, roughness);
             }
             return def ?? new Diffuse(Color.PINK_HOT);
 
