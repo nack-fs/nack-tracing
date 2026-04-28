@@ -26,6 +26,16 @@ namespace NackTracing
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = System.Drawing.Color.Black;
 
+            try
+            {
+                string iconPath = Path.Combine(AppContext.BaseDirectory, "assets", "nacktracing-icon.ico");
+                if (File.Exists(iconPath))
+                {
+                    this.Icon = new Icon(iconPath);
+                }
+            }
+            catch (Exception) { }
+
             pictureBox = new PictureBox();
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
