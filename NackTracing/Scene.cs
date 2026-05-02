@@ -66,13 +66,12 @@ namespace NackTracing
                 export.ExportFile(render);
                 Logger.Log("[INFO] Image saved successfully.");
             }
-            //Environment.Exit(0);
         }
 
         private static void ShowElapsedTime(Stopwatch sw)
         {
             TimeSpan ts = sw.Elapsed;
-            string elapsedTime = String.Format("{1:00}m:{2:00}s.{3:00}ms",
+            string elapsedTime = String.Format("{0:00}h:{1:00}m:{2:00}s.{3:00}ms",
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             Logger.Log($"[INFO] Render completed in: {elapsedTime}");
