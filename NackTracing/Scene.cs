@@ -378,9 +378,7 @@ namespace NackTracing
                     new NVector(0, 1, 0) // vup
             );
 
-            var bvhWorld = new BVHNode(world);
-
-            Render("CornellBox", camera, bvhWorld);
+            Render("CornellBox", camera, world);
         }
 
         public static void CornellSmoke()
@@ -556,9 +554,7 @@ namespace NackTracing
             Material blue = new Diffuse(Color.BLUE_NAVY);
             HitCollection CPUObj = OBJLoader.Load("CPU_NACK", blue);
 
-            var bvhCPU = new BVHNode(CPUObj);
-
-            world.AddObject(bvhCPU);
+            world.AddObject(CPUObj);
 
             HitCollection lights = new HitCollection();
             var lightMaterial = new DiffuseLight(new Color(3, 3, 3));
@@ -603,9 +599,7 @@ namespace NackTracing
             );
             camera.SetBackgroundColor(Color.BLACK);
 
-            var bvhWorld = new BVHNode(world);
-
-            Render("CPU_NACK", camera, bvhWorld, lights);
+            Render("CPU_NACK", camera, world, lights);
         }
 
         public static void SALVAVIDAS()
@@ -623,9 +617,7 @@ namespace NackTracing
             Material blue = new Diffuse(Color.BLUE_NAVY);
             HitCollection SalvavidasObj = OBJLoader.Load("SALVAVIDAS", blue);
 
-            var bvhSalvavidas = new BVHNode(SalvavidasObj);
-
-            world.AddObject(bvhSalvavidas);
+            world.AddObject(SalvavidasObj);
 
             var lightMaterial = new DiffuseLight(new Color(10, 10, 10));
 
@@ -663,9 +655,7 @@ namespace NackTracing
             );
             camera.SetBackgroundColor(Color.BLACK);
 
-            var bvhWorld = new BVHNode(world);
-
-            Render("SALVAVIDAS", camera, bvhWorld, lights);
+            Render("SALVAVIDAS", camera, world, lights);
         }
 
         public static void GPU_SCENE()
