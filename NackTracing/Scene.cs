@@ -66,7 +66,7 @@ namespace NackTracing
                 export.ExportFile(render);
                 Logger.Log("[INFO] Image saved successfully.");
             }
-            Environment.Exit(0);
+            //Environment.Exit(0);
         }
 
         private static void ShowElapsedTime(Stopwatch sw)

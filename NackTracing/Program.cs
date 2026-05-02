@@ -12,7 +12,7 @@ namespace NackTracing
             AssetConfig.Initialize();
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
-            Scene.previewMode = true;
+            Scene.previewMode = false;
 
             DeveloperUserInterface();
 
@@ -22,12 +22,12 @@ namespace NackTracing
             //Scene.PerlinTest();
             //Scene.PlanesScene();
             //Scene.LightTest();
-            //Scene.CornellBox();
+            Scene.CornellBox();
             //Scene.CornellSmoke();
             //Scene.FinalScene(800, 1000, 20);
 
             Scene.CPU_NACK();
-            //Scene.SALVAVIDAS();
+            Scene.SALVAVIDAS();
             //Scene.GPU_SCENE();
         }
 
