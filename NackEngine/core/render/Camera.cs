@@ -80,7 +80,7 @@ namespace NackEngine.core.render
             int rowsDone = 0;
             ShowProgress(() => rowsDone, imageHeight);
 
-            Parallel.For(0, imageHeight, y =>
+            for (int y = 0; y < imageHeight; y++)
             {
                 for (int x = 0; x < imageWidth; x++)
                 {
@@ -100,8 +100,8 @@ namespace NackEngine.core.render
                     pixelColors[y * imageWidth + x] = pixelColor * samplesScale;
                 }
 
-                Interlocked.Increment(ref rowsDone);
-            });
+                rowsDone++;
+            }
             return pixelColors;
         }
 
