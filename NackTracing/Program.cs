@@ -16,19 +16,18 @@ namespace NackTracing
 
             DeveloperUserInterface();
 
-            //Scene.BasicScene();
-            //Scene.CheckeredSpheres();
-            //Scene.EarthAndMars();
-            //Scene.PerlinTest();
-            //Scene.PlanesScene();
-            //Scene.LightTest();
-            //Scene.CornellBox();
-            //Scene.CornellSmoke();
-            //Scene.FinalScene(800, 1000, 20);
+            Scene.BasicScene();
+            Scene.EarthAndMars();
+            Scene.PerlinTest();
+            Scene.PlanesScene();
+            Scene.LightTest();
+            Scene.CornellBox();
+            Scene.CornellSmoke();
+            Scene.FinalScene(800, 1000, 20);
 
             Scene.CPU_NACK();
-            //Scene.SALVAVIDAS();
-            //Scene.GPU_SCENE();
+            Scene.SALVAVIDAS();
+            Scene.GPU_SCENE();
         }
 
         private static void DeveloperUserInterface()
