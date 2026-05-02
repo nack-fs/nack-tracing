@@ -6,27 +6,23 @@ namespace NackEngine.core.space
 {
     public struct NVector
     {
-        public Vector128<float> V;
+        private float x, y, z;
 
         public enum Axis { X, Y, Z}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public NVector(float x, float y, float z)
         {
-            V = Vector128.Create(x, y, z, 0.0f);
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private NVector(Vector128<float> v)
-        {
-            V = v;
-        }
+        public float X() => x;
 
-        public float X() => V.GetElement(0);
+        public float Y() => y;
 
-        public float Y() => V.GetElement(1);
-
-        public float Z() => V.GetElement(2);
+        public float Z() => z;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -38,20 +34,23 @@ namespace NackEngine.core.space
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator +(NVector a, NVector b) => new NVector(a.V + b.V);
+        public static NVector operator +(NVector a, NVector b) =>
+            new NVector(a.x + b.x, a.y + b.y, a.z + b.z);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator -(NVector a, NVector b) => new NVector(a.V - b.V);
+        public static NVector operator -(NVector a, NVector b) =>
+            new NVector(a.x - b.x, a.y - b.y, a.z - b.z);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator -(NVector a) => new NVector(-a.V);
+        public static NVector operator -(NVector a) =>
+            new NVector(-a.x, -a.y, -a.z);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(NVector a, float scalar)
-            => new NVector(a.V * Vector128.Create(scalar));
+            => new NVector(a.x * scalar, a.y * scalar, a.z * scalar);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -59,18 +58,19 @@ namespace NackEngine.core.space
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator *(NVector a, NVector b) => new NVector(a.V * b.V);
+        public static NVector operator *(NVector a, NVector b) =>
+            new NVector(a.x * b.x, a.y * b.y, a.z * b.z);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator /(NVector a, float scalar)
-             => new NVector(a.V / Vector128.Create(scalar));
+             => new NVector(a.x / scalar, a.y / scalar, a.z / scalar);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Dot(NVector a, NVector b)
         {
-            return Vector128.Dot(a.V, b.V);
+            return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
