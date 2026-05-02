@@ -10,13 +10,11 @@ namespace NackEngine.core.space
 
         public enum Axis { X, Y, Z}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public NVector(float x, float y, float z)
         {
             V = Vector128.Create(x, y, z, 0.0f);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private NVector(Vector128<float> v)
         {
             V = v;
@@ -28,52 +26,31 @@ namespace NackEngine.core.space
 
         public float Z() => V.GetElement(2);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float LengthSquared() => Dot(this, this);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Length() => MathF.Sqrt(LengthSquared());
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator +(NVector a, NVector b) => new NVector(a.V + b.V);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator -(NVector a, NVector b) => new NVector(a.V - b.V);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator -(NVector a) => new NVector(-a.V);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(NVector a, float scalar)
             => new NVector(a.V * Vector128.Create(scalar));
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(float scalar, NVector a) => a * scalar;
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator *(NVector a, NVector b) => new NVector(a.V * b.V);
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector operator /(NVector a, float scalar)
              => new NVector(a.V / Vector128.Create(scalar));
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Dot(NVector a, NVector b)
         {
             return Vector128.Dot(a.V, b.V);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector Cross(NVector a, NVector b)
         {
             return new NVector(
@@ -83,7 +60,6 @@ namespace NackEngine.core.space
             );
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NVector UnitVector(NVector a) => a / a.Length();
 
         public static NVector Random()
@@ -97,7 +73,6 @@ namespace NackEngine.core.space
                 MathSetting.RandomFloat(min, max), MathSetting.RandomFloat(min, max));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float GetComponent(Axis axis) => axis switch
         {
             Axis.X => X(),
