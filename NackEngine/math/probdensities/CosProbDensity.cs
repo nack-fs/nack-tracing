@@ -18,10 +18,10 @@ namespace NackEngine.math.probdensities
             return orthonormal.Local(MathSetting.RandomCosineDirection());
         }
 
-        public float Value(NVector direction)
+        public double Value(NVector direction)
         {
             var cos = NVector.Dot(NVector.UnitVector(direction), orthonormal.W);
-            return (cos <= 0) ? 0 : cos / MathF.PI;
+            return (cos <= 0) ? 0 : cos / Math.PI;
         }
     }
 }

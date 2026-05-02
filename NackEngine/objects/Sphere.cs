@@ -14,32 +14,32 @@ namespace NackEngine.objects
     public class Sphere : Hittable
     {
         private Point center;
-        private float radius;
+        private double radius;
         private Material material;
         private AABBox aabbox;
 
         private NVector movement;
         private bool isMoving;
 
-        public Sphere(Point center, float radius, Material material)
+        public Sphere(Point center, double radius, Material material)
         {
             this.center = center;
-            this.radius = MathF.Max(0f, radius);
+            this.radius = Math.Max(0, radius);
             this.material = material;
 
             InitializeAABBoxStatic(center, radius);
         }
 
-        private void InitializeAABBoxStatic(Point center, float radius) {
+        private void InitializeAABBoxStatic(Point center, double radius) {
             NVector rvec = new NVector(radius, radius, radius);
             this.aabbox = new AABBox(center - rvec, center + rvec);
         }
 
         // Constructor for a dynamic sphere in movement
-        public Sphere(Point center1, Point center2, float radius, Material material)
+        public Sphere(Point center1, Point center2, double radius, Material material)
         {
             this.center = center1;
-            this.radius = Math.Max(0f, radius);
+            this.radius = Math.Max(0, radius);
             this.material = material;
 
             this.movement = center2 - center1;
@@ -48,7 +48,7 @@ namespace NackEngine.objects
             InitializeAABBoxDynamic(center1, center2, radius);
         }
 
-        private void InitializeAABBoxDynamic(Point center1, Point center2, float radius)
+        private void InitializeAABBoxDynamic(Point center1, Point center2, double radius)
         {
             NVector rvec = new NVector(radius, radius, radius);
             AABBox box1 = new AABBox(center1 - rvec, center1 + rvec);
@@ -61,8 +61,8 @@ namespace NackEngine.objects
             Point center = GetCenter(ray.Time());
 
             NVector oc = center - ray.Origin();
-            float a = ray.Direction().LengthSquared();
-            float h = NVector.Dot(ray.Direction(), oc);
+            double a = ray.Direction().LengthSquared();
+            double h = NVector.Dot(ray.Direction(), oc);
             var c = oc.LengthSquared() - radius * radius;
             hit = default;
 
@@ -71,9 +71,9 @@ namespace NackEngine.objects
                 return false;
             }
 
-            float sqrtDis = MathF.Sqrt(discriminant);
+            double sqrtDis = Math.Sqrt(discriminant);
 
-            float root = (h - sqrtDis) / a;
+            double root = (h - sqrtDis) / a;
             if (!rayT.Surrounds(root)) {
                 root = (h + sqrtDis) / a;
                 if (!rayT.Surrounds(root)) {
@@ -86,7 +86,7 @@ namespace NackEngine.objects
             NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
 
-            (float,float) uv = GetUV(owNormal);
+            (double,double) uv = GetUV(owNormal);
             hit.U = uv.Item1;
             hit.V = uv.Item2;
 
@@ -95,7 +95,7 @@ namespace NackEngine.objects
             return true;
         }
 
-        private Point GetCenter(float time)
+        private Point GetCenter(double time)
         {
             if (!isMoving) return center;
             return center + (movement * time);
@@ -105,12 +105,12 @@ namespace NackEngine.objects
             return aabbox;
         }
 
-        private (float u, float v) GetUV(Point point) {
-            var theta = MathF.Acos(-point.Y());
-            var phi = MathF.Atan2(-point.Z(), point.X()) + MathF.PI;
+        private (double u, double v) GetUV(Point point) {
+            var theta = Math.Acos(-point.Y());
+            var phi = Math.Atan2(-point.Z(), point.X()) + Math.PI;
 
-            float u = phi / (2f * MathF.PI);
-            float v = theta / MathF.PI;
+            double u = phi / (2 * Math.PI);
+            double v = theta / Math.PI;
 
             return (u, v);
         }

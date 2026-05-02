@@ -17,7 +17,7 @@ namespace NackEngine.core.render.materials.debug
 
         public Color Emitted(double u, double v, Point point, HitStruct hit)
         {
-            var normalColor = new NVector(hit.Normal.X() + 1f, hit.Normal.Y() + 1f, hit.Normal.Z() + 1f) * 0.5f;
+            var normalColor = new NVector(hit.Normal.X() + 1, hit.Normal.Y() + 1, hit.Normal.Z() + 1) * 0.5;
             return new Color(normalColor);
         }
     }

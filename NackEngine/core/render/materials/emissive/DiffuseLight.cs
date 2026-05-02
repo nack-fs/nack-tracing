@@ -27,7 +27,7 @@ namespace NackEngine.core.render.materials.emissive
             return false;
         }
 
-        public Color Emitted(float u, float v, Point point)
+        public Color Emitted(double u, double v, Point point)
         {
             return texture.Value(u,v,point);
         }

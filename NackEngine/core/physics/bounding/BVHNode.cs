@@ -58,8 +58,8 @@ namespace NackEngine.core.physics.bounding
             {
                 objects.Sort(start, objectSpan, comparer);
 
-                float[] leftAreas = new float[objectSpan];
-                float[] rightAreas = new float[objectSpan];
+                double[] leftAreas = new double[objectSpan];
+                double[] rightAreas = new double[objectSpan];
 
                 AABBox leftBox = AABBox.EMPTY;
                 for (int i = 0; i < objectSpan; i++) {
@@ -75,7 +75,7 @@ namespace NackEngine.core.physics.bounding
                     rightAreas[i] = rightBox.Area();
                 }
 
-                float minCost = float.MaxValue;
+                double minCost = double.MaxValue;
                 int minCostSplitIndex = start + objectSpan / 2;
 
                 for (int i = 0; i < objectSpan - 1; i++)
@@ -83,7 +83,7 @@ namespace NackEngine.core.physics.bounding
                     int countLeft = i + 1;
                     int countRight = objectSpan - countLeft;
 
-                    float cost = (countLeft * leftAreas[i]) + (countRight * rightAreas[i + 1]);
+                    double cost = (countLeft * leftAreas[i]) + (countRight * rightAreas[i + 1]);
 
                     if (cost < minCost)
                     {

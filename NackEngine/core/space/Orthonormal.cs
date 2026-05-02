@@ -12,12 +12,12 @@ namespace NackEngine.core.space
 
         public Orthonormal(NVector n) { 
             this.W = NVector.UnitVector(n);
-            NVector a = (Math.Abs(W.X()) > 0.9f) ? new NVector(0f, 1f, 0f) : new NVector(1f, 0f, 0f);
+            NVector a = (Math.Abs(W.X()) > 0.9) ? new NVector(0, 1, 0) : new NVector(1, 0, 0);
             V = NVector.UnitVector(NVector.Cross(W, a));
             U = NVector.Cross(W, V);
         }
 
-        public NVector Local(float a, float b, float c)
+        public NVector Local(double a, double b, double c)
         {
             return a * U + b * V + c * W;
         }

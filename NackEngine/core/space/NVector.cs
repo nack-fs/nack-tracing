@@ -6,35 +6,35 @@ namespace NackEngine.core.space
 {
     public struct NVector
     {
-        public Vector128<float> V;
+        public Vector256<double> V;
 
         public enum Axis { X, Y, Z}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public NVector(float x, float y, float z)
+        public NVector(double x, double y, double z)
         {
-            V = Vector128.Create(x, y, z, 0.0f);
+            V = Vector256.Create(x, y, z, 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private NVector(Vector128<float> v)
+        private NVector(Vector256<double> v)
         {
             V = v;
         }
 
-        public float X() => V.GetElement(0);
+        public double X() => V.GetElement(0);
 
-        public float Y() => V.GetElement(1);
+        public double Y() => V.GetElement(1);
 
-        public float Z() => V.GetElement(2);
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float LengthSquared() => Dot(this, this);
+        public double Z() => V.GetElement(2);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float Length() => MathF.Sqrt(LengthSquared());
+        public double LengthSquared() => Dot(this, this);
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double Length() => Math.Sqrt(LengthSquared());
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,12 +50,12 @@ namespace NackEngine.core.space
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator *(NVector a, float scalar)
-            => new NVector(a.V * Vector128.Create(scalar));
+        public static NVector operator *(NVector a, double scalar)
+            => new NVector(a.V * Vector256.Create(scalar));
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator *(float scalar, NVector a) => a * scalar;
+        public static NVector operator *(double scalar, NVector a) => a * scalar;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,14 +63,14 @@ namespace NackEngine.core.space
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NVector operator /(NVector a, float scalar)
-             => new NVector(a.V / Vector128.Create(scalar));
+        public static NVector operator /(NVector a, double scalar)
+             => new NVector(a.V / Vector256.Create(scalar));
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Dot(NVector a, NVector b)
+        public static double Dot(NVector a, NVector b)
         {
-            return Vector128.Dot(a.V, b.V);
+            return Vector256.Dot(a.V, b.V);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -88,17 +88,17 @@ namespace NackEngine.core.space
 
         public static NVector Random()
         {
-            return new NVector(MathSetting.RandomFloat(), MathSetting.RandomFloat(), MathSetting.RandomFloat());
+            return new NVector(MathSetting.RandomDouble(), MathSetting.RandomDouble(), MathSetting.RandomDouble());
         }
 
-        public static NVector Random(float min, float max)
+        public static NVector Random(double min, double max)
         {
-            return new NVector(MathSetting.RandomFloat(min, max),
-                MathSetting.RandomFloat(min, max), MathSetting.RandomFloat(min, max));
+            return new NVector(MathSetting.RandomDouble(min, max),
+                MathSetting.RandomDouble(min, max), MathSetting.RandomDouble(min, max));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float GetComponent(Axis axis) => axis switch
+        public double GetComponent(Axis axis) => axis switch
         {
             Axis.X => X(),
             Axis.Y => Y(),
@@ -106,7 +106,7 @@ namespace NackEngine.core.space
             _ => throw new IndexOutOfRangeException()
         };
 
-        public NVector Rotate(float sinTheta, float cosTheta, Axis axis) => axis switch
+        public NVector Rotate(double sinTheta, double cosTheta, Axis axis) => axis switch
         {
             Axis.X => new NVector(X(), cosTheta * Y() - sinTheta * Z(), sinTheta * Y() + cosTheta * Z()),
             Axis.Y => new NVector(cosTheta * X() + sinTheta * Z(), Y(), -sinTheta * X() + cosTheta * Z()),
@@ -115,7 +115,7 @@ namespace NackEngine.core.space
         };
 
         public bool IsNaN() {
-            return float.IsNaN(X()) || float.IsNaN(Y()) || float.IsNaN(Z());
+            return double.IsNaN(X()) || double.IsNaN(Y()) || double.IsNaN(Z());
         }
     }
 }

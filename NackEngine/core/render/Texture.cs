@@ -6,6 +6,6 @@ namespace NackEngine.core.render
 
     public interface Texture
     {
-        public Color Value(float u, float v, Point point);
+        public Color Value(double u, double v, Point point);
     }
 }

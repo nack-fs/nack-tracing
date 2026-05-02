@@ -4,14 +4,14 @@ namespace NackEngine.math
 {
     public static class MathSetting
     {
-        public static float RandomFloat()
+        public static double RandomDouble()
         {
-            return (float)Random.Shared.NextDouble();
+            return Random.Shared.NextDouble();
         }
 
-        public static float RandomFloat(float min, float max)
+        public static double RandomDouble(double min, double max)
         {
-            return min + (max - min) * RandomFloat();
+            return min + (max - min) * RandomDouble();
         }
 
         public static int RandomInteger(int min, int max)
@@ -25,9 +25,9 @@ namespace NackEngine.math
             {
                 var p = NVector.Random(-1, 1);
                 var len = p.LengthSquared();
-                if (1e-160f < len && len <= 1)
+                if (1e-160 < len && len <= 1)
                 {
-                    return p / MathF.Sqrt(len);
+                    return p / Math.Sqrt(len);
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace NackEngine.math
         public static NVector RandomOnHemisphere(NVector normal)
         {
             NVector onUnitSphere = RandomUnitVector();
-            return (NVector.Dot(onUnitSphere, normal) > 0.0f) ?
+            return (NVector.Dot(onUnitSphere, normal) > 0.0) ?
                     onUnitSphere : -onUnitSphere;
         }
 
@@ -43,8 +43,8 @@ namespace NackEngine.math
         {
             while (true)
             {
-                var p = new NVector(RandomFloat(-1f, 1f), RandomFloat(-1f, 1f), 0f);
-                if (p.LengthSquared() < 1f)
+                var p = new NVector(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+                if (p.LengthSquared() < 1)
                 {
                     return p;
                 }
@@ -53,13 +53,13 @@ namespace NackEngine.math
 
         public static NVector RandomCosineDirection()
         {
-            var r1 = RandomFloat();
-            var r2 = RandomFloat();
-            var z = MathF.Sqrt(1f - r2);
+            var r1 = RandomDouble();
+            var r2 = RandomDouble();
+            var z = Math.Sqrt(1 - r2);
 
-            var phi = 2f * MathF.PI * r1;
-            var x = MathF.Cos(phi) * MathF.Sqrt(r2);
-            var y = MathF.Sin(phi) * MathF.Sqrt(r2);
+            var phi = 2 * MathF.PI * r1;
+            var x = Math.Cos(phi) * Math.Sqrt(r2);
+            var y = Math.Sin(phi) * Math.Sqrt(r2);
 
             return new NVector(x, y, z);
         }

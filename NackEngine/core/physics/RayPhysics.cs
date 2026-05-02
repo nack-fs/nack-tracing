@@ -12,11 +12,11 @@ namespace NackEngine.core.physics
             return v - 2 * NVector.Dot(v, n) * n;
         }
 
-        public static NVector Refract(NVector uv, NVector n, float eta)
+        public static NVector Refract(NVector uv, NVector n, double eta)
         {
-            var cosine = MathF.Min(NVector.Dot(-uv, n), 1f);
+            var cosine = Math.Min(NVector.Dot(-uv, n), 1);
             NVector rayPerpendicular = eta * (uv + cosine * n);
-            NVector rayParallel = -MathF.Sqrt(MathF.Abs(1f - rayPerpendicular.LengthSquared())) * n;
+            NVector rayParallel = -Math.Sqrt(Math.Abs(1 - rayPerpendicular.LengthSquared())) * n;
             return rayPerpendicular + rayParallel;
         }
     }

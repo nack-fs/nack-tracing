@@ -12,22 +12,22 @@ namespace NackEngine.core.render
 
     public class Camera
     {
-        public float aspectRatio;
+        public double aspectRatio;
         public int imageWidth;
         public int imageHeight;
 
         public int numSamples;
         public int maxDepth;
         private Color background;
-        private float maxIntensity;
+        private double maxIntensity;
 
-        public float fieldView;
+        public double fieldView;
         public Point lookPoint = new Point(0, 0, 0);
         public Point lookTarget = new Point(0, 0, -1);
         public NVector vup = new NVector(0, 1, 0);
 
-        public float depthFieldAngle;
-        public float focusDistance;
+        public double depthFieldAngle;
+        public double focusDistance;
 
         // -----------------------
 
@@ -35,17 +35,17 @@ namespace NackEngine.core.render
         private Point pixel00;
         private NVector deltaH;
         private NVector deltaW;
-        private float samplesScale;
+        private double samplesScale;
         private NVector u, v, w;
         private NVector defocusDiskU;
         private NVector defocusDiskV;
         private int sqrtSPP;
-        private float invSqrtSPP;
+        private double invSqrtSPP;
 
         private bool defaultBackground = true;
         private Texture environment = null;
-        private float envSin = 0f;
-        private float envCos = 1f;
+        private double envSin = 0;
+        private double envCos = 1;
 
         // -----------------------
 
@@ -55,9 +55,9 @@ namespace NackEngine.core.render
 
         // -----------------------
 
-        public Camera(float aspectRatio = 1f, int imageWidth = 100,
-            int numSamples = 10, int maxDepth = 10, float fieldView = 90f,
-            float depthFieldAngle = 0f, float focusDistance = 10f, float maxIntensity = 5f)
+        public Camera(double aspectRatio = 1, int imageWidth = 100,
+            int numSamples = 10, int maxDepth = 10, double fieldView = 90,
+            double depthFieldAngle = 0, double focusDistance = 10, double maxIntensity = 5)
         {
             this.aspectRatio = aspectRatio;
             this.imageWidth = imageWidth;
@@ -136,7 +136,7 @@ namespace NackEngine.core.render
                         accumulationBuffer[index] += sampleColor;
                     }
 
-                    PixelBuffer[index] = accumulationBuffer[index] * (1.0f / sample);
+                    PixelBuffer[index] = accumulationBuffer[index] * (1.0 / sample);
                 });
 
                 IsCompleted = true;
@@ -160,21 +160,21 @@ namespace NackEngine.core.render
 
         private void UpdateProgress(int current, int total)
         {
-            float percent = (float)current / total * 100.0f;
+            double percent = (double)current / total * 100.0;
             Console.Title = $"Renderizando: {percent:F1}% ({current}/{total} filas)";
         }
 
         private void Initialize()
         {
             this.sqrtSPP = (int)Math.Sqrt(numSamples);
-            this.samplesScale = 1f / (sqrtSPP * sqrtSPP);
-            this.invSqrtSPP = 1f / sqrtSPP;
+            this.samplesScale = 1 / (sqrtSPP * sqrtSPP);
+            this.invSqrtSPP = 1 / sqrtSPP;
 
             // Viewport
-            var angle = float.DegreesToRadians(fieldView);
-            var h = MathF.Tan(angle / 2);
-            var viewportHeight = 2f * h * focusDistance;
-            var viewportWidth = viewportHeight * ((float)imageWidth / imageHeight);
+            var angle = double.DegreesToRadians(fieldView);
+            var h = Math.Tan(angle / 2);
+            var viewportHeight = 2 * h * focusDistance;
+            var viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
 
             this.cameraOrigin = lookPoint;
 
@@ -197,11 +197,11 @@ namespace NackEngine.core.render
             this.deltaW = viewportV / imageHeight;
 
             var viewportUpperLeft = cameraOrigin - (focusDistance * w)
-                 - viewportU / 2f - viewportV / 2f;
+                 - viewportU / 2 - viewportV / 2;
 
-            this.pixel00 = viewportUpperLeft + 0.5f * (deltaH + deltaW);
+            this.pixel00 = viewportUpperLeft + 0.5 * (deltaH + deltaW);
 
-            var defocusRadius = focusDistance * MathF.Tan(float.DegreesToRadians(depthFieldAngle / 2f));
+            var defocusRadius = focusDistance * Math.Tan(double.DegreesToRadians(depthFieldAngle / 2));
             this.defocusDiskU = u * defocusRadius;
             this.defocusDiskV = v * defocusRadius;
         }
@@ -224,11 +224,11 @@ namespace NackEngine.core.render
                     NVector unitDirection = NVector.UnitVector(ray.Direction());
                     unitDirection = unitDirection.Rotate(envSin, envCos, NVector.Axis.Y);
 
-                    float theta = MathF.Acos(-unitDirection.Y());
-                    float phi = MathF.Atan2(-unitDirection.Z(), unitDirection.X()) + MathF.PI;
+                    double theta = Math.Acos(-unitDirection.Y());
+                    double phi = Math.Atan2(-unitDirection.Z(), unitDirection.X()) + Math.PI;
 
-                    float u = phi / (2f * MathF.PI);
-                    float v = theta / MathF.PI;
+                    double u = phi / (2 * Math.PI);
+                    double v = theta / Math.PI;
 
                     return environment.Value(u, v, unitDirection);
                 }
@@ -236,8 +236,8 @@ namespace NackEngine.core.render
                 if (defaultBackground)
                 {
                     NVector unitDirection = NVector.UnitVector(ray.Direction());
-                    float t = 0.5f * (unitDirection.Y() + 1.0f);
-                    return Color.WHITE * (1.0f - t) + new Color(0.5f, 0.7f, 1.0f) * t;
+                    double t = 0.5 * (unitDirection.Y() + 1.0);
+                    return Color.WHITE * (1.0 - t) + new Color(0.5, 0.7, 1.0) * t;
                 }
                 return this.background;
             }
@@ -251,7 +251,7 @@ namespace NackEngine.core.render
 
             if (scatter.SkipProb)
             {
-                float offset = 1e-4f;
+                double offset = 1e-4;
                 Ray offsetRay = new Ray(hit.Point + hit.Normal * offset, scatter.Bounced.Direction(), ray.Time());
                 Color colorScatter = scatter.Attenuation * RayColor(offsetRay, depth - 1, world, lights);
                 return colorEmitted + colorScatter;
@@ -269,22 +269,22 @@ namespace NackEngine.core.render
                     p = new MixProbDensity(lightProb, scatter.ProbDensity);
                 }
 
-                float offset = 1e-4f;
+                double offset = 1e-4;
                 Ray scatteredRay = new Ray(hit.Point + hit.Normal * offset, p.Generate(), ray.Time());
 
-                float probability = p.Value(scatteredRay.Direction());
+                double probability = p.Value(scatteredRay.Direction());
 
-                float tol = 1e-8f;
+                double tol = 1e-8;
                 if (probability <= tol) { return colorEmitted; }
 
-                float scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);
+                double scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);
 
                 Color sampleColor = RayColor(scatteredRay, depth - 1, world, lights);
                 if (sampleColor.IsNaN()) return colorEmitted;
 
-                Color colorScatter = (scatter.Attenuation * scatterpdf * sampleColor) * (1.0f / probability);
+                Color colorScatter = (scatter.Attenuation * scatterpdf * sampleColor) * (1.0 / probability);
 
-                colorScatter = colorScatter.Clamp(0f, maxIntensity);
+                colorScatter = colorScatter.Clamp(0, maxIntensity);
                 return colorEmitted + colorScatter;
             }
         }
@@ -297,15 +297,15 @@ namespace NackEngine.core.render
                 + ((y + offset.Y()) * deltaW);
             var rayOrigin = (depthFieldAngle <= 0) ? cameraOrigin : DepthFieldDisk();
             var rayDirection = pixelSample - rayOrigin;
-            var rayTime = MathSetting.RandomFloat();
+            var rayTime = MathSetting.RandomDouble();
 
             return new Ray(rayOrigin, rayDirection, rayTime);
         }
 
         private NVector Sample(int gridX, int gridY)
         {
-            float posXgrid = ((gridX + MathSetting.RandomFloat()) * invSqrtSPP) - 0.5f;
-            float posYgrid = ((gridY + MathSetting.RandomFloat()) * invSqrtSPP) - 0.5f;
+            double posXgrid = ((gridX + MathSetting.RandomDouble()) * invSqrtSPP) - 0.5;
+            double posYgrid = ((gridY + MathSetting.RandomDouble()) * invSqrtSPP) - 0.5;
             return new NVector(posXgrid, posYgrid, 0);
         }
 
@@ -321,14 +321,14 @@ namespace NackEngine.core.render
             this.defaultBackground = false;
         }
 
-        public void SetEnvironment(Texture hdri, float rotation)
+        public void SetEnvironment(Texture hdri, double rotation)
         {
             this.environment = hdri;
             this.defaultBackground = false;
 
-            float rad = float.DegreesToRadians(rotation);
-            this.envSin = MathF.Sin(rad);
-            this.envCos = MathF.Cos(rad);
+            double rad = double.DegreesToRadians(rotation);
+            this.envSin = Math.Sin(rad);
+            this.envCos = Math.Cos(rad);
         }
 
         private void ShuffleIndexes(int[] array) { 

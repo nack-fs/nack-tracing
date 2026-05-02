@@ -7,8 +7,8 @@ namespace NackEngine.core.physics.bounding.comparators
         public int Compare(Hittable a, Hittable b) => CompareAxis(a, b, 0);
         private int CompareAxis(Hittable a, Hittable b, Axis axis)
         {
-            float minA = a.BoundingBox().GetRangeAxis(axis).Min();
-            float minB = b.BoundingBox().GetRangeAxis(axis).Min();
+            double minA = a.BoundingBox().GetRangeAxis(axis).Min();
+            double minB = b.BoundingBox().GetRangeAxis(axis).Min();
             return minA.CompareTo(minB);
         }
     }

@@ -17,7 +17,7 @@ namespace NackEngine.core.physics
 
         public AABBox BoundingBox();
 
-        public float Probability(Point origin, NVector direction) => 0.0f;
+        public double Probability(Point origin, NVector direction) => 0.0;
 
         public NVector Random(Point origin) => new NVector(1, 0, 0);
     }

@@ -12,7 +12,7 @@ namespace NackEngine.core.render.textures
         private int width;
         private int height;
 
-        private readonly float exp = 10f;
+        private readonly double exp = 10;
 
         public FloatImageTexture(float[] data, int width, int height)
         {
@@ -21,12 +21,12 @@ namespace NackEngine.core.render.textures
             this.height = height;
         }
 
-        public Color Value(float u, float v, NVector point)
+        public Color Value(double u, double v, NVector point)
         {
             if (data == null) { return Color.PINK_HOT; }
 
-            u = Math.Clamp(u, 0.0f, 1.0f);
-            v = 1.0f - Math.Clamp(v, 0.0f, 1.0f);
+            u = Math.Clamp(u, 0.0, 1.0);
+            v = 1.0 - Math.Clamp(v, 0.0, 1.0);
 
             int x = (int)(u * width);
             int y = (int)(v * height);

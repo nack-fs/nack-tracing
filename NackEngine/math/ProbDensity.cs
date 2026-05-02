@@ -4,7 +4,7 @@ namespace NackEngine.math
 {
     public interface ProbDensity
     {
-        float Value(NVector direction);
+        double Value(NVector direction);
         NVector Generate();
     }
 }

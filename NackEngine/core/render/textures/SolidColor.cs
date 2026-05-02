@@ -13,11 +13,11 @@ namespace NackEngine.core.render.textures
             this.albedo = albedo;
         }
 
-        public SolidColor(float R, float G, float B) {
+        public SolidColor(double R, double G, double B) {
             this.albedo = new Color(R,G,B);
         }
 
-        public Color Value(float u, float v, NVector point)
+        public Color Value(double u, double v, NVector point)
         {
             return albedo;
         }

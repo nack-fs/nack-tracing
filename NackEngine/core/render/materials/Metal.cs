@@ -11,12 +11,12 @@ namespace NackEngine.core.render.materials
     public class Metal : Material
     {
         private Color albedo;
-        private float fuzz;
+        private double fuzz;
 
-        public Metal(Color albedo, float fuzz)
+        public Metal(Color albedo, double fuzz)
         {
             this.albedo = albedo;
-            this.fuzz = MathF.Min(fuzz, 1f);
+            this.fuzz = Math.Min(fuzz, 1);
         }
 
         public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter)

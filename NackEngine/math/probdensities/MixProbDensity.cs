@@ -14,14 +14,14 @@ namespace NackEngine.math.probdensities
             this.p0 = p0; this.p1 = p1;
         }
 
-        public float Value(NVector direction)
+        public double Value(NVector direction)
         {
-            return 0.5f * p0.Value(direction) + 0.5f * p1.Value(direction);
+            return 0.5 * p0.Value(direction) + 0.5 * p1.Value(direction);
         }
 
         public NVector Generate()
         {
-            return (MathSetting.RandomFloat() < 0.5f)?
+            return (MathSetting.RandomDouble() < 0.5)?
                 p0.Generate() : p1.Generate();
         }
     }

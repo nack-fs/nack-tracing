@@ -79,9 +79,9 @@ namespace NackTracing
                     int index = y * width + x;
                     Color col = camera.PixelBuffer[index];
 
-                    float r = (col.Vector().X() > 0) ? MathF.Sqrt(col.Vector().X()) : 0;
-                    float g = (col.Vector().Y() > 0) ? MathF.Sqrt(col.Vector().Y()) : 0;
-                    float b = (col.Vector().Z() > 0) ? MathF.Sqrt(col.Vector().Z()) : 0;
+                    double r = (col.Vector().X() > 0) ? Math.Sqrt(col.Vector().X()) : 0;
+                    double g = (col.Vector().Y() > 0) ? Math.Sqrt(col.Vector().Y()) : 0;
+                    double b = (col.Vector().Z() > 0) ? Math.Sqrt(col.Vector().Z()) : 0;
 
                     int ir = (int)(256 * Math.Clamp(r, 0.0f, 0.999f));
                     int ig = (int)(256 * Math.Clamp(g, 0.0f, 0.999f));

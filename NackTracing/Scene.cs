@@ -82,60 +82,60 @@ namespace NackTracing
         {
             HitCollection world = new HitCollection();
 
-            var testTexture = new TestTexture(0.32f, Color.BLUE_NAVY, Color.WHITE);
-            world.AddObject(new Sphere(new Point(0f, -1000f, 0f), 1000f, new Diffuse(testTexture)));
+            var testTexture = new TestTexture(0.32, Color.BLUE_NAVY, Color.WHITE);
+            world.AddObject(new Sphere(new Point(0, -1000, 0), 1000, new Diffuse(testTexture)));
 
-            float ballSize = 0.2f;
+            double ballSize = 0.2;
             for (int a = -11; a < 11; a++)
             {
                 for (int b = -11; b < 11; b++)
                 {
-                    var chooseMat = MathSetting.RandomFloat();
-                    var center = new Point(a + 0.9f * MathSetting.RandomFloat(), 0.2f, b + 0.9f * MathSetting.RandomFloat());
+                    var chooseMat = MathSetting.RandomDouble();
+                    var center = new Point(a + 0.9 * MathSetting.RandomDouble(), 0.2, b + 0.9 * MathSetting.RandomDouble());
 
-                    if ((center - new Point(4f, ballSize, 0f)).Length() > 0.9)
+                    if ((center - new Point(4, ballSize, 0)).Length() > 0.9)
                     {
                         Material sphereMaterial;
 
-                        if (chooseMat < 0.8f)
+                        if (chooseMat < 0.8)
                         {
                             var albedo = NVector.Random() * NVector.Random();
                             sphereMaterial = new Diffuse(new Color(albedo));
-                            var center2 = center + new NVector(0f, MathSetting.RandomFloat(0f, 0.5f), 0f);
-                            world.AddObject(new Sphere(center, center2, 0.2f, sphereMaterial));
+                            var center2 = center + new NVector(0, MathSetting.RandomDouble(0, 0.5), 0);
+                            world.AddObject(new Sphere(center, center2, 0.2, sphereMaterial));
                         }
-                        else if (chooseMat < 0.95f)
+                        else if (chooseMat < 0.95)
                         {
-                            var albedo = NVector.Random(0.5f, 1f);
-                            var fuzz = MathSetting.RandomFloat(0f, 0.5f);
+                            var albedo = NVector.Random(0.5, 1);
+                            var fuzz = MathSetting.RandomDouble(0, 0.5);
                             sphereMaterial = new Metal(new Color(albedo), fuzz);
                         }
                         else
                         {
-                            sphereMaterial = new Dielectric(1.5f);
+                            sphereMaterial = new Dielectric(1.5);
                         }
                         world.AddObject(new Sphere(center, ballSize, sphereMaterial));
                     }
                 }
             }
-            Material material1 = new Dielectric(1.5f);
-            world.AddObject(new Sphere(new Point(0f, 1f, 0f), 1.0f, material1));
+            Material material1 = new Dielectric(1.5);
+            world.AddObject(new Sphere(new Point(0, 1, 0), 1.0, material1));
 
-            Material material2 = new Diffuse(new Color(0.4f, 0.2f, 0.1f));
-            world.AddObject(new Sphere(new Point(-4f, 1f, 0f), 1.0f, material2));
+            Material material2 = new Diffuse(new Color(0.4, 0.2, 0.1));
+            world.AddObject(new Sphere(new Point(-4, 1, 0), 1.0, material2));
 
-            Material material3 = new Metal(new Color(0.7f, 0.6f, 0.5f), 0.0f);
-            world.AddObject(new Sphere(new Point(4f, 1f, 0f), 1.0f, material3));
+            Material material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
+            world.AddObject(new Sphere(new Point(4, 1, 0), 1.0, material3));
 
             Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
                 fieldView: 20,
 
-                depthFieldAngle: 0.6f,
-                focusDistance: 10.0f
+                depthFieldAngle: 0.6,
+                focusDistance: 10.0
             );
             camera.SetLookPoint(
                     new Point(13, 2, 3), // Look point
@@ -152,13 +152,13 @@ namespace NackTracing
         {
             HitCollection world = new HitCollection();
 
-            var testTexture = new TestTexture(0.32f, Color.BLUE_NAVY, Color.WHITE);
+            var testTexture = new TestTexture(0.32, Color.BLUE_NAVY, Color.WHITE);
 
             world.AddObject(new Sphere(new Point(0, -10, 0), 10, new Diffuse(testTexture)));
             world.AddObject(new Sphere(new Point(0, 10, 0), 10, new Diffuse(testTexture)));
 
             Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
@@ -183,11 +183,11 @@ namespace NackTracing
             var earthSurface = new Diffuse(earthTexture);
             var marsSurface = new Diffuse(marsTexture);
 
-            world.AddObject(new Sphere(new Point(0, 2, 0), 1.5f, earthSurface));
-            world.AddObject(new Sphere(new Point(0, -2, 0), 1.5f, marsSurface));
+            world.AddObject(new Sphere(new Point(0, 2, 0), 1.5, earthSurface));
+            world.AddObject(new Sphere(new Point(0, -2, 0), 1.5, marsSurface));
 
             Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
@@ -213,7 +213,7 @@ namespace NackTracing
             world.AddObject(new Sphere(new Point(0, 2, 0), 2, perlinSurface));
 
             Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
@@ -255,7 +255,7 @@ namespace NackTracing
                     dollarTexture));
 
             Camera camera = new Camera(
-                aspectRatio: 1.0f,
+                aspectRatio: 1.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
@@ -263,7 +263,7 @@ namespace NackTracing
 
                 depthFieldAngle: 0
             );
-            camera.SetBackgroundColor(new Color(0.7f, 0.8f, 1.0f));
+            camera.SetBackgroundColor(new Color(0.7, 0.8, 1.0));
             camera.SetLookPoint(
                     new Point(0, 0, 9),
                     new Point(0, 0, 0),
@@ -297,7 +297,7 @@ namespace NackTracing
                 new NVector(2, 0, 0), new NVector(0, 2, 0), diffuseLight));
 
             Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 100,
                 maxDepth: 50,
@@ -353,17 +353,17 @@ namespace NackTracing
                 grey));
 
             Hittable box1 = new Box(new Point(0, 0, 0), new Point(165, 330, 165), grey);
-            box1 = new Rotate(box1, 15.0f, Axis.Y);
+            box1 = new Rotate(box1, 15.0, Axis.Y);
             box1 = new Translate(box1, new Point(265, 0, 295));
             world.AddObject(box1);
 
             Hittable box2 = new Box(new Point(0, 0, 0), new Point(165, 165, 165), grey);
-            box2 = new Rotate(box2, -18.0f, Axis.Y);
+            box2 = new Rotate(box2, -18.0, Axis.Y);
             box2 = new Translate(box2, new Point(130, 0, 65));
             world.AddObject(box2);
 
             Camera camera = new Camera(
-                aspectRatio: 1.0f,
+                aspectRatio: 1.0,
                 imageWidth: 600,
                 numSamples: 1000,
                 maxDepth: 50,
@@ -419,18 +419,18 @@ namespace NackTracing
                 grey));
 
             Hittable box1 = new Box(new Point(0, 0, 0), new Point(160, 330, 165), grey);
-            box1 = new Rotate(box1, 15.0f, Axis.Y);
+            box1 = new Rotate(box1, 15.0, Axis.Y);
             box1 = new Translate(box1, new Point(265, 0, 295));
 
             Hittable box2 = new Box(new Point(0, 0, 0), new Point(165, 165, 165), grey);
-            box2 = new Rotate(box2, -18.0f, Axis.Y);
+            box2 = new Rotate(box2, -18.0, Axis.Y);
             box2 = new Translate(box2, new Point(130, 0, 65));
 
-            world.AddObject(new ConstantVolume(box1, 0.01f, Color.BLACK));
-            world.AddObject(new ConstantVolume(box2, 0.01f, Color.WHITE));
+            world.AddObject(new ConstantVolume(box1, 0.01, Color.BLACK));
+            world.AddObject(new ConstantVolume(box2, 0.01, Color.WHITE));
 
             Camera camera = new Camera(
-                aspectRatio: 1.0f,
+                aspectRatio: 1.0,
                 imageWidth: 600,
                 numSamples: 1000,
                 maxDepth: 50,
@@ -460,12 +460,12 @@ namespace NackTracing
             {
                 for (int j = 0; j < numBoxes; j++)
                 {
-                    float w = 100.0f;
-                    float x0 = -1000.0f + i * w;
-                    float z0 = -1000.0f + j * w;
-                    float y0 = 0.0f;
+                    double w = 100.0;
+                    double x0 = -1000.0 + i * w;
+                    double z0 = -1000.0 + j * w;
+                    double y0 = 0.0;
                     var x1 = x0 + w;
-                    var y1 = MathSetting.RandomFloat(1, 101);
+                    var y1 = MathSetting.RandomDouble(1, 101);
                     var z1 = z0 + w;
 
                     boxes.AddObject(new Box(new Point(x0, y0, z0), new Point(x1, y1, z1), ground));
@@ -487,26 +487,26 @@ namespace NackTracing
             var sphereMaterial = new Diffuse(new Color("#FF5B5B"));
             world.AddObject(new Sphere(center1, center2, 50, sphereMaterial));
 
-            world.AddObject(new Sphere(new Point(260, 150, 45), 50, new Dielectric(1.5f)));
+            world.AddObject(new Sphere(new Point(260, 150, 45), 50, new Dielectric(1.5)));
             world.AddObject(new Sphere(
-                new Point(0, 150, 145), 50, new Metal(new Color(0.8f, 0.8f, 0.9f), 1.0f)
+                new Point(0, 150, 145), 50, new Metal(new Color(0.8, 0.8, 0.9), 1.0)
             ));
 
-            var boundary = new Sphere(new Point(360, 150, 145), 70, new Dielectric(1.5f));
+            var boundary = new Sphere(new Point(360, 150, 145), 70, new Dielectric(1.5));
             world.AddObject(boundary);
-            world.AddObject(new ConstantVolume(boundary, 0.2f, new Color(0.2f, 0.4f, 0.9f)));
+            world.AddObject(new ConstantVolume(boundary, 0.2, new Color(0.2, 0.4, 0.9)));
 
-            boundary = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5f));
-            world.AddObject(new ConstantVolume(boundary, 0.0001f, Color.WHITE));
+            boundary = new Sphere(new Point(0, 0, 0), 5000, new Dielectric(1.5));
+            world.AddObject(new ConstantVolume(boundary, 0.0001, Color.WHITE));
 
             var earthMat = new Diffuse(ImageLoader.Load("MARS"));
             world.AddObject(new Sphere(new Point(400, 200, 400), 100, earthMat));
 
-            var perlinTexture = new NoiseTexture(0.1f);
+            var perlinTexture = new NoiseTexture(0.1);
             world.AddObject(new Sphere(new Point(220, 280, 300), 80, new Diffuse(perlinTexture)));
 
             HitCollection boxes2 = new HitCollection();
-            var fuzz = MathSetting.RandomFloat(0, 0.5f);
+            var fuzz = MathSetting.RandomDouble(0, 0.5);
             var gold = new Metal(Color.GOLD, fuzz);
             int ns = 1000;
             for (int j = 0; j < ns; j++)
@@ -521,7 +521,7 @@ namespace NackTracing
             world.AddObject(translatedBox);
 
             Camera camera = new Camera(
-                aspectRatio: 1.0f,
+                aspectRatio: 1.0,
                 imageWidth: imageWidth,
                 numSamples: numSamples,
                 maxDepth: maxDepth,
@@ -571,7 +571,7 @@ namespace NackTracing
             );
 
             var smallLight = new Plane(
-                new Point(-3, 6.75f, -3),
+                new Point(-3, 6.75, -3),
                 new NVector(10, 0, 0),
                 new NVector(0, 0, 10),
                 lightMaterial
@@ -584,9 +584,9 @@ namespace NackTracing
 
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
-                X: -9.2436f,
-                Y: -12.738f,
-                Z: 9.0725f,
+                X: -9.2436,
+                Y: -12.738,
+                Z: 9.0725,
 
                 // Location of the object to view
                 targetX: 0,
@@ -594,10 +594,10 @@ namespace NackTracing
                 targetZ: 0,
 
                 // Lens properties
-                focalLengthMM: 50.0f,
+                focalLengthMM: 50.0,
 
                 // Render properties
-                aspectRatio: 16.0f / 9.0f,
+                aspectRatio: 16.0 / 9.0,
                 imageWidth: 1080,
                 numSamples: 1200
             );
@@ -640,13 +640,13 @@ namespace NackTracing
             HitCollection lights = new HitCollection();
             lights.AddObject(ceilingLight);
 
-            float zoom = 1.5f;
+            double zoom = 1.5;
 
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
-                X: -5.52395f * zoom,
-                Y: -8.95188f * zoom,
-                Z: 1.51004f * zoom,
+                X: -5.52395 * zoom,
+                Y: -8.95188 * zoom,
+                Z: 1.51004 * zoom,
 
                 // Location of the object to view
                 targetX: 0,
@@ -654,10 +654,10 @@ namespace NackTracing
                 targetZ: 0,
 
                 // Lens properties
-                focalLengthMM: 50.0f,
+                focalLengthMM: 50.0,
 
                 // Render properties
-                aspectRatio: 1.0f,
+                aspectRatio: 1.0,
                 imageWidth: 1080,
                 numSamples: 500
             );
@@ -687,30 +687,30 @@ namespace NackTracing
 
             world.AddObject(bvhGPU);
 
-            float zoom = 0.9f;
+            double zoom = 0.9;
 
             Camera camera = BlenderAdapter.CreateCamera(
                 // Location Camera in Blender
-                X: -0.811323f * zoom,
-                Y: -9.68943f * zoom,
-                Z: 0.477847f * zoom,
+                X: -0.811323 * zoom,
+                Y: -9.68943 * zoom,
+                Z: 0.477847 * zoom,
 
                 // Location of the object to view
-                targetX: 1.53376f,
-                targetY: -6.12449f,
-                targetZ: 0.767201f,
+                targetX: 1.53376,
+                targetY: -6.12449,
+                targetZ: 0.767201,
 
                 // Lens properties
-                focalLengthMM: 36f,
+                focalLengthMM: 36,
 
                 // Render properties
-                aspectRatio: 16f / 9f,
+                aspectRatio: 16 / 9,
                 imageWidth: 1920,
                 numSamples: 1000
             );
 
             Texture HDRI = HDRLoader.Load("SimonsRocks");
-            camera.SetEnvironment(HDRI, 135f);
+            camera.SetEnvironment(HDRI, 135);
 
             var bvhWorld = new BVHNode(world);
 

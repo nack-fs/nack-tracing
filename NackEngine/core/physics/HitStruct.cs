@@ -11,11 +11,11 @@ namespace NackEngine.core.physics
     {
         public Point Point { get; set; }
         public NVector Normal { get; set; }
-        public float T { get; set; }
+        public double T { get; set; }
 
-        public float U { get; set; }
+        public double U { get; set; }
 
-        public float V { get; set; }
+        public double V { get; set; }
 
         public bool FrontFace { get; set; }
         public Material Material { get; set; }

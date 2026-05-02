@@ -10,13 +10,13 @@ namespace NackEngine.core.render
     {
         public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter);
 
-        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
-            return 0f;
+        public double ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
+            return 0;
         }
 
-        public Color Emitted(float u, float v, Point point)
+        public Color Emitted(double u, double v, Point point)
         {
-            return new Color(0f, 0f, 0f);
+            return new Color(0, 0, 0);
         }
     }
 }

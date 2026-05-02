@@ -17,12 +17,12 @@ namespace NackEngine.core.render.textures
             this.bytes = bytes;
         }
 
-        public Color Value(float u, float v, NVector point)
+        public Color Value(double u, double v, NVector point)
         {
             if (pixelData == null) { return new Color(1, 0, 1); }
 
-            u = Math.Clamp(u, 0.0f, 1.0f);
-            v = 1.0f - Math.Clamp(v, 0.0f, 1.0f);
+            u = Math.Clamp(u, 0.0, 1.0);
+            v = 1.0 - Math.Clamp(v, 0.0, 1.0);
 
             int i = (int)(u * width);
             int j = (int)(v * height);
@@ -36,7 +36,7 @@ namespace NackEngine.core.render.textures
             byte g = pixelData[index + 1];
             byte r = pixelData[index + 2];
 
-            float scale = 1.0f / 255.0f;
+            double scale = 1.0 / 255.0;
             return new Color(r * scale, g * scale, b * scale);
         }
     }

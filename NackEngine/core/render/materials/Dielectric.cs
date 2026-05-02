@@ -10,10 +10,10 @@ namespace NackEngine.core.render.materials
 {
     public class Dielectric : Material
     {
-        private float indexRefraction;
+        private double indexRefraction;
         private Color albedo;
 
-        public Dielectric(float indexRefraction, Color? albedo = null)
+        public Dielectric(double indexRefraction, Color? albedo = null)
         {
             this.indexRefraction = indexRefraction;
             this.albedo = albedo ?? Color.WHITE;
@@ -26,16 +26,16 @@ namespace NackEngine.core.render.materials
             scatter.SkipProb = true;
             scatter.ProbDensity = null;
 
-            float ri = hit.FrontFace ? (1.0f / indexRefraction) : indexRefraction;
+            double ri = hit.FrontFace ? (1.0 / indexRefraction) : indexRefraction;
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
-            float cosine = MathF.Min(NVector.Dot(-unitDirection, hit.Normal), 1.0f);
-            float sine = MathF.Sqrt(1.0f - cosine*cosine);
+            double cosine = Math.Min(NVector.Dot(-unitDirection, hit.Normal), 1.0);
+            double sine = Math.Sqrt(1.0 - cosine*cosine);
 
             bool canRefract = ri * sine <= 1.0;
             NVector direction;
 
-            if (canRefract || Reflectance(cosine, ri) <= MathSetting.RandomFloat())
+            if (canRefract || Reflectance(cosine, ri) <= MathSetting.RandomDouble())
             {
                 direction = RayPhysics.Refract(unitDirection, hit.Normal, ri);
             }
@@ -46,10 +46,10 @@ namespace NackEngine.core.render.materials
             return true;
         }
 
-        private static float Reflectance(float cosine, float indexRefraction) {
-            var r0 = (1f - indexRefraction) / (1f + indexRefraction);
+        private static double Reflectance(double cosine, double indexRefraction) {
+            var r0 = (1 - indexRefraction) / (1 + indexRefraction);
             r0 *= r0;
-            return r0 + (1f - r0) * MathF.Pow((1f - cosine), 5f);
+            return r0 + (1 - r0) * Math.Pow((1 - cosine), 5);
         }
     }
 }

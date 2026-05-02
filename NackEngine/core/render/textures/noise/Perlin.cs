@@ -27,15 +27,15 @@ namespace NackEngine.core.render.textures.noise
             permZ = GeneratePerm();
         }
 
-        public float Noise(Point p)
+        public double Noise(Point p)
         {
-            var u = p.X() - MathF.Floor(p.X());
-            var v = p.Y() - MathF.Floor(p.Y());
-            var w = p.Z() - MathF.Floor(p.Z());
+            var u = p.X() - Math.Floor(p.X());
+            var v = p.Y() - Math.Floor(p.Y());
+            var w = p.Z() - Math.Floor(p.Z());
 
-            var i = (int)MathF.Floor(p.X());
-            var j = (int)MathF.Floor(p.Y());
-            var k = (int)MathF.Floor(p.Z());
+            var i = (int)Math.Floor(p.X());
+            var j = (int)Math.Floor(p.Y());
+            var k = (int)Math.Floor(p.Z());
 
             NVector[,,] c = new NVector[2, 2, 2];
 
@@ -51,12 +51,12 @@ namespace NackEngine.core.render.textures.noise
             return PerlinInterp(c, u, v, w);
         }
 
-        private static float PerlinInterp(NVector[,,] c, float u, float v, float w)
+        private static double PerlinInterp(NVector[,,] c, double u, double v, double w)
         {
             var uu = u * u * (3 - 2 * u);
             var vv = v * v * (3 - 2 * v);
             var ww = w * w * (3 - 2 * w);
-            var accum = 0.0f;
+            var accum = 0.0;
 
             for (int i = 0; i < 2; i++)
             {
@@ -76,20 +76,20 @@ namespace NackEngine.core.render.textures.noise
             return accum;
         }
 
-        public float Turbulence(Point p, int depth)
+        public double Turbulence(Point p, int depth)
         {
-            var accum = 0.0f;
+            var accum = 0.0;
             var tempP = p;
-            var weight = 1.0f;
+            var weight = 1.0;
 
             for (int i = 0; i < depth; i++)
             {
                 accum += weight * Noise(tempP);
-                weight *= 0.5f;
-                tempP *= 2f;
+                weight *= 0.5;
+                tempP *= 2;
             }
 
-            return MathF.Abs(accum);
+            return Math.Abs(accum);
         }
 
         private static int[] GeneratePerm()

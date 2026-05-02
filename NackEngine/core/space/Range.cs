@@ -2,35 +2,35 @@
 {
     public struct Range
     {
-        private float min;
-        private float max;
+        private double min;
+        private double max;
 
-        public static readonly Range EMPTY = new Range(float.MaxValue, float.MinValue);
-        public static readonly Range UNIVERSE = new Range(float.MinValue, float.MaxValue);
-        public static readonly Range DEFAULT = new Range(0.001f, float.MaxValue);
+        public static readonly Range EMPTY = new Range(double.MaxValue, double.MinValue);
+        public static readonly Range UNIVERSE = new Range(double.MinValue, double.MaxValue);
+        public static readonly Range DEFAULT = new Range(0.001, double.MaxValue);
 
         public Range()
         {
-            this.min = float.MinValue; this.max = float.MaxValue;
+            this.min = double.MinValue; this.max = double.MaxValue;
         }
 
-        public Range(float min, float max)
+        public Range(double min, double max)
         {
             this.min = min; this.max = max;
         }
 
         public Range(Range a, Range b)
         {
-            this.min = MathF.Min(a.Min(), b.Min());
-            this.max = MathF.Max(a.Max(), b.Max());
+            this.min = Math.Min(a.Min(), b.Min());
+            this.max = Math.Max(a.Max(), b.Max());
         }
 
-        public float Size()
+        public double Size()
         {
             return max - min;
         }
 
-        public bool Contains(float z)
+        public bool Contains(double z)
         {
             return min <= z && z <= max;
         }
@@ -40,40 +40,40 @@
             return min < z && z < max;
         }
 
-        public float Min()
+        public double Min()
         {
             return min;
         }
 
-        public float Max()
+        public double Max()
         {
             return max;
         }
 
-        public void SetMin(float min)
+        public void SetMin(double min)
         {
             this.min = min;
         }
 
-        public void SetMax(float max)
+        public void SetMax(double max)
         {
             this.max = max;
         }
 
-        public double Clamp(float x)
+        public double Clamp(double x)
         {
             if (x < min) return min;
             if (x > max) return max;
             return x;
         }
 
-        public Range Expand(float delta)
+        public Range Expand(double delta)
         {
-            var padding = delta * 0.5f;
+            var padding = delta * 0.5;
             return new Range(min - padding, max + padding);
         }
 
-        public static Range operator +(Range range, float displacement) =>
+        public static Range operator +(Range range, double displacement) =>
             new Range(range.min + displacement, range.max + displacement);
     }
 }
