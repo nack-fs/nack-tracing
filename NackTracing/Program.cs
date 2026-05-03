@@ -16,7 +16,7 @@ namespace NackTracing
 
             DeveloperUserInterface();
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 7; i++) {
                 Scene.CornellBox();
                 Scene.SALVAVIDAS();
                 Scene.CPU_NACK();
