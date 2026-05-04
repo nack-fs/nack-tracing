@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NackEngine.core.physics;
-using NackEngine.core.render;
+﻿using NackEngine.core.physics;
 using NackEngine.core.render.textures;
 using NackEngine.core.space;
-using NackEngine.math;
 using NackEngine.math.probdensities;
 
 namespace NackEngine.core.render.materials
@@ -32,7 +27,8 @@ namespace NackEngine.core.render.materials
             return true;
         }
 
-        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
+        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered)
+        {
             var cos = NVector.Dot(hit.Normal, NVector.UnitVector(scattered.Direction()));
             return (cos < 0f) ? 0f : cos / MathF.PI;
         }

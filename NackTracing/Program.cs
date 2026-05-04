@@ -17,7 +17,6 @@ namespace NackTracing
             DeveloperUserInterface();
 
             //Scene.BasicScene();
-            //Scene.CheckeredSpheres();
             //Scene.EarthAndMars();
             //Scene.PerlinTest();
             //Scene.PlanesScene();

@@ -66,7 +66,6 @@ namespace NackTracing
                 export.ExportFile(render);
                 Logger.Log("[INFO] Image saved successfully.");
             }
-            Environment.Exit(0);
         }
 
         private static void ShowElapsedTime(Stopwatch sw)
@@ -147,33 +146,6 @@ namespace NackTracing
 
             Render("BasicScene", camera, bvhWorld);
         }
-
-        public static void CheckeredSpheres()
-        {
-            HitCollection world = new HitCollection();
-
-            var testTexture = new TestTexture(0.32f, Color.BLUE_NAVY, Color.WHITE);
-
-            world.AddObject(new Sphere(new Point(0, -10, 0), 10, new Diffuse(testTexture)));
-            world.AddObject(new Sphere(new Point(0, 10, 0), 10, new Diffuse(testTexture)));
-
-            Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
-                imageWidth: 1080,
-                numSamples: 100,
-                maxDepth: 50,
-                fieldView: 20,
-
-                depthFieldAngle: 0
-            );
-            camera.SetLookPoint(
-                    new Point(13, 2, 3), // Look point
-                    new Point(0, 0, 0), // Look target
-                    new NVector(0, 1, 0) // vup
-            );
-            Render("CheckeredSpheres", camera, world);
-        }
-
         public static void EarthAndMars()
         {
             HitCollection world = new HitCollection();
