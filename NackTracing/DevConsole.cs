@@ -6,7 +6,8 @@ namespace NackTracing
 {
     public static class DevConsole
     {
-        private static readonly string releaseVersion = "8.05-STABLE";
+        private static readonly string releaseVersion = "9.0.1-RELEASE";
+        private static readonly string buildDate = "2026.05.13";
 
         public static void DeveloperUserInterface()
         {
@@ -17,7 +18,8 @@ namespace NackTracing
                 Console.Title = "NACK ENGINE | CORE RENDERER | DEVELOPER ACCESS";
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"\n    {new string('-', 50)}");
+                Separator('=');
+                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(" [ ");
 
                 if (Scene.previewMode)
@@ -33,22 +35,29 @@ namespace NackTracing
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(" ] [ ");
-                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write("MODE: DEVELOPER RENDER ENGINE");
-                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine($" ] [ RELEASE: {releaseVersion} ]");
-                Console.WriteLine($"\n    {new string('-', 80)}");
+                Console.Write(" [ ");
+                Console.Write($"BUILD DATE: {buildDate} ]");
+                Console.WriteLine($" ] [ Threads Detected: {Environment.ProcessorCount} ]");
+                Separator('-');
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\n    > CORE INITIALIZED");
-                Console.WriteLine("    > RENDER PIPELINE READY");
+                Console.WriteLine("    > RENDER PIPELINE READY\n");
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"\n    {new string('-', 80)}");
+                Separator('-');
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("    Ray Tracing Environment | TFG - Ignacio Fernández Suárez | University of Oviedo");
+                Console.WriteLine("    Nack Tracing Developer Access | Author: Ignacio Fernández Suárez");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"\n    {new string('-', 80)}");
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Separator('-');
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("    For more details, visit the repository: https://github.com/nack-fs/nack-tracing");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Separator('=');
 
                 Console.WriteLine("");
             }
@@ -56,6 +65,13 @@ namespace NackTracing
             {
                 Console.WriteLine("Default primary output.\n");
             }
+        }
+
+        private static void Separator(char lineChar)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine(new string(lineChar, 85));
+            Console.ResetColor();
         }
     }
 }
