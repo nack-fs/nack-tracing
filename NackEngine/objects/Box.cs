@@ -2,10 +2,6 @@
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects

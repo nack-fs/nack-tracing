@@ -1,7 +1,6 @@
 ﻿using NackEngine.IO;
 using System.Diagnostics;
 
-
 namespace NackTracing
 {
     internal class Program

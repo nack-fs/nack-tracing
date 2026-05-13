@@ -1,7 +1,4 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Point = NackEngine.core.space.NVector;
 
@@ -24,19 +21,23 @@ namespace NackEngine.core.physics
             this.timeMilis = timeMilis;
         }
 
-        public Point Origin() {
-            return origin;    
+        public Point Origin()
+        {
+            return origin;
         }
 
-        public NVector Direction(){
+        public NVector Direction()
+        {
             return direction;
         }
 
-        public Point At(float t) { 
+        public Point At(float t)
+        {
             return origin + t * direction;
         }
 
-        public float Time() {
+        public float Time()
+        {
             return timeMilis;
         }
     }

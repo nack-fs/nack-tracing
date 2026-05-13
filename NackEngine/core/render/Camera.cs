@@ -105,7 +105,8 @@ namespace NackEngine.core.render
             return pixelColors;
         }
 
-        public void RenderPreview(Hittable world, Hittable lights = null) {
+        public void RenderPreview(Hittable world, Hittable lights = null)
+        {
             Initialize();
 
             int totalPixels = imageWidth * imageHeight;
@@ -113,11 +114,13 @@ namespace NackEngine.core.render
             Color[] accumulationBuffer = new Color[totalPixels];
 
             int[] indexes = new int[totalPixels];
-            for (int i = 0; i < totalPixels; i++) {
+            for (int i = 0; i < totalPixels; i++)
+            {
                 indexes[i] = i;
             }
 
-            for (int sample = 1; sample <= numSamples; sample++) {
+            for (int sample = 1; sample <= numSamples; sample++)
+            {
                 CurrentSample = sample;
 
                 ShuffleIndexes(indexes);
@@ -220,7 +223,8 @@ namespace NackEngine.core.render
             HitStruct hit;
             if (!world.Hit(ray, Range.DEFAULT, out hit))
             {
-                if (environment != null) {
+                if (environment != null)
+                {
                     NVector unitDirection = NVector.UnitVector(ray.Direction());
                     unitDirection = unitDirection.Rotate(envSin, envCos, NVector.Axis.Y);
 
@@ -331,10 +335,12 @@ namespace NackEngine.core.render
             this.envCos = MathF.Cos(rad);
         }
 
-        private void ShuffleIndexes(int[] array) { 
+        private void ShuffleIndexes(int[] array)
+        {
             int n = array.Length;
 
-            while (n > 1) {
+            while (n > 1)
+            {
                 int k = Random.Shared.Next(n--);
                 (array[n], array[k]) = (array[k], array[n]);
             }

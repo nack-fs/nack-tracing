@@ -1,9 +1,5 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection.Metadata;
-using System.Text;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.core.render
@@ -42,7 +38,8 @@ namespace NackEngine.core.render
 
         private NVector vector;
 
-        public Color(float r, float g, float b) {
+        public Color(float r, float g, float b)
+        {
             this.vector = new NVector(r, g, b);
         }
 
@@ -60,19 +57,23 @@ namespace NackEngine.core.render
             this.vector = new NVector(r / 255.0f, g / 255.0f, b / 255.0f);
         }
 
-        public Color(NVector vector) {
+        public Color(NVector vector)
+        {
             this.vector = vector;
         }
 
-        public NVector Vector() { 
+        public NVector Vector()
+        {
             return this.vector;
         }
 
-        private float Linear2Gamma(float linear) {
+        private float Linear2Gamma(float linear)
+        {
             return (linear > 0) ? MathF.Sqrt(linear) : 0f;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             var r = this.vector.X();
             var g = this.vector.Y();
             var b = this.vector.Z();
@@ -81,7 +82,7 @@ namespace NackEngine.core.render
             g = Linear2Gamma(g);
             b = Linear2Gamma(b);
 
-            Range intensity = new Range(0.000f,0.999f);
+            Range intensity = new Range(0.000f, 0.999f);
             int ir = (int)(256 * intensity.Clamp(r));
             int ig = (int)(256 * intensity.Clamp(g));
             int ib = (int)(256 * intensity.Clamp(b));

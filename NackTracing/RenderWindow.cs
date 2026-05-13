@@ -1,9 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using NackEngine.core.render;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using NackEngine.core.render;
 using Color = NackEngine.core.render.Color;
 using Timer = System.Windows.Forms.Timer;
 

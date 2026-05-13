@@ -1,6 +1,6 @@
 ﻿using NackEngine.core.space;
-using Range = NackEngine.core.space.Range;
 using Axis = NackEngine.core.space.NVector.Axis;
+using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.core.physics.bounding
 {
@@ -78,7 +78,8 @@ namespace NackEngine.core.physics.bounding
             return true;
         }
 
-        public float Area() {
+        public float Area()
+        {
             float dx = X.Size();
             float dy = Y.Size();
             float dz = Z.Size();

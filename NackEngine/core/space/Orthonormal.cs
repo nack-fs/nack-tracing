@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NackEngine.core.space
+﻿namespace NackEngine.core.space
 {
     public struct Orthonormal
     {
@@ -10,7 +6,8 @@ namespace NackEngine.core.space
         public NVector V { get; }
         public NVector W { get; }
 
-        public Orthonormal(NVector n) { 
+        public Orthonormal(NVector n)
+        {
             this.W = NVector.UnitVector(n);
             NVector a = (Math.Abs(W.X()) > 0.9f) ? new NVector(0f, 1f, 0f) : new NVector(1f, 0f, 0f);
             V = NVector.UnitVector(NVector.Cross(W, a));

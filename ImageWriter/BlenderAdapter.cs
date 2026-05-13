@@ -1,8 +1,5 @@
 ﻿using NackEngine.core.render;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.IO
 {

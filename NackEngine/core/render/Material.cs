@@ -10,7 +10,8 @@ namespace NackEngine.core.render
     {
         public bool Bounce(Ray ray, HitStruct hit, out ScatterStruct scatter);
 
-        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered) {
+        public float ScatterProb(Ray ray, HitStruct hit, Ray scattered)
+        {
             return 0f;
         }
 

@@ -53,7 +53,8 @@ namespace NackTracing
                 });
                 Application.Run(window);
             }
-            else {
+            else
+            {
                 Logger.Log("[INFO] Rendering...");
                 Stopwatch sw = new Stopwatch();
                 sw.Start();

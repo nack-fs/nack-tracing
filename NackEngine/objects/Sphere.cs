@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NackEngine.core.physics;
+﻿using NackEngine.core.physics;
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
@@ -30,7 +27,8 @@ namespace NackEngine.objects
             InitializeAABBoxStatic(center, radius);
         }
 
-        private void InitializeAABBoxStatic(Point center, float radius) {
+        private void InitializeAABBoxStatic(Point center, float radius)
+        {
             NVector rvec = new NVector(radius, radius, radius);
             this.aabbox = new AABBox(center - rvec, center + rvec);
         }
@@ -56,7 +54,7 @@ namespace NackEngine.objects
             this.aabbox = new AABBox(box1, box2);
         }
 
-        public bool Hit(Ray ray, Range rayT,out HitStruct hit)
+        public bool Hit(Ray ray, Range rayT, out HitStruct hit)
         {
             Point center = GetCenter(ray.Time());
 
@@ -67,16 +65,19 @@ namespace NackEngine.objects
             hit = default;
 
             var discriminant = h * h - a * c;
-            if (discriminant < 0) {
+            if (discriminant < 0)
+            {
                 return false;
             }
 
             float sqrtDis = MathF.Sqrt(discriminant);
 
             float root = (h - sqrtDis) / a;
-            if (!rayT.Surrounds(root)) {
+            if (!rayT.Surrounds(root))
+            {
                 root = (h + sqrtDis) / a;
-                if (!rayT.Surrounds(root)) {
+                if (!rayT.Surrounds(root))
+                {
                     return false;
                 }
             }
@@ -86,7 +87,7 @@ namespace NackEngine.objects
             NVector owNormal = (hit.Point - center) / radius;
             hit.setFaceNormal(ray, owNormal);
 
-            (float,float) uv = GetUV(owNormal);
+            (float, float) uv = GetUV(owNormal);
             hit.U = uv.Item1;
             hit.V = uv.Item2;
 
@@ -101,11 +102,13 @@ namespace NackEngine.objects
             return center + (movement * time);
         }
 
-        public AABBox BoundingBox() {
+        public AABBox BoundingBox()
+        {
             return aabbox;
         }
 
-        private (float u, float v) GetUV(Point point) {
+        private (float u, float v) GetUV(Point point)
+        {
             var theta = MathF.Acos(-point.Y());
             var phi = MathF.Atan2(-point.Z(), point.X()) + MathF.PI;
 

@@ -17,7 +17,7 @@ namespace NackEngine.objects.volumes
         public ConstantVolume(Hittable boundary, float density, Texture texture)
         {
             this.boundary = boundary;
-            this.negInvDensity = -1f/density;
+            this.negInvDensity = -1f / density;
             this.phaseFunction = new Isotropic(texture);
         }
 

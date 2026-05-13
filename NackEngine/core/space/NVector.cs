@@ -8,7 +8,7 @@ namespace NackEngine.core.space
     {
         public Vector128<float> V;
 
-        public enum Axis { X, Y, Z}
+        public enum Axis { X, Y, Z }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public NVector(float x, float y, float z)
@@ -114,7 +114,8 @@ namespace NackEngine.core.space
             _ => throw new IndexOutOfRangeException()
         };
 
-        public bool IsNaN() {
+        public bool IsNaN()
+        {
             return float.IsNaN(X()) || float.IsNaN(Y()) || float.IsNaN(Z());
         }
     }

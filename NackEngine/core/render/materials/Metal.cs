@@ -1,10 +1,6 @@
 ﻿using NackEngine.core.physics;
-using NackEngine.core.render;
 using NackEngine.core.space;
 using NackEngine.math;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.core.render.materials
 {
@@ -30,8 +26,8 @@ namespace NackEngine.core.render.materials
             NVector reflected = RayPhysics.Reflect(ray.Direction(), hit.Normal);
             reflected = NVector.UnitVector(reflected) + (fuzz * MathSetting.RandomUnitVector());
             scatter.Bounced = new Ray(hit.Point, reflected, ray.Time());
-            
-            return (NVector.Dot(scatter.Bounced.Direction(), hit.Normal)>0); 
+
+            return (NVector.Dot(scatter.Bounced.Direction(), hit.Normal) > 0);
         }
     }
 }
