@@ -1,5 +1,5 @@
 {
-  "assetsBaseConfig": "C:\\Users\\ignac\\Downloads\\assets",
+  "assetsBaseConfig": "C:\\PATH\\TO\\YOUR\\ASSETS",
 
   "textures": {
     "EARTH": "textures/earth-texture.jpg",
