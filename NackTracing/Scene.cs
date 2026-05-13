@@ -597,7 +597,9 @@ namespace NackTracing
 
             var bvhSalvavidas = new BVHNode(SalvavidasObj);
 
-            world.AddObject(bvhSalvavidas);
+            Hittable rotatedSalvavidas = new Rotate(bvhSalvavidas, -30f, Axis.Y);
+
+            world.AddObject(rotatedSalvavidas);
 
             var lightMaterial = new DiffuseLight(new Color(10, 10, 10));
 
