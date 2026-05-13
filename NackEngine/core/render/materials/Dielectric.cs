@@ -29,13 +29,13 @@ namespace NackEngine.core.render.materials
             float ri = hit.FrontFace ? (1.0f / indexRefraction) : indexRefraction;
 
             NVector unitDirection = NVector.UnitVector(ray.Direction());
-            float cosine = MathF.Min(NVector.Dot(-unitDirection, hit.Normal), 1.0f);
-            float sine = MathF.Sqrt(1.0f - cosine*cosine);
+            float cos = MathF.Min(NVector.Dot(-unitDirection, hit.Normal), 1.0f);
+            float sin = MathF.Sqrt(1.0f - cos*cos);
 
-            bool canRefract = ri * sine <= 1.0;
+            bool canRefract = ri * sin <= 1.0f;
             NVector direction;
 
-            if (canRefract || Reflectance(cosine, ri) <= MathSetting.RandomFloat())
+            if (canRefract || Reflectance(cos, ri) <= MathSetting.RandomFloat())
             {
                 direction = RayPhysics.Refract(unitDirection, hit.Normal, ri);
             }
