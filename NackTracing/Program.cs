@@ -25,9 +25,9 @@ namespace NackTracing
             //Scene.CornellSmoke();
             //Scene.FinalScene(800, 1000, 20);
 
-            Scene.CPU_NACK();
+            //Scene.CPU_NACK();
             //Scene.SALVAVIDAS();
-            //Scene.GPU_SCENE();
+            Scene.GPU_SCENE();
         }
 
         private static void DeveloperUserInterface()

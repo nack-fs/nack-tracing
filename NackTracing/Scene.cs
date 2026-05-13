@@ -678,10 +678,12 @@ namespace NackTracing
                 // Render properties
                 aspectRatio: 16f / 9f,
                 imageWidth: 1920,
-                numSamples: 1000
+                numSamples: 850,
+
+                maxDepth: 20
             );
 
-            Texture HDRI = HDRLoader.Load("SimonsRocks");
+            Texture HDRI = HDRLoader.Load("SimonsRocks", 2.5f);
             camera.SetEnvironment(HDRI, 135f);
 
             var bvhWorld = new BVHNode(world);

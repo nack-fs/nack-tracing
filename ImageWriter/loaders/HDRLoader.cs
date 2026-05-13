@@ -10,7 +10,7 @@ namespace NackEngine.IO.loaders
 {
     public static class HDRLoader
     {
-        public static FloatImageTexture Load(string filename) {
+        public static FloatImageTexture Load(string filename, float? exposure = null) {
 
             string path = AssetConfig.GetHdriPath(filename);
             if (string.IsNullOrEmpty(path)) { path = filename; }
@@ -19,7 +19,9 @@ namespace NackEngine.IO.loaders
             {
                 using (var stream = File.OpenRead(path)) {
                     ImageResultFloat image = ImageResultFloat.FromStream(stream, ColorComponents.RedGreenBlue);
-                    return new FloatImageTexture(image.Data, image.Width, image.Height);
+                    return exposure.HasValue
+                        ? new FloatImageTexture(image.Data, image.Width, image.Height, exposure.Value)
+                        : new FloatImageTexture(image.Data, image.Width, image.Height);
                 }
             }
             catch (Exception e) {
