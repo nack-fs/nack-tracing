@@ -1,4 +1,5 @@
 ﻿using NackEngine.core.space;
+using NackEngine.math;
 using Axis = NackEngine.core.space.NVector.Axis;
 using Range = NackEngine.core.space.Range;
 
@@ -103,7 +104,7 @@ namespace NackEngine.core.physics.bounding
 
         private void MinPadding()
         {
-            float d = 1e-4f;
+            float d = MathSetting.AABB_PADDING;
             if (X.Size() < d) X = X.Expand(d);
             if (Y.Size() < d) Y = Y.Expand(d);
             if (Z.Size() < d) Z = Z.Expand(d);

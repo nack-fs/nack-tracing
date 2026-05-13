@@ -56,7 +56,7 @@ namespace NackEngine.objects
             hit = default;
             var dNormal = NVector.Dot(normal, ray.Direction());
 
-            float tol = 1e-8f;
+            float tol = MathSetting.MATH_EPSILON;
             if (Math.Abs(dNormal) < tol)
             {
                 return false;

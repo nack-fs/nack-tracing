@@ -12,25 +12,26 @@ namespace NackEngine.core.render
 
     public class Camera
     {
+        #region Basic Configuration
         public float aspectRatio;
         public int imageWidth;
         public int imageHeight;
-
         public int numSamples;
         public int maxDepth;
         private Color background;
         private float maxIntensity;
+        #endregion
 
+        #region Optics and Orientation
         public float fieldView;
         public Point lookPoint = new Point(0, 0, 0);
         public Point lookTarget = new Point(0, 0, -1);
         public NVector vup = new NVector(0, 1, 0);
-
         public float depthFieldAngle;
         public float focusDistance;
+        #endregion
 
-        // -----------------------
-
+        #region Internal variables
         private Point cameraOrigin;
         private Point pixel00;
         private NVector deltaH;
@@ -41,13 +42,14 @@ namespace NackEngine.core.render
         private NVector defocusDiskV;
         private int sqrtSPP;
         private float invSqrtSPP;
+        #endregion
 
+        #region Environment
         private bool defaultBackground = true;
         private Texture environment = null;
         private float envSin = 0f;
         private float envCos = 1f;
-
-        // -----------------------
+        #endregion
 
         public Color[] PixelBuffer { get; private set; }
         public bool IsCompleted { get; set; } = false;
@@ -255,7 +257,7 @@ namespace NackEngine.core.render
 
             if (scatter.SkipProb)
             {
-                float offset = 1e-4f;
+                float offset = MathSetting.HIT_EPSILON;
                 Ray offsetRay = new Ray(hit.Point + hit.Normal * offset, scatter.Bounced.Direction(), ray.Time());
                 Color colorScatter = scatter.Attenuation * RayColor(offsetRay, depth - 1, world, lights);
                 return colorEmitted + colorScatter;
@@ -273,12 +275,12 @@ namespace NackEngine.core.render
                     p = new MixProbDensity(lightProb, scatter.ProbDensity);
                 }
 
-                float offset = 1e-4f;
+                float offset = MathSetting.HIT_EPSILON;
                 Ray scatteredRay = new Ray(hit.Point + hit.Normal * offset, p.Generate(), ray.Time());
 
                 float probability = p.Value(scatteredRay.Direction());
 
-                float tol = 1e-8f;
+                float tol = MathSetting.MATH_EPSILON;
                 if (probability <= tol) { return colorEmitted; }
 
                 float scatterpdf = hit.Material.ScatterProb(ray, hit, scatteredRay);

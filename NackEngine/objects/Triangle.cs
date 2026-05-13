@@ -2,6 +2,7 @@
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
+using NackEngine.math;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects
@@ -85,7 +86,7 @@ namespace NackEngine.objects
             NVector s = ray.Origin() - v0;
             float u = f * NVector.Dot(s, h);
 
-            float eps = 1e-8f;
+            float eps = MathSetting.MATH_EPSILON;
 
             if (u < -eps || u > 1.0f + eps) return false;
 
