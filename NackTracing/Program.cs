@@ -15,6 +15,7 @@ namespace NackTracing
             DevConsole.DeveloperUserInterface();
 
             /*
+             * ----------------------
              * Active Rendering Scene
              * ----------------------
              */

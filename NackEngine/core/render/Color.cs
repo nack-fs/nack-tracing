@@ -6,35 +6,37 @@ namespace NackEngine.core.render
 {
     public struct Color
     {
-        // ------- Default colors -------
-        // --- BASIC COLORS ---
+        #region Basic Colors
         public static readonly Color WHITE = new Color("#FFFFFF");
         public static readonly Color BLACK = new Color("#000000");
         public static readonly Color GREY_LIGHT = new Color("#D3D3D3");
         public static readonly Color GREY_DARK = new Color("#A9A9A9");
+        #endregion
 
-        // --- MODERN PALETTE ---
+        #region Modern Palette
         public static readonly Color RED_MODERN = new Color("#C1121F");
         public static readonly Color BLUE_WATER = new Color("#669BBC");
         public static readonly Color BLUE_NAVY = new Color("#003049");
         public static readonly Color YELLOW_EGG = new Color("#FFB703");
         public static readonly Color ORANGE_SUNSET = new Color("#FB8500");
+        #endregion
 
-        // --- ESSENTIALS ---
+        #region Essentials
         public static readonly Color GREEN_FOREST = new Color("#2A9D8F");
         public static readonly Color GREEN_LIME = new Color("#9EF01A");
         public static readonly Color PURPLE_ROYAL = new Color("#7209B7");
         public static readonly Color PURPLE_LAVENDER = new Color("#B5179E");
         public static readonly Color PINK_HOT = new Color("#F72585");
         public static readonly Color CYAN_NEON = new Color("#4CC9F0");
+        #endregion
 
-        // --- EARTH TONES ---
+        #region Earth
         public static readonly Color BROWN_WOOD = new Color("#6F4E37");
         public static readonly Color BEIGE_SAND = new Color("#F4A261");
         public static readonly Color GOLD = new Color("#FFD700");
         public static readonly Color SILVER = new Color("#C0C0C0");
         public static readonly Color BRONZE = new Color("#CD7F32");
-
+        #endregion
 
         private NVector vector;
 
