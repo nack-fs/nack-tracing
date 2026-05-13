@@ -683,7 +683,7 @@ namespace NackTracing
                 maxDepth: 20
             );
 
-            Texture HDRI = HDRLoader.Load("SimonsRocks", 2.5f);
+            Texture HDRI = HDRLoader.Load("SimonsRocks", 6f);
             camera.SetEnvironment(HDRI, 135f);
 
             var bvhWorld = new BVHNode(world);
