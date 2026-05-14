@@ -17,10 +17,6 @@ El proyecto persigue dos objetivos fundamentales: primero, construir una arquite
 
 <img width="1080" height="607" alt="image23" src="https://github.com/user-attachments/assets/ff9b6948-1bbc-4ad4-9555-ae320d9804d2" />
 
-## 🛠️ Tecnologías
-*   **Lenguaje:** C#
-*   **Plataforma:** .NET
-*   **IDE:** Visual Studio 2026
 
 *Autor: Ignacio Fernández Suárez*
 
