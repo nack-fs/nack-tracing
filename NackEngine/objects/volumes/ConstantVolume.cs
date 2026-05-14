@@ -17,7 +17,7 @@ namespace NackEngine.objects.volumes
         public ConstantVolume(Hittable boundary, float density, Texture texture)
         {
             this.boundary = boundary;
-            this.negInvDensity = -1f/density;
+            this.negInvDensity = -1f / density;
             this.phaseFunction = new Isotropic(texture);
         }
 
@@ -36,7 +36,7 @@ namespace NackEngine.objects.volumes
             HitStruct hit1, hit2;
 
             if (!boundary.Hit(ray, Range.UNIVERSE, out hit1)) { return false; }
-            float tol = 1e-4f;
+            float tol = MathSetting.HIT_EPSILON;
             if (!boundary.Hit(ray, new Range(hit1.T + tol, float.MaxValue), out hit2)) { return false; }
 
             if (hit1.T < range.Min()) { hit1.T = range.Min(); }

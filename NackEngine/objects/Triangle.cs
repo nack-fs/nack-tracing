@@ -2,9 +2,7 @@
 using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using NackEngine.math;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects
@@ -23,9 +21,10 @@ namespace NackEngine.objects
         private NVector uv0, uv1, uv2;
         private NVector n0, n1, n2;
 
-        public Triangle(Point v0, Point v1, Point v2, 
-            NVector uv0,NVector uv1, NVector uv2,
-            NVector n0, NVector n1, NVector n2,  Material material) { 
+        public Triangle(Point v0, Point v1, Point v2,
+            NVector uv0, NVector uv1, NVector uv2,
+            NVector n0, NVector n1, NVector n2, Material material)
+        {
 
             this.v0 = v0; this.v1 = v1; this.v2 = v2;
             this.n0 = n0; this.n1 = n1; this.n2 = n2;
@@ -46,7 +45,8 @@ namespace NackEngine.objects
             InitializeBoundingBox();
         }
 
-        private void InitializeBoundingBox() {
+        private void InitializeBoundingBox()
+        {
             Point min = new Point(
                 MathF.Min(v0.X(), MathF.Min(v1.X(), v2.X())),
                 MathF.Min(v0.Y(), MathF.Min(v1.Y(), v2.Y())),
@@ -67,7 +67,7 @@ namespace NackEngine.objects
         }
 
         public AABBox BoundingBox() => aabbox;
-        
+
 
         public bool Hit(Ray ray, Range range, out HitStruct hit)
         {
@@ -86,7 +86,7 @@ namespace NackEngine.objects
             NVector s = ray.Origin() - v0;
             float u = f * NVector.Dot(s, h);
 
-            float eps = 1e-8f;
+            float eps = MathSetting.MATH_EPSILON;
 
             if (u < -eps || u > 1.0f + eps) return false;
 
@@ -97,7 +97,8 @@ namespace NackEngine.objects
 
             float t = f * NVector.Dot(edge2, q);
 
-            if (!range.Contains(t)) { 
+            if (!range.Contains(t))
+            {
                 return false;
             }
 

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using NackEngine.core.render;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using NackEngine.core.render;
 using Color = NackEngine.core.render.Color;
 using Timer = System.Windows.Forms.Timer;
 
@@ -25,6 +22,16 @@ namespace NackTracing
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = System.Drawing.Color.Black;
+
+            try
+            {
+                string iconPath = Path.Combine(AppContext.BaseDirectory, "assets", "nacktracing-icon.ico");
+                if (File.Exists(iconPath))
+                {
+                    this.Icon = new Icon(iconPath);
+                }
+            }
+            catch (Exception) { }
 
             pictureBox = new PictureBox();
             pictureBox.Dock = DockStyle.Fill;

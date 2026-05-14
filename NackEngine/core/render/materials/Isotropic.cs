@@ -1,6 +1,5 @@
 ﻿using NackEngine.core.physics;
 using NackEngine.core.render.textures;
-using NackEngine.math;
 using NackEngine.math.probdensities;
 
 namespace NackEngine.core.render.materials

@@ -1,12 +1,8 @@
-﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NackEngine.core.physics;
+﻿using NackEngine.core.physics;
+using NackEngine.core.space;
 
 namespace NackEngine.math.probdensities
 {
-    using static NackEngine.core.space.NVector;
     using Point = NVector;
 
     public class HittableProbDensity : ProbDensity
@@ -14,7 +10,8 @@ namespace NackEngine.math.probdensities
         private Hittable wrappedObj;
         private Point origin;
 
-        public HittableProbDensity(Hittable wrappedObj, Point origin) { 
+        public HittableProbDensity(Hittable wrappedObj, Point origin)
+        {
             this.wrappedObj = wrappedObj;
             this.origin = origin;
         }

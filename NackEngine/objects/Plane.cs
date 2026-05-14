@@ -3,9 +3,6 @@ using NackEngine.core.physics.bounding;
 using NackEngine.core.render;
 using NackEngine.core.space;
 using NackEngine.math;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects
@@ -25,7 +22,8 @@ namespace NackEngine.objects
 
         private float area;
 
-        public Plane(Point corner, NVector u, NVector v, Material material) { 
+        public Plane(Point corner, NVector u, NVector v, Material material)
+        {
             this.corner = corner;
             this.u = u;
             this.v = v;
@@ -34,14 +32,15 @@ namespace NackEngine.objects
             var n = NVector.Cross(u, v);
             this.normal = NVector.UnitVector(n);
             this.D = NVector.Dot(normal, corner);
-            this.w = n / NVector.Dot(n,n);
+            this.w = n / NVector.Dot(n, n);
 
             this.area = NVector.Cross(u, v).Length();
 
             InitializeBoundingBox();
         }
 
-        private void InitializeBoundingBox() {
+        private void InitializeBoundingBox()
+        {
             var diagonal1 = new AABBox(corner, corner + u + v);
             var diagonal2 = new AABBox(corner + u, corner + v);
             this.aabbox = new AABBox(diagonal1, diagonal2);
@@ -57,8 +56,9 @@ namespace NackEngine.objects
             hit = default;
             var dNormal = NVector.Dot(normal, ray.Direction());
 
-            float tol = 1e-8f;
-            if (Math.Abs(dNormal) < tol) {
+            float tol = MathSetting.MATH_EPSILON;
+            if (Math.Abs(dNormal) < tol)
+            {
                 return false;
             }
 
@@ -80,11 +80,13 @@ namespace NackEngine.objects
             return true;
         }
 
-        private bool IsInside(float a, float b, out HitStruct hit) {
+        private bool IsInside(float a, float b, out HitStruct hit)
+        {
             hit = default;
             Range unitRange = new Range(0f, 1f);
 
-            if (!unitRange.Contains(a) || !unitRange.Contains(b)) { 
+            if (!unitRange.Contains(a) || !unitRange.Contains(b))
+            {
                 return false;
             }
 
@@ -93,9 +95,11 @@ namespace NackEngine.objects
             return true;
         }
 
-        public float Probability(Point origin, NVector direction) {
+        public float Probability(Point origin, NVector direction)
+        {
             HitStruct hit;
-            if (!this.Hit(new Ray(origin, direction), Range.DEFAULT, out hit)) {
+            if (!this.Hit(new Ray(origin, direction), Range.DEFAULT, out hit))
+            {
                 return 0f;
             }
 
@@ -105,7 +109,8 @@ namespace NackEngine.objects
             return distanceSquared / (cos * area);
         }
 
-        public NVector Random(Point origin) {
+        public NVector Random(Point origin)
+        {
             var p = corner +
                 (MathSetting.RandomFloat() * u) +
                 (MathSetting.RandomFloat() * v);

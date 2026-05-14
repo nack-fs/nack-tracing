@@ -53,7 +53,8 @@ namespace NackTracing
                 });
                 Application.Run(window);
             }
-            else {
+            else
+            {
                 Logger.Log("[INFO] Rendering...");
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
@@ -66,13 +67,12 @@ namespace NackTracing
                 export.ExportFile(render);
                 Logger.Log("[INFO] Image saved successfully.");
             }
-            Environment.Exit(0);
         }
 
         private static void ShowElapsedTime(Stopwatch sw)
         {
             TimeSpan ts = sw.Elapsed;
-            string elapsedTime = String.Format("{1:00}m:{2:00}s.{3:00}ms",
+            string elapsedTime = String.Format("{0:00}h:{1:00}m:{2:00}s.{3:00}ms",
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             Logger.Log($"[INFO] Render completed in: {elapsedTime}");
@@ -147,33 +147,6 @@ namespace NackTracing
 
             Render("BasicScene", camera, bvhWorld);
         }
-
-        public static void CheckeredSpheres()
-        {
-            HitCollection world = new HitCollection();
-
-            var testTexture = new TestTexture(0.32f, Color.BLUE_NAVY, Color.WHITE);
-
-            world.AddObject(new Sphere(new Point(0, -10, 0), 10, new Diffuse(testTexture)));
-            world.AddObject(new Sphere(new Point(0, 10, 0), 10, new Diffuse(testTexture)));
-
-            Camera camera = new Camera(
-                aspectRatio: 16.0f / 9.0f,
-                imageWidth: 1080,
-                numSamples: 100,
-                maxDepth: 50,
-                fieldView: 20,
-
-                depthFieldAngle: 0
-            );
-            camera.SetLookPoint(
-                    new Point(13, 2, 3), // Look point
-                    new Point(0, 0, 0), // Look target
-                    new NVector(0, 1, 0) // vup
-            );
-            Render("CheckeredSpheres", camera, world);
-        }
-
         public static void EarthAndMars()
         {
             HitCollection world = new HitCollection();
@@ -365,7 +338,7 @@ namespace NackTracing
             Camera camera = new Camera(
                 aspectRatio: 1.0f,
                 imageWidth: 600,
-                numSamples: 200,
+                numSamples: 1000,
                 maxDepth: 50,
                 fieldView: 40,
 
@@ -390,7 +363,7 @@ namespace NackTracing
             var red = new Diffuse(Color.RED_MODERN);
             var grey = new Diffuse(Color.GREY_LIGHT);
             var lime = new Diffuse(Color.GREEN_LIME);
-            var light = new DiffuseLight(new Color(7, 7, 7));
+            var light = new DiffuseLight(new Color(15, 15, 15));
 
             world.AddObject(new Plane(new Point(555, 0, 0),
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
@@ -400,16 +373,18 @@ namespace NackTracing
                 new NVector(0, 555, 0), new NVector(0, 0, 555),
                 red));
 
-            world.AddObject(new Plane(new Point(113, 554, 127),
-                new NVector(330, 0, 0), new NVector(0, 0, 305),
-                light));
+            var planeLight = new Plane(new Point(343, 554, 332),
+                new NVector(-130, 0, 0), new NVector(0, 0, -105),
+                light);
 
-            world.AddObject(new Plane(new Point(0, 555, 0),
-                new NVector(555, 0, 0), new NVector(0, 0, 555),
-                grey));
+            world.AddObject(planeLight);
 
             world.AddObject(new Plane(new Point(0, 0, 0),
                 new NVector(555, 0, 0), new NVector(0, 0, 555),
+                grey));
+
+            world.AddObject(new Plane(new Point(555, 555, 555),
+                new NVector(-555, 0, 0), new NVector(0, 0, -555),
                 grey));
 
             world.AddObject(new Plane(new Point(0, 0, 555),
@@ -425,12 +400,12 @@ namespace NackTracing
             box2 = new Translate(box2, new Point(130, 0, 65));
 
             world.AddObject(new ConstantVolume(box1, 0.01f, Color.BLACK));
-            world.AddObject(new ConstantVolume(box1, 0.01f, Color.WHITE));
+            world.AddObject(new ConstantVolume(box2, 0.01f, Color.WHITE));
 
             Camera camera = new Camera(
                 aspectRatio: 1.0f,
                 imageWidth: 600,
-                numSamples: 200,
+                numSamples: 1000,
                 maxDepth: 50,
                 fieldView: 40,
 
@@ -441,6 +416,7 @@ namespace NackTracing
                     new Point(278, 278, 0), // Look target
                     new NVector(0, 1, 0) // vup
             );
+            camera.SetBackgroundColor(Color.BLACK);
 
             var bvhWorld = new BVHNode(world);
 
@@ -622,7 +598,9 @@ namespace NackTracing
 
             var bvhSalvavidas = new BVHNode(SalvavidasObj);
 
-            world.AddObject(bvhSalvavidas);
+            Hittable rotatedSalvavidas = new Rotate(bvhSalvavidas, -30f, Axis.Y);
+
+            world.AddObject(rotatedSalvavidas);
 
             var lightMaterial = new DiffuseLight(new Color(10, 10, 10));
 
@@ -703,10 +681,12 @@ namespace NackTracing
                 // Render properties
                 aspectRatio: 16f / 9f,
                 imageWidth: 1920,
-                numSamples: 1000
+                numSamples: 850,
+
+                maxDepth: 20
             );
 
-            Texture HDRI = HDRLoader.Load("SimonsRocks");
+            Texture HDRI = HDRLoader.Load("SimonsRocks", 6f);
             camera.SetEnvironment(HDRI, 135f);
 
             var bvhWorld = new BVHNode(world);

@@ -1,8 +1,5 @@
 ﻿using NackEngine.core.render;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.core.physics
 {
@@ -20,9 +17,10 @@ namespace NackEngine.core.physics
         public bool FrontFace { get; set; }
         public Material Material { get; set; }
 
-        public void setFaceNormal(Ray ray, NVector owNormal) {
+        public void setFaceNormal(Ray ray, NVector owNormal)
+        {
             this.FrontFace = NVector.Dot(ray.Direction(), owNormal) < 0;
-            this.Normal = FrontFace? owNormal : -owNormal;
+            this.Normal = FrontFace ? owNormal : -owNormal;
         }
     }
 }

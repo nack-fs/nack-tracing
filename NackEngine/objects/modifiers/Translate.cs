@@ -1,9 +1,6 @@
 ﻿using NackEngine.core.physics;
 using NackEngine.core.physics.bounding;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Range = NackEngine.core.space.Range;
 
 namespace NackEngine.objects.modifiers
@@ -15,7 +12,8 @@ namespace NackEngine.objects.modifiers
 
         private AABBox aabbox;
 
-        public Translate(Hittable obj, NVector offset) {
+        public Translate(Hittable obj, NVector offset)
+        {
             this.wrappedObj = obj;
             this.offset = offset;
 

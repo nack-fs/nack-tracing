@@ -1,6 +1,5 @@
 ﻿using NackEngine.core.physics.bounding.comparators;
 using NackEngine.core.space;
-using NackEngine.math;
 using NackEngine.objects;
 using Range = NackEngine.core.space.Range;
 
@@ -12,13 +11,14 @@ namespace NackEngine.core.physics.bounding
         private Hittable right;
         private AABBox aabbox;
 
-        public BVHNode(HitCollection list) : this(list.GetObjects(), 0, list.GetObjects().Count){}
+        public BVHNode(HitCollection list) : this(list.GetObjects(), 0, list.GetObjects().Count) { }
 
         public BVHNode(List<Hittable> objects, int start, int end)
         {
             aabbox = AABBox.EMPTY;
 
-            for (int i = start; i < end; i++) {
+            for (int i = start; i < end; i++)
+            {
                 aabbox = new AABBox(aabbox, objects[i].BoundingBox());
             }
 
@@ -62,7 +62,8 @@ namespace NackEngine.core.physics.bounding
                 float[] rightAreas = new float[objectSpan];
 
                 AABBox leftBox = AABBox.EMPTY;
-                for (int i = 0; i < objectSpan; i++) {
+                for (int i = 0; i < objectSpan; i++)
+                {
 
                     leftBox = new AABBox(leftBox, objects[start + i].BoundingBox());
                     leftAreas[i] = leftBox.Area();
@@ -105,7 +106,6 @@ namespace NackEngine.core.physics.bounding
 
             aabbox = new AABBox(left.BoundingBox(), right.BoundingBox());
         }
-
 
         public AABBox BoundingBox()
         {

@@ -1,8 +1,5 @@
 ﻿using NackEngine.core.physics;
 using NackEngine.math;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.core.render.materials
 {

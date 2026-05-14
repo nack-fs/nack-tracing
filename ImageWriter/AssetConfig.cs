@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace NackEngine.IO
@@ -21,15 +18,18 @@ namespace NackEngine.IO
         public Dictionary<string, string> Models { get; set; }
     }
 
-    public static class AssetConfig {
+    public static class AssetConfig
+    {
         private static NackConfigModel configData;
 
         private static readonly string assetsConfigPath = Path.Combine(AppContext.BaseDirectory, "assets", "nack-config.json");
 
-        public static void Initialize() {
+        public static void Initialize()
+        {
             if (configData != null) { return; }
 
-            if (!File.Exists(assetsConfigPath)) {
+            if (!File.Exists(assetsConfigPath))
+            {
                 Logger.Log($"[WARN] Configuration file not found in {assetsConfigPath}");
                 CreateEmptyConfig();
                 return;
@@ -38,7 +38,8 @@ namespace NackEngine.IO
             LoadConfiguration();
         }
 
-        private static void CreateEmptyConfig() {
+        private static void CreateEmptyConfig()
+        {
             configData = new NackConfigModel
             {
                 AssetsBaseConfig = "",
@@ -48,11 +49,14 @@ namespace NackEngine.IO
             };
         }
 
-        private static void LoadConfiguration() {
-            try {
+        private static void LoadConfiguration()
+        {
+            try
+            {
                 string json = File.ReadAllText(assetsConfigPath);
 
-                var options = new JsonSerializerOptions {
+                var options = new JsonSerializerOptions
+                {
                     PropertyNameCaseInsensitive = true,
                     ReadCommentHandling = JsonCommentHandling.Skip
                 };
@@ -72,14 +76,17 @@ namespace NackEngine.IO
             }
         }
 
-        private static string GetPathFromDictionary(string name, Dictionary<string, string> dict) {
+        private static string GetPathFromDictionary(string name, Dictionary<string, string> dict)
+        {
             if (configData == null) { return null; }
 
-            if (dict.TryGetValue(name, out string relativePath)) {
+            if (dict.TryGetValue(name, out string relativePath))
+            {
                 relativePath = relativePath.TrimStart('/', '\\');
                 string fullPath = Path.Combine(configData.AssetsBaseConfig, relativePath);
 
-                if (File.Exists(fullPath)) {
+                if (File.Exists(fullPath))
+                {
                     return fullPath;
                 }
 
@@ -92,7 +99,8 @@ namespace NackEngine.IO
                 return name;
             }
 
-            if (!string.IsNullOrEmpty(configData.AssetsBaseConfig)) {
+            if (!string.IsNullOrEmpty(configData.AssetsBaseConfig))
+            {
                 string fallback = Path.Combine(configData.AssetsBaseConfig, name);
                 if (File.Exists(fallback)) { return fallback; }
             }

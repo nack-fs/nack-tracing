@@ -1,8 +1,5 @@
 ﻿using NackEngine.core.render;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.IO
 {
@@ -21,7 +18,12 @@ namespace NackEngine.IO
             int maxDepth = 50,
             float depthFieldAngle = 0.0f)
         {
-            // X=X, Y=Z, Z=-Y
+            /*
+             * Translation for Blender:
+             * -----------------------
+             *  X=X, Y=Z, Z=-Y
+             */
+
             Point lookPoint = new Point(X, Z, -Y);
             Point lookTarget = new Point(targetX, targetZ, -targetY);
 

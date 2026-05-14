@@ -1,7 +1,4 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.math.probdensities
 {
@@ -9,7 +6,8 @@ namespace NackEngine.math.probdensities
     {
         private Orthonormal orthonormal;
 
-        public CosProbDensity(NVector w) { 
+        public CosProbDensity(NVector w)
+        {
             this.orthonormal = new Orthonormal(w);
         }
 

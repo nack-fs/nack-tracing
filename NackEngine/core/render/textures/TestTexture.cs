@@ -1,7 +1,4 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.core.render.textures
 {
@@ -11,7 +8,8 @@ namespace NackEngine.core.render.textures
         private Texture tex1;
         private Texture tex2;
 
-        public TestTexture(float scale, Texture tex1, Texture tex2) {
+        public TestTexture(float scale, Texture tex1, Texture tex2)
+        {
             this.inverseScale = 1.0f / scale;
             this.tex1 = tex1;
             this.tex2 = tex2;

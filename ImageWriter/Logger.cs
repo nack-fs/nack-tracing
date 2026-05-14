@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NackEngine.IO
+﻿namespace NackEngine.IO
 {
     public class Logger
     {

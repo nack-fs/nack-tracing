@@ -4,6 +4,10 @@ namespace NackEngine.math
 {
     public static class MathSetting
     {
+        public const float HIT_EPSILON = 1e-4f;
+        public const float MATH_EPSILON = 1e-8f;
+        public const float AABB_PADDING = 1e-4f;
+
         public static float RandomFloat()
         {
             return (float)Random.Shared.NextDouble();

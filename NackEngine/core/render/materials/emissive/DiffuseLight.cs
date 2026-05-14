@@ -1,9 +1,6 @@
 ﻿using NackEngine.core.physics;
 using NackEngine.core.render.textures;
 using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NackEngine.core.render.materials.emissive
 {
@@ -13,11 +10,13 @@ namespace NackEngine.core.render.materials.emissive
     {
         private Texture texture;
 
-        public DiffuseLight(Texture texture) { 
+        public DiffuseLight(Texture texture)
+        {
             this.texture = texture;
         }
 
-        public DiffuseLight(Color emit) {
+        public DiffuseLight(Color emit)
+        {
             this.texture = new SolidColor(emit);
         }
 
@@ -29,7 +28,7 @@ namespace NackEngine.core.render.materials.emissive
 
         public Color Emitted(float u, float v, Point point)
         {
-            return texture.Value(u,v,point);
+            return texture.Value(u, v, point);
         }
     }
 }

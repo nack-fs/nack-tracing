@@ -1,8 +1,4 @@
 ﻿using NackEngine.core.space;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
 
 namespace NackEngine.core.render.textures
 {
@@ -12,13 +8,14 @@ namespace NackEngine.core.render.textures
         private int width;
         private int height;
 
-        private readonly float exp = 10f;
+        private readonly float exposure;
 
-        public FloatImageTexture(float[] data, int width, int height)
+        public FloatImageTexture(float[] data, int width, int height, float exposure = 1.0f)
         {
             this.data = data;
             this.width = width;
             this.height = height;
+            this.exposure = exposure;
         }
 
         public Color Value(float u, float v, NVector point)
@@ -36,7 +33,7 @@ namespace NackEngine.core.render.textures
 
             int index = (y * width + x) * 3;
 
-            return new Color(data[index] * exp, data[index + 1] * exp, data[index + 2] * exp);
+            return new Color(data[index] * exposure, data[index + 1] * exposure, data[index + 2] * exposure);
         }
     }
 }

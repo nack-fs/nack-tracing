@@ -8,7 +8,8 @@ namespace NackEngine.core.render.textures
         private Perlin noise = new Perlin();
         private float scale;
 
-        public NoiseTexture(float scale = 1f) {
+        public NoiseTexture(float scale = 1f)
+        {
             this.scale = scale;
         }
 
