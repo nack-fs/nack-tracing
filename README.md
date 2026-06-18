@@ -9,6 +9,8 @@
 
 # Nack Tracing: A Photorealistic Ray Tracing Engine in C#
 
+### 📄 Project Documentation
+[Click to Read Documentation](./TFG_Ignacio_Fernández_Suárez.pdf)
 
 This project, called Nack Tracing, is the Final Degree Project of the School of Computer Engineering at the University of Oviedo. It consists of the design and implementation of a ray tracing engine from scratch using C# and the .NET platform.
 
