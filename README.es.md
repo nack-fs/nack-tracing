@@ -9,6 +9,9 @@
 
 # Nack Tracing: un motor de trazado de rayos fotorrealista en C#
 
+### 📄 Documentación del Proyecto
+[Click para leer la documentación](./TFG_Ignacio_Fernández_Suárez.pdf)
+
 Este proyecto, denominado Nack Tracing, es el Trabajo de Fin de Grado (TFG) de la Escuela de Ingeniería Informática de la Universidad de Oviedo. Consiste en el diseño y la implementación de un motor de trazado de rayos desde cero utilizando C# y la plataforma .NET.
 
 El motor es capaz de generar imágenes sintéticas con un alto grado de realismo visual mediante la simulación del comportamiento físico de la luz al interactuar con diferentes materiales y geometrías en una escena 3D.
